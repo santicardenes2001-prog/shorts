@@ -446,6 +446,13 @@
      "fx_in": "jump",
      "idle": "shake",
      "blink": true,
+     "swaps": [
+      {
+       "at": "b2:desnudo",
+       "a": "prisionero_desnudo",
+       "fx": "punch"
+      }
+     ],
      "out": "b2:barcas",
      "fx_out": "pop"
     },
@@ -453,15 +460,16 @@
      "texto": {
       "t": "CENSURADO",
       "estilo": "censura",
-      "size": 70
+      "size": 30
      },
      "x": 590,
-     "y": 1140,
-     "r": -4,
+     "y": 1240,
+     "r": 0,
      "in": "b2:desnudo",
      "fx_in": "pop",
      "z": 30,
-     "sfx": "golpe",
+     "sfx": "none",
+     "idle": "shake",
      "out": "b2:barcas",
      "fx_out": "pop"
     },
@@ -1179,16 +1187,18 @@
     },
     {
      "a": "cuerda",
-     "x": 421,
-     "y": -270,
+     "x": 438,
+     "y": 0,
+     "sy": 1.223,
      "in": "b9:colgar",
      "fx_in": "drop",
      "sfx": "none"
     },
     {
      "a": "cuerda",
-     "x": 659,
-     "y": -270,
+     "x": 642,
+     "y": 0,
+     "sy": 1.223,
      "in": "b9:colgar",
      "fx_in": "drop",
      "sfx": "none"
@@ -1196,8 +1206,8 @@
     {
      "a": "colgado_v_miedo",
      "x": 540,
-     "y": 430,
-     "s": 0.7,
+     "y": 856,
+     "s": 0.6,
      "in": "b9:colgar",
      "fx_in": "drop",
      "idle": {
@@ -1240,7 +1250,7 @@
       "size": 64
      },
      "x": 540,
-     "y": 1270,
+     "y": 600,
      "in": "b9:sangre",
      "fx_in": "pop",
      "z": 20,
@@ -1254,7 +1264,7 @@
       "size": 86
      },
      "x": 540,
-     "y": 1270,
+     "y": 600,
      "in": "b9:consciente",
      "fx_in": "pop",
      "z": 20,
@@ -1348,26 +1358,28 @@
     },
     {
      "a": "cuerda",
-     "x": 421,
-     "y": -270,
+     "x": 438,
+     "y": 0,
+     "sy": 1.223,
      "keys": [
       {
        "at": "b11:proceso",
        "dur": 0.6,
-       "x": 371,
+       "x": 388,
        "ease": "back"
       }
      ]
     },
     {
      "a": "cuerda",
-     "x": 659,
-     "y": -270,
+     "x": 642,
+     "y": 0,
+     "sy": 1.223,
      "keys": [
       {
        "at": "b11:proceso",
        "dur": 0.6,
-       "x": 709,
+       "x": 692,
        "ease": "back"
       }
      ]
@@ -1375,11 +1387,11 @@
     {
      "a": "colgado_v_miedo",
      "x": 540,
-     "y": 430,
-     "s": 0.7,
+     "y": 856,
+     "s": 0.6,
      "idle": {
       "fx": "sway",
-      "fuerza": 0.4
+      "fuerza": 0.3
      },
      "swaps": [
       {
@@ -1392,9 +1404,9 @@
     },
     {
      "a": "colgado_mitad_izq",
-     "x": 421,
-     "y": 430,
-     "s": 0.7,
+     "x": 438,
+     "y": 856,
+     "s": 0.6,
      "in": "b11:proceso",
      "sfx": "golpe",
      "keys": [
@@ -1402,7 +1414,7 @@
        "at": "b11:proceso",
        "dur": 0.6,
        "r": 20,
-       "x": 371,
+       "x": 388,
        "ease": "back"
       }
      ],
@@ -1413,16 +1425,16 @@
     },
     {
      "a": "colgado_mitad_der",
-     "x": 659,
-     "y": 430,
-     "s": 0.7,
+     "x": 642,
+     "y": 856,
+     "s": 0.6,
      "in": "b11:proceso",
      "keys": [
       {
        "at": "b11:proceso",
        "dur": 0.6,
        "r": -20,
-       "x": 709,
+       "x": 692,
        "ease": "back"
       }
      ],
@@ -1432,37 +1444,35 @@
      }
     },
     {
-     "a": "verdugo",
-     "x": 180,
+     "a": "verdugo_sierra",
+     "x": 177,
      "y": 1330,
-     "s": 0.52,
+     "s": 0.5,
      "in": "b10:verdugos",
      "fx_in": "slide_right",
-     "idle": "work",
      "z": 2
     },
     {
-     "a": "verdugo",
-     "x": 830,
+     "a": "verdugo_sierra",
+     "x": 903,
      "y": 1330,
-     "s": 0.52,
+     "s": 0.5,
      "flip": true,
      "in": "b10:verdugos+0.15",
      "fx_in": "slide_left",
-     "idle": "work",
      "z": 2
     },
     {
      "a": "sierra",
      "x": 540,
-     "y": 600,
-     "s": 0.75,
+     "y": 940,
+     "s": 0.65,
      "in": "b10:comenzaban",
-     "fx_in": "pop",
-     "z": 3,
+     "fx_in": "fade",
+     "z": -1,
      "idle": {
       "fx": "vaiven",
-      "fuerza": 1.6,
+      "fuerza": 0.8,
       "vel": 2.6,
       "from": "b10:serrar"
      },
@@ -1470,15 +1480,13 @@
       {
        "at": "b10:serrar",
        "dur": 5,
-       "y": 690,
+       "y": 1040,
        "ease": "linear"
       },
       {
        "at": "b11:proceso",
-       "dur": 0.5,
-       "y": 1000,
-       "alpha": 0,
-       "ease": "in"
+       "dur": 0.4,
+       "alpha": 0
       }
      ]
     },
@@ -1486,10 +1494,10 @@
      "texto": {
       "t": "CENSURADO",
       "estilo": "censura",
-      "size": 118
+      "size": 96
      },
      "x": 540,
-     "y": 660,
+     "y": 1050,
      "r": -6,
      "in": "b10:cuerpo",
      "fx_in": "pop",
@@ -1506,7 +1514,7 @@
       "size": 70
      },
      "x": 540,
-     "y": 1200,
+     "y": 640,
      "in": "b11:ombligo",
      "fx_in": "pop",
      "z": 20,
@@ -1687,7 +1695,7 @@
      "swaps": [
       {
        "at": "b13:piel",
-       "a": "vos_asco",
+       "a": "vos_miedo",
        "fx": "punch"
       }
      ]
@@ -1821,11 +1829,12 @@
      "z": 1
     },
     {
-     "a": "vos_asco",
+     "a": "vos_miedo",
      "x": 170,
      "y": 1330,
      "s": 0.45,
-     "idle": "shake"
+     "idle": "shake",
+     "blink": true
     },
     {
      "a": "verdugo",
@@ -1864,11 +1873,11 @@
      "texto": {
       "t": "CENSURADO",
       "estilo": "censura",
-      "size": 118
+      "size": 62
      },
      "x": 540,
-     "y": 1060,
-     "r": -8,
+     "y": 1045,
+     "r": -5,
      "in": "b14:rostro",
      "fx_in": "pop",
      "z": 30,
@@ -2054,11 +2063,11 @@
      "texto": {
       "t": "CENSURADO",
       "estilo": "censura",
-      "size": 118
+      "size": 62
      },
      "x": 540,
-     "y": 1060,
-     "r": -8,
+     "y": 1045,
+     "r": -5,
      "in": "b15",
      "fx_in": "pop",
      "z": 30,

@@ -248,6 +248,7 @@ VOS_VARIANTS = {
     "vos_estira": dict(eyes="closed", brows="neutral", mouth_kind="yawn", arm_kind="up"),
     "vos_cansado": dict(eyes="tired", brows="sad", mouth_kind="flat"),
     "vos_mira": dict(look=(1, -0.3)),
+    "vos_miedo": dict(eyes="wide", brows="sad", mouth_kind="nervio"),
     # astronauta (escafandra + traje)
     "vos_astro": dict(astro=True),
     "vos_astro_mira": dict(astro=True, look=(1, -0.3)),
@@ -257,7 +258,7 @@ VOS_VARIANTS = {
     "vos_astro_susto": dict(astro=True, eyes="wide", brows="sad", mouth_kind="o", look=(-1, 0)),
 }
 # Variantes de parpadeo automáticas para las que tienen ojos abiertos
-BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa",
+BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa", "vos_miedo",
              "vos_astro", "vos_astro_mira", "vos_astro_sorpresa", "vos_astro_susto"]
 
 # Bocas para lip sync (cabeza neutral con distintas bocas)
@@ -1027,21 +1028,28 @@ def podredumbre(nivel):
     return "".join(s)
 
 
-def prisionero(eyes="wide", brows="sad", mouth_kind="o", arm_kind="down", look=(0, 0), extra=""):
-    """Prisionero medieval: túnica rota, descalzo, barba y pelo revuelto (520x820, como Vos)."""
+def prisionero(eyes="wide", brows="sad", mouth_kind="o", arm_kind="down", look=(0, 0), extra="", desnudo=False):
+    """Prisionero medieval: túnica rota, descalzo, barba y pelo revuelto (520x820, como Vos).
+    desnudo=True: sin túnica (la censura de la entrepierna va aparte, en y≈675)."""
     s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
-    front, back = arms(arm_kind, None, TUNICA)
+    front, back = arms(arm_kind, None, P["piel"] if desnudo else TUNICA)
     s.append(back)
     for x in (205, 269):
         s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
     for x in (220, 300):
         s.append(f'<ellipse cx="{x}" cy="792" rx="36" ry="18" fill="{P["piel2"]}" stroke="{INK}" stroke-width="5"/>')
-    # túnica con borde roto
-    s.append(ln("M 176 470 Q 260 440 344 470 L 364 690 L 340 672 L 320 700 L 296 674 L 270 704 L 246 676 "
-                "L 222 702 L 198 674 L 174 696 L 156 690 Z", SW, INK, TUNICA))
-    s.append(ln("M 196 560 L 230 590", 5, TUNICA2) + ln("M 300 610 L 330 580", 5, TUNICA2))
-    s.append(f'<rect x="200" y="520" width="34" height="26" rx="6" fill="{TUNICA2}" opacity=".8"/>')
-    s.append(ln("M 220 474 Q 260 500 300 474", 6))
+    if desnudo:
+        s.append(f'<rect x="166" y="452" width="188" height="236" rx="66" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(ln("M 196 510 Q 224 530 252 514", 5, P["piel2"]) + ln("M 324 510 Q 296 530 268 514", 5, P["piel2"]))
+        s.append(ln("M 214 580 Q 230 590 246 580", 4, P["piel2"]) + ln("M 274 580 Q 290 590 306 580", 4, P["piel2"]))
+        s.append(f'<circle cx="260" cy="616" r="6" fill="{P["piel2"]}"/>')
+    else:
+        # túnica con borde roto
+        s.append(ln("M 176 470 Q 260 440 344 470 L 364 690 L 340 672 L 320 700 L 296 674 L 270 704 L 246 676 "
+                    "L 222 702 L 198 674 L 174 696 L 156 690 Z", SW, INK, TUNICA))
+        s.append(ln("M 196 560 L 230 590", 5, TUNICA2) + ln("M 300 610 L 330 580", 5, TUNICA2))
+        s.append(f'<rect x="200" y="520" width="34" height="26" rx="6" fill="{TUNICA2}" opacity=".8"/>')
+        s.append(ln("M 220 474 Q 260 500 300 474", 6))
     s.append(front)
     s.append(cabeza_prisionero(eyes, brows, mouth_kind, look, extra))
     return "".join(s)
@@ -1050,6 +1058,7 @@ def prisionero(eyes="wide", brows="sad", mouth_kind="o", arm_kind="down", look=(
 PRISIONERO_VARIANTS = {
     "prisionero_miedo": dict(),
     "prisionero_nervio": dict(eyes="open", brows="sad", mouth_kind="nervio", look=(-1, 0)),
+    "prisionero_desnudo": dict(eyes="wide", brows="sad", mouth_kind="nervio", desnudo=True),
     "prisionero_dolor": dict(eyes="dolor", brows="sad", mouth_kind="grito"),
     "prisionero_asco": dict(eyes="squint", brows="asco", mouth_kind="bleh",
                             extra=f'<ellipse cx="165" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'
@@ -1060,10 +1069,18 @@ PRISIONERO_VARIANTS = {
 }
 
 
-def verdugo(eyes="mira"):
-    """Verdugo con capucha negra; solo se le ven los ojos (520x820)."""
+def verdugo(eyes="mira", sostiene=False):
+    """Verdugo con capucha negra; solo se le ven los ojos (520x820).
+    sostiene=True: brazo derecho bien en alto, con la mano en (480, 40) para agarrar el mango de la sierra."""
     s = [f'<ellipse cx="260" cy="806" rx="140" ry="14" fill="#000" opacity=".12"/>']
     front, back = arms("down", None, "#5A1622")
+    if sostiene:
+        front = (stroke_path("M 182 505 Q 150 575 148 652", P["piel"], 28)
+                 + f'<circle cx="148" cy="655" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
+                 + f'<circle cx="186" cy="500" r="30" fill="#5A1622" stroke="{INK}" stroke-width="{SW}"/>')
+        brazo = (stroke_path("M 338 500 Q 490 470 480 44", P["piel"], 30)
+                 + f'<circle cx="480" cy="40" r="28" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
+                 + f'<circle cx="334" cy="500" r="30" fill="#5A1622" stroke="{INK}" stroke-width="{SW}"/>')
     s.append(back)
     for x in (200, 274):
         s.append(f'<rect x="{x}" y="640" width="50" height="150" rx="20" fill="#3A3540" stroke="{INK}" stroke-width="{SW}"/>')
@@ -1087,6 +1104,8 @@ def verdugo(eyes="mira"):
                      f'<circle cx="{cx + look}" cy="306" r="12" fill="{INK}"/>')
     # cejas enojadas pintadas sobre la capucha
     s.append(ln("M 150 252 L 236 278", 12, "#0E0C10") + ln("M 370 252 L 284 278", 12, "#0E0C10"))
+    if sostiene:
+        s.append(brazo)
     return "".join(s)
 
 
@@ -1251,7 +1270,8 @@ def olor():
 
 def sierra():
     """Sierra de dos manos (900x200), hoja con dientes y dos mangos."""
-    teeth = " ".join(f"L {x} 150 L {x + 15} 128" for x in range(140, 760, 30))
+    # el contorno vuelve de derecha a izquierda por el filo, diente por diente
+    teeth = " ".join(f"L {x - 16} 158 L {x - 32} 128" for x in range(770, 140, -32))
     blade = f"M 130 60 L 770 60 L 770 128 {teeth} L 130 128 Z"
     s = [ln(blade, 6, INK, "#C8D0DC")]
     s.append(ln("M 150 80 L 740 80", 8, "#fff", extra='opacity=".6"'))
@@ -1643,6 +1663,7 @@ def build():
     add("verdugo", 520, 820, verdugo("mira"), anchor=(0.5, 1.0))
     add("verdugo_frente", 520, 820, verdugo("frente"), anchor=(0.5, 1.0))
     add("verdugo_risa", 520, 820, verdugo("risa"), anchor=(0.5, 1.0))
+    add("verdugo_sierra", 520, 820, verdugo("mira", sostiene=True), anchor=(0.5, 1.0))
     for f in ("miedo", "asco", "dolor", "nervio"):
         add(f"barcas_{f}", 760, 420, barcas(f))
     add("barcas_miel", 760, 420, barcas("asco", miel=True))
