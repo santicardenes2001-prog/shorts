@@ -260,15 +260,14 @@ escenas.append({
 # ------------------------------------------------------------ 9. el final: causas de muerte
 escenas.append({
     "nombre": "desollamiento_final", "beats": [15], "fondo": "fondo_mazmorra",
-    "sonidos": [{"at": "b15:expuesta", "s": "golpe"}, {"at": "b15:moría", "s": "zumbido", "vol": .7}],
+    "sonidos": [{"at": "b15", "s": "golpe"}, {"at": "b15:moría", "s": "zumbido", "vol": .7}],
     "elementos": antorchas() + [
         chispas(5),
         {"a": "poste", "x": 540, "y": 1330, "z": -1},
-        {"a": "prisionero_dolor", "x": 540, "y": 1330, "s": .6, "idle": {"fx": "shake", "fuerza": .5, "to": "b15:moría"},
-         "swaps": [{"at": "b15:expuesta", "a": "desollado", "fx": "punch"},
-                   {"at": "b15:moría", "a": "desollado_muerto", "fx": "punch"}]},
+        # al terminar ya está desollado (sin censura); en "moría" los ojos pasan a X
+        {"a": "desollado", "x": 540, "y": 1330, "s": .6, "idle": {"fx": "shake", "fuerza": .5, "to": "b15:moría"},
+         "swaps": [{"at": "b15:moría", "a": "desollado_muerto", "fx": "punch"}]},
         {"a": "cuerdas", "x": 540, "y": 1200, "s": .6, "z": 1},
-        censura("b15", 540, 1045, size=62, r=-5, sfx="none", out="b15:expuesta", fx_out="pop"),
         cartel("SHOCK TÉRMICO", 250, 520, "b15:shock", size=50, estilo="cartel_celeste"),
         {"a": "termometro_00", "x": 150, "y": 1250, "s": .5, "in": "b15:shock", "fx_in": "pop", "idle": "shake"},
         cartel("SANGRE", 250, 650, "b15:sangre", size=50, estilo="cartel_rojo"),

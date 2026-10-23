@@ -1930,7 +1930,7 @@
    "fondo": "fondo_mazmorra",
    "sonidos": [
     {
-     "at": "b15:expuesta",
+     "at": "b15",
      "s": "golpe"
     },
     {
@@ -2030,7 +2030,7 @@
      "z": -1
     },
     {
-     "a": "prisionero_dolor",
+     "a": "desollado",
      "x": 540,
      "y": 1330,
      "s": 0.6,
@@ -2040,11 +2040,6 @@
       "to": "b15:moría"
      },
      "swaps": [
-      {
-       "at": "b15:expuesta",
-       "a": "desollado",
-       "fx": "punch"
-      },
       {
        "at": "b15:moría",
        "a": "desollado_muerto",
@@ -2058,22 +2053,6 @@
      "y": 1200,
      "s": 0.6,
      "z": 1
-    },
-    {
-     "texto": {
-      "t": "CENSURADO",
-      "estilo": "censura",
-      "size": 62
-     },
-     "x": 540,
-     "y": 1045,
-     "r": -5,
-     "in": "b15",
-     "fx_in": "pop",
-     "z": 30,
-     "sfx": "none",
-     "out": "b15:expuesta",
-     "fx_out": "pop"
     },
     {
      "texto": {
