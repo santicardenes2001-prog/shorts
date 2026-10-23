@@ -75,6 +75,11 @@ def eye(cx, cy, kind, look, side):
         return ln(f"M {cx-34} {cy+4} Q {cx} {cy+16} {cx+34} {cy+4}", 8)
     if kind == "happy":
         return ln(f"M {cx-34} {cy+12} Q {cx} {cy-24} {cx+34} {cy+12}", 9)
+    if kind == "muerto":      # X
+        return ln(f"M {cx-26} {cy-26} L {cx+26} {cy+26}", 10) + ln(f"M {cx+26} {cy-26} L {cx-26} {cy+26}", 10)
+    if kind == "sin_parpados":   # ojos enormes, sin párpados
+        return (f'<circle cx="{cx}" cy="{cy}" r="44" fill="#fff" stroke="{INK}" stroke-width="6"/>'
+                f'<circle cx="{cx + look[0] * 8}" cy="{cy + 4}" r="9" fill="{INK}"/>')
     if kind == "dolor":       # ojos apretados: > <
         k = 1 if side == "L" else -1
         return ln(f"M {cx-30*k} {cy-24} L {cx+26*k} {cy+2} L {cx-30*k} {cy+26}", 10)
@@ -131,6 +136,9 @@ def mouth(kind):
                 f'<g clip-path="url(#gclip)"><rect x="210" y="356" width="100" height="22" fill="#fff"/>'
                 f'<ellipse cx="260" cy="458" rx="30" ry="16" fill="{P["lengua"]}"/></g>'
                 f'<ellipse cx="260" cy="414" rx="42" ry="50" fill="none" stroke="{INK}" stroke-width="7"/>')
+    if kind == "dientes":     # dientes al aire (sin labios)
+        return (f'<rect x="200" y="384" width="120" height="48" rx="14" fill="#F6EBD6" stroke="{INK}" stroke-width="6"/>'
+                + ln("M 202 408 L 318 408", 5) + "".join(ln(f"M {x} 386 L {x} 430", 4) for x in range(220, 320, 20)))
     if kind == "nervio":      # boca temblorosa
         return ln("M 214 404 L 232 392 L 250 406 L 268 392 L 286 406 L 304 394", 8)
     raise ValueError(kind)
@@ -140,16 +148,20 @@ HAIR = ("M 92 240 C 72 110, 190 58, 275 66 C 372 74, 452 130, 430 240 "
         "L 404 186 L 372 204 L 338 170 L 300 198 L 262 164 L 222 200 L 186 170 L 152 204 L 122 178 Z")
 
 
-def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra="", hair=HAIR, hair_color=None):
+def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra="", hair=HAIR, hair_color=None,
+         skin=None, cheeks=True):
     """Cabeza de Vos en coordenadas del lienzo de 520x820 (centro 260,270).
-    hair/hair_color permiten armar otros personajes con la misma cabeza."""
+    hair/hair_color/skin permiten armar otros personajes con la misma cabeza (hair=None: sin pelo)."""
+    skin = skin or P["piel"]
     s = []
     for x in (90, 430):
-        s.append(f'<circle cx="{x}" cy="292" r="30" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(f'<circle cx="260" cy="270" r="172" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(ln(hair, SW, INK, hair_color or P["pelo"]))
-    s.append(f'<ellipse cx="165" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>'
-             f'<ellipse cx="355" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>')
+        s.append(f'<circle cx="{x}" cy="292" r="30" fill="{skin}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="260" cy="270" r="172" fill="{skin}" stroke="{INK}" stroke-width="{SW}"/>')
+    if hair:
+        s.append(ln(hair, SW, INK, hair_color or P["pelo"]))
+    if cheeks:
+        s.append(f'<ellipse cx="165" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>'
+                 f'<ellipse cx="355" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>')
     s.append(extra)
     s.append(eye(EYE_L, EYE_Y, eyes, look, "L"))
     s.append(eye(EYE_R, EYE_Y, eyes, look, "R"))
@@ -996,8 +1008,23 @@ def barba():
                       for x, y in [(180, 400), (200, 420), (230, 432), (290, 432), (320, 420), (340, 400), (160, 380), (360, 380)]))
 
 
-def cabeza_prisionero(eyes="wide", brows="sad", mouth_kind="o", look=(0, 0), extra=""):
-    return head(eyes, brows, mouth_kind, look, barba() + extra, hair=PELO_PRISIONERO, hair_color="#6B4A2F")
+PIEL_PODRIDA, PIEL_PODRIDA2 = "#B7C49A", "#93A57A"
+
+
+def cabeza_prisionero(eyes="wide", brows="sad", mouth_kind="o", look=(0, 0), extra="", skin=None, hair_color="#6B4A2F"):
+    return head(eyes, brows, mouth_kind, look, barba() + extra, hair=PELO_PRISIONERO, hair_color=hair_color, skin=skin)
+
+
+def podredumbre(nivel):
+    """Moretones, ojeras y larvas para la cara del prisionero (coordenadas de head)."""
+    s = [f'<ellipse cx="200" cy="350" rx="50" ry="22" fill="#5E4A6E" opacity=".35"/>'
+         f'<ellipse cx="320" cy="350" rx="50" ry="22" fill="#5E4A6E" opacity=".35"/>',
+         f'<circle cx="140" cy="220" r="26" fill="#6E5A7E" opacity=".45"/><circle cx="380" cy="400" r="20" fill="#6E5A7E" opacity=".45"/>']
+    if nivel >= 2:
+        s.append(f'<circle cx="370" cy="210" r="30" fill="#4E6B3A" opacity=".5"/><circle cx="160" cy="420" r="22" fill="#4E6B3A" opacity=".5"/>')
+        for x, y, r in [(150, 300, 20), (390, 330, 30), (230, 170, 10)]:
+            s.append(ln(f"M {x - 14} {y} q 7 -10 14 0 q 7 10 14 0", 9, "#F4EED8", extra=f'transform="rotate({r} {x} {y})"'))
+    return "".join(s)
 
 
 def prisionero(eyes="wide", brows="sad", mouth_kind="o", arm_kind="down", look=(0, 0), extra=""):
@@ -1064,12 +1091,17 @@ def verdugo(eyes="mira"):
 
 
 def barcas(face="miedo", miel=False):
-    """Dos barcas, una encima de la otra, con el prisionero adentro: asoman cabeza, manos y pies (760x420)."""
+    """Dos barcas, una encima de la otra, con el prisionero adentro: asoman cabeza, manos y pies (760x420).
+    face: miedo asco dolor nervio podrido1 podrido2."""
     faces = {"miedo": dict(), "asco": PRISIONERO_VARIANTS["prisionero_asco"],
              "dolor": dict(eyes="dolor", brows="sad", mouth_kind="grito"),
-             "nervio": dict(eyes="open", brows="sad", mouth_kind="nervio", look=(1, 0))}
-    kw = {k: v for k, v in faces[face].items() if k in ("eyes", "brows", "mouth_kind", "look", "extra")}
+             "nervio": dict(eyes="open", brows="sad", mouth_kind="nervio", look=(1, 0)),
+             "podrido1": dict(eyes="dolor", brows="sad", mouth_kind="grito", skin=PIEL_PODRIDA, extra=podredumbre(1)),
+             "podrido2": dict(eyes="muerto", brows="sad", mouth_kind="o", skin=PIEL_PODRIDA2, extra=podredumbre(2),
+                              hair_color="#6E6A60")}
+    kw = {k: v for k, v in faces[face].items() if k in ("eyes", "brows", "mouth_kind", "look", "extra", "skin", "hair_color")}
     kw = dict(dict(eyes="wide", brows="sad", mouth_kind="o"), **kw)
+    piel = kw.get("skin") or P["piel"]
     madera, madera2, madera3 = "#A0714D", "#7A5236", "#8A5E3E"
     s = []
     # barca de abajo
@@ -1084,16 +1116,98 @@ def barcas(face="miedo", miel=False):
                     "Q 438 156 430 140 L 428 82 L 400 82 L 396 104 Q 388 120 380 104 Z", 5, INK, P["amarillo"]))
     # manos que asoman por la junta y pies a la derecha
     for x, dx in [(360, -30), (540, 30)]:
-        s.append(stroke_path(f"M {x} 212 L {x + dx} 176", P["piel"], 24) +
-                 f'<circle cx="{x + dx}" cy="172" r="22" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(stroke_path(f"M {x} 212 L {x + dx} 176", piel, 24) +
+                 f'<circle cx="{x + dx}" cy="172" r="22" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
     for y in (190, 238):
-        s.append(f'<ellipse cx="716" cy="{y}" rx="36" ry="22" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<ellipse cx="716" cy="{y}" rx="36" ry="22" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+    if face.startswith("podrido"):   # manchas en la madera y larvas
+        s.append(f'<ellipse cx="420" cy="290" rx="120" ry="30" fill="#4E3A20" opacity=".45"/>'
+                 f'<ellipse cx="600" cy="120" rx="70" ry="24" fill="#4E3A20" opacity=".4"/>')
+        n = 6 if face == "podrido1" else 14
+        rnd = random.Random(8)
+        for _ in range(n):
+            x, y, r = rnd.uniform(220, 660), rnd.choice([rnd.uniform(90, 190), rnd.uniform(232, 330)]), rnd.uniform(-40, 40)
+            s.append(ln(f"M {x - 14:.0f} {y:.0f} q 7 -10 14 0 q 7 10 14 0", 10, "#F4EED8", extra=f'transform="rotate({r:.0f} {x:.0f} {y:.0f})"')
+                     .replace('stroke="#F4EED8"', 'stroke="#F4EED8"'))
     # cabeza asomando a la izquierda
     s.append('<g transform="translate(118 200) scale(0.52) translate(-260 -290)">' + cabeza_prisionero(**kw) + '</g>')
     if miel:   # miel chorreando por la cabeza
         s.append(ln("M 44 92 Q 118 56 192 92 L 190 120 Q 182 140 174 120 L 170 104 L 150 106 L 146 154 "
                     "Q 138 172 130 154 L 126 106 L 96 106 L 92 134 Q 84 150 76 134 L 70 104 L 50 106 Z", 5, INK, P["amarillo"]))
         s.append(ln("M 80 86 Q 100 76 122 78", 6, "#fff", extra='opacity=".7"'))
+    return "".join(s)
+
+
+CORTE = "#C0392B"
+
+
+def colgado_v(face="miedo", mitad=None):
+    """Prisionero colgado cabeza abajo de los dos pies, piernas abiertas (600x900).
+    Los pies quedan arriba en (130, 60) y (470, 60). mitad: None, "izq" o "der" (partido al medio)."""
+    faces = {"miedo": dict(eyes="wide", brows="sad", mouth_kind="o"),
+             "grito": dict(eyes="dolor", brows="sad", mouth_kind="grito"),
+             "muerto": dict(eyes="muerto", brows="sad", mouth_kind="o")}
+    b = []
+    # piernas abiertas (en coordenadas "de pie", después se rota 180°)
+    for x0, x1 in [(262, 130), (338, 470)]:
+        b.append(stroke_path(f"M {x0} 600 L {x1} 830", P["piel"], 46))
+        b.append(f'<ellipse cx="{x1}" cy="846" rx="40" ry="22" fill="{P["piel2"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    # brazos "arriba" (quedan colgando hacia el piso)
+    for x0, x1 in [(232, 140), (368, 460)]:
+        b.append(stroke_path(f"M {x0} 420 Q {x1} 380 {x1} 130", P["piel"], 28)
+                 + f'<circle cx="{x1}" cy="126" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    # túnica
+    b.append(ln("M 214 390 Q 300 362 386 390 L 404 640 L 380 622 L 356 650 L 330 624 L 300 654 L 270 624 "
+                "L 244 650 L 220 622 L 196 640 Z", SW, INK, TUNICA))
+    b.append(f'<circle cx="214" cy="420" r="28" fill="{TUNICA}" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="386" cy="420" r="28" fill="{TUNICA}" stroke="{INK}" stroke-width="{SW}"/>')
+    b.append('<g transform="translate(300 220) scale(0.82) translate(-260 -270)">' + cabeza_prisionero(**faces[face]) + '</g>')
+    body = '<g transform="rotate(180 300 450)">' + "".join(b) + '</g>'
+    if mitad is None:
+        return body
+    # partido al medio: recorte por x=300 y la "carne" del corte en el borde
+    clip = '<rect x="0" y="0" width="300" height="900"/>' if mitad == "izq" else '<rect x="300" y="0" width="300" height="900"/>'
+    x = 284 if mitad == "izq" else 300
+    corte = (f'<rect x="{x}" y="262" width="16" height="560" rx="8" fill="{CORTE}" stroke="{INK}" stroke-width="5"/>'
+             + "".join(f'<rect x="{x + 3}" y="{y}" width="10" height="22" rx="5" fill="#F6EBD6"/>' for y in (330, 380, 430, 480))
+             + f'<rect x="{x + 4}" y="560" width="8" height="90" rx="4" fill="#E07A6E"/>')
+    return f'<clipPath id="m"><{clip[1:]}</clipPath><g clip-path="url(#m)">{body}</g>{corte}'
+
+
+MUSCULO, MUSCULO2, MUSCULO3 = "#C8473F", "#E07A6E", "#9E2F2A"
+
+
+def desollado(muerto=False):
+    """Prisionero sin piel (estilo lámina de anatomía), atado al poste: músculo rojo con fibras,
+    ojos sin párpados y dientes al aire. Mismo lienzo que el prisionero (520x820)."""
+    s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
+    def fibras(d, w=28):
+        return stroke_path(d, MUSCULO, w) + ln(d, 4, MUSCULO2, extra='opacity=".8"')
+    for d in ("M 182 505 Q 150 575 148 652", "M 338 505 Q 370 575 372 652"):
+        s.append(fibras(d))
+    for x in (148, 372):
+        s.append(f'<circle cx="{x}" cy="655" r="24" fill="{MUSCULO}" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (205, 269):
+        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{MUSCULO}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(ln(f"M {x + 14} 660 Q {x + 22} 720 {x + 14} 780", 4, MUSCULO2) + ln(f"M {x + 32} 660 Q {x + 26} 720 {x + 32} 780", 4, MUSCULO2))
+    for x in (220, 300):
+        s.append(f'<ellipse cx="{x}" cy="792" rx="36" ry="18" fill="{MUSCULO3}" stroke="{INK}" stroke-width="5"/>')
+    # torso: pectorales y abdominales
+    s.append(f'<rect x="166" y="452" width="188" height="214" rx="64" fill="{MUSCULO}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 186 500 Q 222 540 258 510", 5, MUSCULO3) + ln("M 334 500 Q 298 540 262 510", 5, MUSCULO3))
+    s.append(ln("M 260 520 L 260 650", 5, MUSCULO3))
+    for y in (560, 594, 628):
+        s.append(ln(f"M 220 {y} L 300 {y}", 4, MUSCULO3))
+    for x in (190, 330):
+        s.append(f'<circle cx="{x}" cy="500" r="26" fill="{MUSCULO}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="196" y="630" width="128" height="50" rx="12" fill="#EDE3CC" stroke="{INK}" stroke-width="6"/>')
+    # cabeza sin piel ni pelo, con fibras en la cara
+    fib = (ln("M 130 260 Q 160 200 230 186", 6, MUSCULO2) + ln("M 390 260 Q 360 200 290 186", 6, MUSCULO2)
+           + ln("M 140 330 Q 170 400 220 410", 6, MUSCULO3) + ln("M 380 330 Q 350 400 300 410", 6, MUSCULO3)
+           + ln("M 260 110 L 260 200", 6, MUSCULO3) + ln("M 200 120 Q 230 160 236 200", 5, MUSCULO2)
+           + ln("M 320 120 Q 290 160 284 200", 5, MUSCULO2))
+    s.append(head("muerto" if muerto else "sin_parpados", "neutral", "dientes", (0, 0), fib, hair=None, skin=MUSCULO,
+                  cheeks=False).replace(ln(BROWS["neutral"][0], 13) + ln(BROWS["neutral"][1], 13), ""))
     return "".join(s)
 
 
@@ -1533,6 +1647,14 @@ def build():
         add(f"barcas_{f}", 760, 420, barcas(f))
     add("barcas_miel", 760, 420, barcas("asco", miel=True))
     add("barcas_miel_dolor", 760, 420, barcas("dolor", miel=True))
+    add("barcas_podrido1", 760, 420, barcas("podrido1", miel=True))
+    add("barcas_podrido2", 760, 420, barcas("podrido2", miel=True))
+    for f in ("miedo", "grito"):
+        add(f"colgado_v_{f}", 600, 900, colgado_v(f), anchor=(0.5, 60 / 900))
+    for m, ax in (("izq", 130), ("der", 470)):
+        add(f"colgado_mitad_{m}", 600, 900, colgado_v("muerto", m), anchor=(ax / 600, 60 / 900))
+    add("desollado", 520, 820, desollado(), anchor=(0.5, 1.0))
+    add("desollado_muerto", 520, 820, desollado(True), anchor=(0.5, 1.0))
     add("jarra_leche", 280, 320, jarra_leche())
     add("tarro_miel", 280, 300, tarro_miel())
     add("mosca", 100, 80, mosca())

@@ -727,6 +727,16 @@
        "at": "b6:devorándolo",
        "a": "barcas_miel_dolor",
        "fx": "punch"
+      },
+      {
+       "at": "b6:dentro",
+       "a": "barcas_podrido1",
+       "fx": "punch"
+      },
+      {
+       "at": "b6:días",
+       "a": "barcas_podrido2",
+       "fx": "punch"
       }
      ]
     },
@@ -824,6 +834,43 @@
      "z": 11
     },
     {
+     "particulas": {
+      "a": "mosca",
+      "n": 26,
+      "semilla": 7,
+      "zona": [
+       200,
+       950,
+       940,
+       1350
+      ],
+      "vx": [
+       -50,
+       50
+      ],
+      "vy": [
+       -30,
+       30
+      ],
+      "s": [
+       0.25,
+       0.5
+      ],
+      "r": [
+       -15,
+       15
+      ],
+      "ondula": [
+       45,
+       0.7
+      ]
+     },
+     "in": "b6:dentro",
+     "fx_in": "fade",
+     "dur_in": 0.5,
+     "z": 12
+    },
+    {
      "texto": {
       "t": "MILES DE INSECTOS",
       "estilo": "cartel_verde",
@@ -834,7 +881,7 @@
      "in": "b5:miles",
      "fx_in": "pop",
      "z": 20,
-     "out": "b6:días",
+     "out": "b6",
      "fx_out": "pop"
     },
     {
@@ -1132,25 +1179,31 @@
     },
     {
      "a": "cuerda",
-     "x": 540,
-     "y": -230,
+     "x": 421,
+     "y": -270,
      "in": "b9:colgar",
      "fx_in": "drop",
      "sfx": "none"
     },
     {
-     "a": "prisionero_colgado",
+     "a": "cuerda",
+     "x": 659,
+     "y": -270,
+     "in": "b9:colgar",
+     "fx_in": "drop",
+     "sfx": "none"
+    },
+    {
+     "a": "colgado_v_miedo",
      "x": 540,
-     "y": 470,
+     "y": 430,
      "s": 0.7,
-     "r": 180,
      "in": "b9:colgar",
      "fx_in": "drop",
      "idle": {
       "fx": "sway",
-      "fuerza": 1.5
-     },
-     "blink": false
+      "fuerza": 0.6
+     }
     },
     {
      "a": "cerebro",
@@ -1295,26 +1348,88 @@
     },
     {
      "a": "cuerda",
-     "x": 540,
-     "y": -230
+     "x": 421,
+     "y": -270,
+     "keys": [
+      {
+       "at": "b11:proceso",
+       "dur": 0.6,
+       "x": 371,
+       "ease": "back"
+      }
+     ]
     },
     {
-     "a": "prisionero_colgado",
+     "a": "cuerda",
+     "x": 659,
+     "y": -270,
+     "keys": [
+      {
+       "at": "b11:proceso",
+       "dur": 0.6,
+       "x": 709,
+       "ease": "back"
+      }
+     ]
+    },
+    {
+     "a": "colgado_v_miedo",
      "x": 540,
-     "y": 470,
+     "y": 430,
      "s": 0.7,
-     "r": 180,
      "idle": {
       "fx": "sway",
-      "fuerza": 0.6
+      "fuerza": 0.4
      },
      "swaps": [
       {
        "at": "b10:serrar",
-       "a": "prisionero_colgado_grito",
+       "a": "colgado_v_grito",
        "fx": "punch"
       }
-     ]
+     ],
+     "out": "b11:proceso"
+    },
+    {
+     "a": "colgado_mitad_izq",
+     "x": 421,
+     "y": 430,
+     "s": 0.7,
+     "in": "b11:proceso",
+     "sfx": "golpe",
+     "keys": [
+      {
+       "at": "b11:proceso",
+       "dur": 0.6,
+       "r": 20,
+       "x": 371,
+       "ease": "back"
+      }
+     ],
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.5
+     }
+    },
+    {
+     "a": "colgado_mitad_der",
+     "x": 659,
+     "y": 430,
+     "s": 0.7,
+     "in": "b11:proceso",
+     "keys": [
+      {
+       "at": "b11:proceso",
+       "dur": 0.6,
+       "r": -20,
+       "x": 709,
+       "ease": "back"
+      }
+     ],
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.5
+     }
     },
     {
      "a": "verdugo",
@@ -1340,7 +1455,7 @@
     {
      "a": "sierra",
      "x": 540,
-     "y": 580,
+     "y": 600,
      "s": 0.75,
      "in": "b10:comenzaban",
      "fx_in": "pop",
@@ -1350,7 +1465,22 @@
       "fuerza": 1.6,
       "vel": 2.6,
       "from": "b10:serrar"
-     }
+     },
+     "keys": [
+      {
+       "at": "b10:serrar",
+       "dur": 5,
+       "y": 690,
+       "ease": "linear"
+      },
+      {
+       "at": "b11:proceso",
+       "dur": 0.5,
+       "y": 1000,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
     },
     {
      "texto": {
@@ -1365,7 +1495,9 @@
      "fx_in": "pop",
      "z": 30,
      "sfx": "golpe",
-     "idle": "shake"
+     "idle": "shake",
+     "out": "b11:proceso",
+     "fx_out": "pop"
     },
     {
      "texto": {
@@ -1374,7 +1506,7 @@
       "size": 70
      },
      "x": 540,
-     "y": 870,
+     "y": 1200,
      "in": "b11:ombligo",
      "fx_in": "pop",
      "z": 20,
@@ -1789,11 +1921,11 @@
    "fondo": "fondo_mazmorra",
    "sonidos": [
     {
-     "at": "b15:moría",
+     "at": "b15:expuesta",
      "s": "golpe"
     },
     {
-     "at": "b15:infecciones",
+     "at": "b15:moría",
      "s": "zumbido",
      "vol": 0.7
     }
@@ -1886,26 +2018,37 @@
      "a": "poste",
      "x": 540,
      "y": 1330,
-     "z": -1,
-     "out": "b15:moría",
-     "fx_out": "fade"
+     "z": -1
     },
     {
      "a": "prisionero_dolor",
      "x": 540,
      "y": 1330,
      "s": 0.6,
-     "out": "b15:moría",
-     "fx_out": "fade"
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.5,
+      "to": "b15:moría"
+     },
+     "swaps": [
+      {
+       "at": "b15:expuesta",
+       "a": "desollado",
+       "fx": "punch"
+      },
+      {
+       "at": "b15:moría",
+       "a": "desollado_muerto",
+       "fx": "punch"
+      }
+     ]
     },
     {
      "a": "cuerdas",
      "x": 540,
      "y": 1200,
      "s": 0.6,
-     "z": 1,
-     "out": "b15:moría",
-     "fx_out": "fade"
+     "z": 1
     },
     {
      "texto": {
@@ -1920,27 +2063,8 @@
      "fx_in": "pop",
      "z": 30,
      "sfx": "none",
-     "out": "b15:moría",
+     "out": "b15:expuesta",
      "fx_out": "pop"
-    },
-    {
-     "a": "calavera",
-     "x": 540,
-     "y": 640,
-     "s": 0.85,
-     "in": "b15:moría",
-     "fx_in": "pop",
-     "idle": "float",
-     "sfx": "none"
-    },
-    {
-     "a": "termometro_00",
-     "x": 240,
-     "y": 1220,
-     "s": 0.6,
-     "in": "b15:shock",
-     "fx_in": "pop",
-     "idle": "shake"
     },
     {
      "texto": {
@@ -1948,20 +2072,20 @@
       "estilo": "cartel_celeste",
       "size": 50
      },
-     "x": 240,
-     "y": 1300,
+     "x": 250,
+     "y": 520,
      "in": "b15:shock",
      "fx_in": "pop",
      "z": 20
     },
     {
-     "a": "gota",
-     "x": 540,
-     "y": 1090,
-     "s": 0.75,
-     "in": "b15:sangre",
-     "fx_in": "drop",
-     "idle": "bob"
+     "a": "termometro_00",
+     "x": 150,
+     "y": 1250,
+     "s": 0.5,
+     "in": "b15:shock",
+     "fx_in": "pop",
+     "idle": "shake"
     },
     {
      "texto": {
@@ -1969,20 +2093,20 @@
       "estilo": "cartel_rojo",
       "size": 50
      },
-     "x": 540,
-     "y": 930,
+     "x": 250,
+     "y": 650,
      "in": "b15:sangre",
      "fx_in": "pop",
      "z": 20
     },
     {
-     "a": "microbio_verde",
-     "x": 790,
-     "y": 1100,
-     "s": 0.55,
-     "in": "b15:infecciones",
-     "fx_in": "pop",
-     "idle": "wiggle"
+     "a": "gota",
+     "x": 260,
+     "y": 810,
+     "s": 0.6,
+     "in": "b15:sangre",
+     "fx_in": "drop",
+     "idle": "bob"
     },
     {
      "texto": {
@@ -1990,11 +2114,20 @@
       "estilo": "cartel_verde",
       "size": 50
      },
-     "x": 790,
-     "y": 1300,
+     "x": 830,
+     "y": 520,
      "in": "b15:infecciones",
      "fx_in": "pop",
      "z": 20
+    },
+    {
+     "a": "microbio_verde",
+     "x": 830,
+     "y": 700,
+     "s": 0.5,
+     "in": "b15:infecciones",
+     "fx_in": "pop",
+     "idle": "wiggle"
     },
     {
      "particulas": {
