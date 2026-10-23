@@ -75,6 +75,9 @@ def eye(cx, cy, kind, look, side):
         return ln(f"M {cx-34} {cy+4} Q {cx} {cy+16} {cx+34} {cy+4}", 8)
     if kind == "happy":
         return ln(f"M {cx-34} {cy+12} Q {cx} {cy-24} {cx+34} {cy+12}", 9)
+    if kind == "dolor":       # ojos apretados: > <
+        k = 1 if side == "L" else -1
+        return ln(f"M {cx-30*k} {cy-24} L {cx+26*k} {cy+2} L {cx-30*k} {cy+26}", 10)
     if kind == "squint":
         return (f'<clipPath id="{cid}"><ellipse cx="{cx}" cy="{cy+10}" rx="38" ry="20"/></clipPath>'
                 f'<ellipse cx="{cx}" cy="{cy+10}" rx="38" ry="20" fill="#fff" stroke="{INK}" stroke-width="6"/>'
@@ -122,6 +125,14 @@ def mouth(kind):
         return ln("M 228 404 L 292 404", 8)
     if kind == "mid":
         return f'<ellipse cx="260" cy="404" rx="28" ry="14" fill="{P["boca"]}" stroke="{INK}" stroke-width="7"/>'
+    if kind == "grito":       # boca muy abierta con dientes arriba
+        return ('<clipPath id="gclip"><ellipse cx="260" cy="414" rx="42" ry="50"/></clipPath>'
+                f'<ellipse cx="260" cy="414" rx="42" ry="50" fill="{P["boca"]}"/>'
+                f'<g clip-path="url(#gclip)"><rect x="210" y="356" width="100" height="22" fill="#fff"/>'
+                f'<ellipse cx="260" cy="458" rx="30" ry="16" fill="{P["lengua"]}"/></g>'
+                f'<ellipse cx="260" cy="414" rx="42" ry="50" fill="none" stroke="{INK}" stroke-width="7"/>')
+    if kind == "nervio":      # boca temblorosa
+        return ln("M 214 404 L 232 392 L 250 406 L 268 392 L 286 406 L 304 394", 8)
     raise ValueError(kind)
 
 
@@ -129,13 +140,14 @@ HAIR = ("M 92 240 C 72 110, 190 58, 275 66 C 372 74, 452 130, 430 240 "
         "L 404 186 L 372 204 L 338 170 L 300 198 L 262 164 L 222 200 L 186 170 L 152 204 L 122 178 Z")
 
 
-def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra=""):
-    """Cabeza de Vos en coordenadas del lienzo de 520x820 (centro 260,270)."""
+def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra="", hair=HAIR, hair_color=None):
+    """Cabeza de Vos en coordenadas del lienzo de 520x820 (centro 260,270).
+    hair/hair_color permiten armar otros personajes con la misma cabeza."""
     s = []
     for x in (90, 430):
         s.append(f'<circle cx="{x}" cy="292" r="30" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
     s.append(f'<circle cx="260" cy="270" r="172" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(ln(HAIR, SW, INK, P["pelo"]))
+    s.append(ln(hair, SW, INK, hair_color or P["pelo"]))
     s.append(f'<ellipse cx="165" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>'
              f'<ellipse cx="355" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>')
     s.append(extra)
@@ -970,6 +982,256 @@ def punto_estrella():
     return f'<circle cx="10" cy="10" r="7" fill="#FFF6D6"/>'
 
 
+# ---------------------------------------------------------------- Edad Media (short "3 torturas")
+PELO_PRISIONERO = ("M 84 250 C 50 120, 170 50, 270 60 C 380 66, 470 130, 438 252 L 426 300 L 404 214 L 380 236 "
+                   "L 362 190 L 330 222 L 300 180 L 262 214 L 228 176 L 196 220 L 160 186 L 130 236 L 108 210 L 98 300 Z")
+TUNICA, TUNICA2 = "#B89A6A", "#957A4E"
+
+
+def barba():
+    """Barba de varios días (va en 'extra' de head, debajo de ojos y boca)."""
+    return (f'<path d="M 120 330 Q 130 440 260 446 Q 390 440 400 330 Q 360 420 260 424 Q 160 420 120 330 Z" '
+            f'fill="#5A4636" opacity=".55"/>'
+            + "".join(f'<circle cx="{x}" cy="{y}" r="3" fill="#5A4636" opacity=".6"/>'
+                      for x, y in [(180, 400), (200, 420), (230, 432), (290, 432), (320, 420), (340, 400), (160, 380), (360, 380)]))
+
+
+def cabeza_prisionero(eyes="wide", brows="sad", mouth_kind="o", look=(0, 0), extra=""):
+    return head(eyes, brows, mouth_kind, look, barba() + extra, hair=PELO_PRISIONERO, hair_color="#6B4A2F")
+
+
+def prisionero(eyes="wide", brows="sad", mouth_kind="o", arm_kind="down", look=(0, 0), extra=""):
+    """Prisionero medieval: túnica rota, descalzo, barba y pelo revuelto (520x820, como Vos)."""
+    s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
+    front, back = arms(arm_kind, None, TUNICA)
+    s.append(back)
+    for x in (205, 269):
+        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (220, 300):
+        s.append(f'<ellipse cx="{x}" cy="792" rx="36" ry="18" fill="{P["piel2"]}" stroke="{INK}" stroke-width="5"/>')
+    # túnica con borde roto
+    s.append(ln("M 176 470 Q 260 440 344 470 L 364 690 L 340 672 L 320 700 L 296 674 L 270 704 L 246 676 "
+                "L 222 702 L 198 674 L 174 696 L 156 690 Z", SW, INK, TUNICA))
+    s.append(ln("M 196 560 L 230 590", 5, TUNICA2) + ln("M 300 610 L 330 580", 5, TUNICA2))
+    s.append(f'<rect x="200" y="520" width="34" height="26" rx="6" fill="{TUNICA2}" opacity=".8"/>')
+    s.append(ln("M 220 474 Q 260 500 300 474", 6))
+    s.append(front)
+    s.append(cabeza_prisionero(eyes, brows, mouth_kind, look, extra))
+    return "".join(s)
+
+
+PRISIONERO_VARIANTS = {
+    "prisionero_miedo": dict(),
+    "prisionero_nervio": dict(eyes="open", brows="sad", mouth_kind="nervio", look=(-1, 0)),
+    "prisionero_dolor": dict(eyes="dolor", brows="sad", mouth_kind="grito"),
+    "prisionero_asco": dict(eyes="squint", brows="asco", mouth_kind="bleh",
+                            extra=f'<ellipse cx="165" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'
+                                  f'<ellipse cx="355" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'),
+    # colgado: con los brazos "arriba" que, dado vuelta (r=180), quedan colgando hacia el piso
+    "prisionero_colgado": dict(arm_kind="up", eyes="wide", brows="sad", mouth_kind="o"),
+    "prisionero_colgado_grito": dict(arm_kind="up", eyes="dolor", brows="sad", mouth_kind="grito"),
+}
+
+
+def verdugo(eyes="mira"):
+    """Verdugo con capucha negra; solo se le ven los ojos (520x820)."""
+    s = [f'<ellipse cx="260" cy="806" rx="140" ry="14" fill="#000" opacity=".12"/>']
+    front, back = arms("down", None, "#5A1622")
+    s.append(back)
+    for x in (200, 274):
+        s.append(f'<rect x="{x}" y="640" width="50" height="150" rx="20" fill="#3A3540" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (220, 300):
+        s.append(f'<ellipse cx="{x}" cy="794" rx="42" ry="22" fill="{INK}"/>')
+    s.append(f'<rect x="140" y="440" width="240" height="250" rx="70" fill="#7A1E2E" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="146" y="590" width="228" height="34" fill="#3A2A20" stroke="{INK}" stroke-width="6"/>'
+             f'<rect x="240" y="584" width="40" height="46" rx="6" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="6"/>')
+    s.append(front)
+    # capucha en punta, cubre toda la cabeza
+    s.append(ln("M 100 330 Q 96 160 200 96 L 260 20 L 320 96 Q 424 160 420 330 Q 430 470 260 480 Q 90 470 100 330 Z",
+                SW, INK, "#1E1A1F"))
+    s.append(ln("M 150 150 Q 190 100 230 80", 10, "#fff", extra='opacity=".18"'))
+    for cx in (200, 320):
+        s.append(f'<ellipse cx="{cx}" cy="300" rx="52" ry="36" fill="#0E0C10"/>')
+        if eyes == "risa":
+            s.append(ln(f"M {cx-26} 308 Q {cx} 280 {cx+26} 308", 9, "#fff"))
+        else:
+            look = 8 if eyes == "mira" else 0
+            s.append(f'<ellipse cx="{cx}" cy="302" rx="26" ry="24" fill="#fff"/>'
+                     f'<circle cx="{cx + look}" cy="306" r="12" fill="{INK}"/>')
+    # cejas enojadas pintadas sobre la capucha
+    s.append(ln("M 150 252 L 236 278", 12, "#0E0C10") + ln("M 370 252 L 284 278", 12, "#0E0C10"))
+    return "".join(s)
+
+
+def barcas(face="miedo", miel=False):
+    """Dos barcas, una encima de la otra, con el prisionero adentro: asoman cabeza, manos y pies (760x420)."""
+    faces = {"miedo": dict(), "asco": PRISIONERO_VARIANTS["prisionero_asco"],
+             "dolor": dict(eyes="dolor", brows="sad", mouth_kind="grito"),
+             "nervio": dict(eyes="open", brows="sad", mouth_kind="nervio", look=(1, 0))}
+    kw = {k: v for k, v in faces[face].items() if k in ("eyes", "brows", "mouth_kind", "look", "extra")}
+    kw = dict(dict(eyes="wide", brows="sad", mouth_kind="o"), **kw)
+    madera, madera2, madera3 = "#A0714D", "#7A5236", "#8A5E3E"
+    s = []
+    # barca de abajo
+    s.append(ln("M 150 212 L 690 212 Q 680 330 560 362 L 270 362 Q 160 330 150 212 Z", SW, INK, madera))
+    s.append(ln("M 176 262 L 668 262", 5, madera2) + ln("M 220 312 L 630 312", 5, madera2))
+    # barca de arriba (dada vuelta, un poco más oscura)
+    s.append(ln("M 150 212 L 690 212 Q 680 96 560 64 L 270 64 Q 160 96 150 212 Z", SW, INK, madera3))
+    s.append(ln("M 176 162 L 668 162", 5, madera2) + ln("M 220 112 L 630 112", 5, madera2))
+    s.append(ln("M 140 212 L 700 212", 12))
+    if miel:
+        s.append(ln("M 380 68 Q 440 60 500 68 L 498 112 Q 490 128 482 112 L 480 82 L 450 82 L 446 140 "
+                    "Q 438 156 430 140 L 428 82 L 400 82 L 396 104 Q 388 120 380 104 Z", 5, INK, P["amarillo"]))
+    # manos que asoman por la junta y pies a la derecha
+    for x, dx in [(360, -30), (540, 30)]:
+        s.append(stroke_path(f"M {x} 212 L {x + dx} 176", P["piel"], 24) +
+                 f'<circle cx="{x + dx}" cy="172" r="22" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for y in (190, 238):
+        s.append(f'<ellipse cx="716" cy="{y}" rx="36" ry="22" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    # cabeza asomando a la izquierda
+    s.append('<g transform="translate(118 200) scale(0.52) translate(-260 -290)">' + cabeza_prisionero(**kw) + '</g>')
+    if miel:   # miel chorreando por la cabeza
+        s.append(ln("M 44 92 Q 118 56 192 92 L 190 120 Q 182 140 174 120 L 170 104 L 150 106 L 146 154 "
+                    "Q 138 172 130 154 L 126 106 L 96 106 L 92 134 Q 84 150 76 134 L 70 104 L 50 106 Z", 5, INK, P["amarillo"]))
+        s.append(ln("M 80 86 Q 100 76 122 78", 6, "#fff", extra='opacity=".7"'))
+    return "".join(s)
+
+
+def jarra_leche():
+    s = [ln("M 60 40 L 180 40 L 196 80 Q 210 250 190 290 L 50 290 Q 30 250 44 80 Z", SW, INK, "#fff")]
+    s.append(ln("M 196 110 Q 260 120 250 180 Q 240 230 196 236", 18) + ln("M 196 110 Q 260 120 250 180 Q 240 230 196 236", 8, "#fff"))
+    s.append(f'<rect x="46" y="150" width="150" height="40" fill="{P["remera"]}" opacity=".85"/>')
+    s.append(ln("M 60 40 L 180 40 L 196 80 Q 210 250 190 290 L 50 290 Q 30 250 44 80 Z", SW))
+    s.append(ln("M 60 40 Q 40 20 30 34", SW, INK, "#fff"))
+    s.append(ln("M 70 220 L 70 260", 9, "#DCE8F5"))
+    return "".join(s)
+
+
+def tarro_miel():
+    s = [ln("M 50 90 Q 30 200 70 280 L 210 280 Q 250 200 230 90 Z", SW, INK, "#E8A317")]
+    s.append(f'<rect x="40" y="56" width="200" height="44" rx="14" fill="{P["marron"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 60 96 L 220 96 L 214 124 Q 206 140 198 124 L 194 110 L 160 112 L 156 150 Q 148 168 140 150 "
+                "L 136 112 L 100 112 L 96 132 Q 88 148 80 132 L 74 112 L 62 112 Z", 5, INK, P["amarillo"]))
+    s.append(ln("M 80 170 Q 76 220 96 250", 10, "#fff", extra='opacity=".5"'))
+    # cucharón de miel
+    s.append(stroke_path("M 200 70 L 250 10", P["marron2"], 14))
+    return "".join(s)
+
+
+def mosca():
+    """Mosca chiquita (100x80) mirando a la derecha."""
+    return (f'<ellipse cx="40" cy="22" rx="24" ry="14" fill="#DDF2FF" opacity=".85" stroke="{INK}" stroke-width="4" transform="rotate(-25 40 22)"/>'
+            f'<ellipse cx="58" cy="20" rx="20" ry="12" fill="#DDF2FF" opacity=".85" stroke="{INK}" stroke-width="4" transform="rotate(20 58 20)"/>'
+            f'<ellipse cx="46" cy="50" rx="30" ry="20" fill="#2E2A33" stroke="{INK}" stroke-width="5"/>'
+            f'<circle cx="78" cy="46" r="15" fill="#2E2A33" stroke="{INK}" stroke-width="5"/>'
+            f'<circle cx="84" cy="42" r="6" fill="{P["rojo"]}"/>'
+            + ln("M 30 66 L 24 76", 4) + ln("M 46 70 L 46 78", 4) + ln("M 60 68 L 66 76", 4))
+
+
+def olor():
+    s = []
+    for x in (30, 80, 130):
+        s.append(ln(f"M {x} 200 Q {x - 22} 160 {x} 120 Q {x + 22} 80 {x} 40", 12, "#8BD06A", extra='opacity=".85"'))
+    return "".join(s)
+
+
+def sierra():
+    """Sierra de dos manos (900x200), hoja con dientes y dos mangos."""
+    teeth = " ".join(f"L {x} 150 L {x + 15} 128" for x in range(140, 760, 30))
+    blade = f"M 130 60 L 770 60 L 770 128 {teeth} L 130 128 Z"
+    s = [ln(blade, 6, INK, "#C8D0DC")]
+    s.append(ln("M 150 80 L 740 80", 8, "#fff", extra='opacity=".6"'))
+    for x in (60, 840):
+        s.append(f'<rect x="{x - 40}" y="40" width="80" height="110" rx="26" fill="{P["marron"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<rect x="{x - 14}" y="66" width="28" height="58" rx="14" fill="{P["marron2"]}"/>')
+    return "".join(s)
+
+
+def cuchillo():
+    s = [ln("M 30 70 Q 160 20 300 60 L 300 100 L 30 100 Z", 6, INK, "#D7DEE8")]
+    s.append(ln("M 60 82 Q 160 52 280 74", 6, "#fff", extra='opacity=".7"'))
+    s.append(f'<rect x="300" y="50" width="26" height="66" rx="8" fill="#8E97A8" stroke="{INK}" stroke-width="6"/>')
+    s.append(f'<rect x="322" y="62" width="130" height="42" rx="18" fill="{P["marron2"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="360" cy="83" r="6" fill="#E8D7A0"/><circle cx="420" cy="83" r="6" fill="#E8D7A0"/>')
+    return "".join(s)
+
+
+def sombrero_bruja():
+    return (ln("M 30 230 Q 150 200 270 230 Q 280 250 250 256 L 50 256 Q 20 250 30 230 Z", SW, INK, "#3B2A55")
+            + ln("M 80 224 L 150 30 Q 166 0 190 30 Q 180 40 176 60 L 220 224 Z", SW, INK, "#3B2A55")
+            + f'<rect x="84" y="196" width="134" height="30" fill="{P["violeta"]}" stroke="{INK}" stroke-width="6"/>'
+            + f'<rect x="136" y="194" width="30" height="34" rx="4" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="5"/>')
+
+
+def corona():
+    d = "M 30 200 L 20 60 L 90 120 L 150 30 L 210 120 L 280 60 L 270 200 Z"
+    return (ln(d, SW, INK, P["amarillo"]) + f'<rect x="30" y="180" width="240" height="40" rx="10" fill="#E8B400" stroke="{INK}" stroke-width="{SW}"/>'
+            + "".join(f'<circle cx="{x}" cy="200" r="11" fill="{c}" stroke="{INK}" stroke-width="4"/>'
+                      for x, c in [(90, P["rojo"]), (150, P["remera"]), (210, P["verde"])]))
+
+
+def poste():
+    """Poste de madera alto (200x900) con anillo de hierro arriba; ancla abajo."""
+    return (f'<rect x="60" y="20" width="80" height="870" rx="16" fill="{P["marron"]}" stroke="{INK}" stroke-width="{SW}"/>'
+            + ln("M 82 60 L 82 860", 6, P["marron2"]) + ln("M 116 120 L 116 700", 6, P["marron2"])
+            + f'<circle cx="100" cy="90" r="34" fill="none" stroke="#5B5566" stroke-width="16"/>'
+            + f'<circle cx="100" cy="90" r="34" fill="none" stroke="{INK}" stroke-width="4"/>')
+
+
+def cuerdas():
+    """Cuerdas que atan al prisionero al poste (se ponen encima, 360x420)."""
+    s = []
+    for y in (90, 300):
+        d = f"M 20 {y} Q 180 {y + 40} 340 {y}"
+        s.append(stroke_path(d, "#C9A46A", 22))
+        for x in range(60, 330, 40):
+            s.append(ln(f"M {x} {y + 4 + 20 * math.sin(math.pi * (x - 20) / 320)} l 10 14", 4, "#8E6E3E"))
+    return "".join(s)
+
+
+def cuerda_vertical():
+    """Soga que cuelga del techo (40x700); ancla arriba."""
+    s = [f'<rect x="10" y="0" width="20" height="700" rx="8" fill="#C9A46A" stroke="{INK}" stroke-width="5"/>']
+    s += [ln(f"M 12 {y} L 28 {y + 14}", 4, "#8E6E3E") for y in range(10, 690, 28)]
+    return "".join(s)
+
+
+def microbio(color, color2, face="malo"):
+    rnd = random.Random(len(color))
+    pts = []
+    for i in range(14):
+        a = i * 2 * math.pi / 14
+        r = 100 + (18 if i % 2 else -6) + rnd.uniform(-6, 6)
+        pts.append(f"{150 + r * math.cos(a):.1f} {150 + r * math.sin(a):.1f}")
+    d = "M " + " Q ".join(f"{pts[i]} {pts[(i + 1) % 14]}" for i in range(0, 14, 2)) + " Z"
+    s = [ln(d, SW, INK, color)]
+    s += [f'<circle cx="{x}" cy="{y}" r="{r}" fill="{color2}"/>' for x, y, r in [(100, 210, 14), (210, 220, 10), (220, 100, 12)]]
+    s.append(cara(face, 150, 150, .6, "mb"))
+    return "".join(s)
+
+
+def gota():
+    d = "M 60 10 C 60 10 110 80 110 112 A 50 50 0 0 1 10 112 C 10 80 60 10 60 10 Z"
+    return ln(d, SW, INK, "#D7263D") + ln("M 36 104 Q 36 84 50 70", 8, "#fff", extra='opacity=".6"')
+
+
+def antorcha():
+    """Llama de antorcha sobre un soporte (160x300); ancla abajo."""
+    s = [ln("M 60 170 L 100 170 L 92 290 L 68 290 Z", SW, INK, P["marron2"])]
+    s.append(f'<rect x="44" y="150" width="72" height="32" rx="10" fill="#5B5566" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<g transform="translate(80 160) scale(0.55) translate(-110 -260)">{llama()}</g>')
+    return "".join(s)
+
+
+def calavera():
+    s = [ln("M 40 120 Q 40 30 130 30 Q 220 30 220 120 Q 220 170 190 180 L 190 220 L 70 220 L 70 180 Q 40 170 40 120 Z",
+            SW, INK, P["hueso"])]
+    s.append(f'<ellipse cx="95" cy="120" rx="28" ry="32" fill="{INK}"/><ellipse cx="165" cy="120" rx="28" ry="32" fill="{INK}"/>')
+    s.append(ln("M 130 150 L 118 176 L 142 176 Z", 5, INK, INK))
+    s += [ln(f"M {x} 196 L {x} 220", 5) for x in (100, 130, 160)]
+    return "".join(s)
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
 
@@ -1008,6 +1270,76 @@ def fondo_espacio_rojo():
 
 def fondo_espacio_violeta():
     return fondo_espacio("violeta")
+
+
+def fondo_mazmorra():
+    """Pared de piedra con cadenas, piso oscuro y viñeta. Las antorchas van aparte (para animarlas)."""
+    rnd = random.Random(21)
+    s = [f'<rect width="{W}" height="{H}" fill="#3B3F52"/>']
+    bh, y, row = 96, 0, 0
+    while y < 1240:
+        off = 0 if row % 2 == 0 else -80
+        x = off
+        while x < W:
+            bw = rnd.choice([150, 170, 190])
+            c = rnd.choice(["#4A4F66", "#454A60", "#50556D", "#42475C"])
+            s.append(f'<rect x="{x + 5}" y="{y + 5}" width="{bw - 10}" height="{bh - 10}" rx="14" fill="{c}" '
+                     f'stroke="#2C2F3E" stroke-width="5"/>')
+            x += bw
+        y += bh
+        row += 1
+    # cadenas colgando
+    for cx, n in [(180, 7), (900, 9)]:
+        for i in range(n):
+            yy = 40 + i * 46
+            if i % 2 == 0:
+                s.append(f'<ellipse cx="{cx}" cy="{yy}" rx="16" ry="26" fill="none" stroke="#8E97A8" stroke-width="9"/>')
+            else:
+                s.append(f'<rect x="{cx - 4}" y="{yy - 24}" width="8" height="48" rx="4" fill="#8E97A8"/>')
+        s.append(f'<circle cx="{cx}" cy="{40 + n * 46}" r="30" fill="none" stroke="#8E97A8" stroke-width="12"/>')
+    s.append(f'<rect x="0" y="1230" width="{W}" height="{H - 1230}" fill="#2A2C38"/>')
+    s.append(ln(f"M 0 1232 L {W} 1232", 10, "#1E1F28"))
+    for y in range(1330, H, 130):
+        s.append(ln(f"M 0 {y} L {W} {y}", 5, "#23252F"))
+    for x in range(-200, W + 400, 260):
+        s.append(ln(f"M {W / 2 + (x - W / 2) * .3:.0f} 1232 L {x} {H}", 5, "#23252F"))
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#vig)"/>')
+    defs = ('<radialGradient id="vig" cx="0.5" cy="0.45" r="0.75"><stop offset="0.45" stop-color="#FF9A3C" stop-opacity="0.10"/>'
+            '<stop offset="1" stop-color="#0A0A12" stop-opacity="0.65"/></radialGradient>')
+    return "".join(s), defs
+
+
+def fondo_pantano():
+    """Pantano de noche: cielo verdoso, luna, árboles secos y agua turbia (desde y=1080)."""
+    rnd = random.Random(31)
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    s.append(f'<circle cx="820" cy="420" r="120" fill="#F4F1C9" opacity=".9"/>'
+             f'<circle cx="820" cy="420" r="190" fill="#F4F1C9" opacity=".12"/>')
+    for _ in range(40):
+        s.append(f'<circle cx="{rnd.uniform(0, W):.0f}" cy="{rnd.uniform(0, 900):.0f}" r="{rnd.choice([2, 2.5, 3])}" '
+                 f'fill="#fff" opacity="{rnd.uniform(.3, .8):.2f}"/>')
+    # árboles secos (siluetas)
+    for x0, k in [(90, 1.0), (980, .85), (300, .6)]:
+        g = (f"M {x0 - 26 * k} 1090 L {x0 - 14 * k} {1090 - 520 * k} L {x0 - 90 * k} {1090 - 700 * k} "
+             f"L {x0 - 6 * k} {1090 - 580 * k} L {x0 + 10 * k} {1090 - 760 * k} L {x0 + 20 * k} {1090 - 560 * k} "
+             f"L {x0 + 100 * k} {1090 - 640 * k} L {x0 + 26 * k} {1090 - 470 * k} L {x0 + 30 * k} 1090 Z")
+        s.append(f'<path d="{g}" fill="#1C2620"/>')
+    s.append(ln(f"M -10 1090 Q 270 1060 540 1090 Q 810 1120 1090 1080 L 1090 1930 L -10 1930 Z", SW, INK, "#3E5A3A"))
+    s.append(f'<rect x="0" y="1090" width="{W}" height="{H - 1090}" fill="url(#agua)"/>')
+    for _ in range(18):
+        x, y = rnd.uniform(40, 1040), rnd.uniform(1160, 1880)
+        w = rnd.uniform(60, 140)
+        s.append(ln(f"M {x - w / 2:.0f} {y:.0f} Q {x:.0f} {y - 12:.0f} {x + w / 2:.0f} {y:.0f}", 5, "#6E8C5E", extra='opacity=".6"'))
+    # juncos
+    for x in [40, 70, 1010, 1040, 520]:
+        h = rnd.uniform(140, 220)
+        s.append(stroke_path(f"M {x} 1110 Q {x + 10} {1110 - h / 2:.0f} {x - 6} {1110 - h:.0f}", "#4E6B3A", 10, INK, 20))
+        s.append(f'<rect x="{x - 14}" y="{1110 - h - 40:.0f}" width="22" height="56" rx="11" fill="#6B4A2F" stroke="{INK}" stroke-width="5"/>')
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2433"/>'
+            '<stop offset="0.55" stop-color="#2F4A3E"/></linearGradient>'
+            '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5A3A" stop-opacity="0"/>'
+            '<stop offset="1" stop-color="#1A2A1C" stop-opacity=".8"/></linearGradient>')
+    return "".join(s), defs
 
 
 def fondo_liso():
@@ -1190,7 +1522,35 @@ def build():
     add("corazon", 160, 160, corazon())
     add("estrellita", 60, 60, estrellita())
     add("punto_estrella", 20, 20, punto_estrella())
+    # ---- short "3 torturas"
+    for name, kw in PRISIONERO_VARIANTS.items():
+        add(name, 520, 820, prisionero(**kw), anchor=(0.5, 1.0))
+    add("prisionero_miedo__blink", 520, 820, prisionero(eyes="closed"), anchor=(0.5, 1.0))
+    add("verdugo", 520, 820, verdugo("mira"), anchor=(0.5, 1.0))
+    add("verdugo_frente", 520, 820, verdugo("frente"), anchor=(0.5, 1.0))
+    add("verdugo_risa", 520, 820, verdugo("risa"), anchor=(0.5, 1.0))
+    for f in ("miedo", "asco", "dolor", "nervio"):
+        add(f"barcas_{f}", 760, 420, barcas(f))
+    add("barcas_miel", 760, 420, barcas("asco", miel=True))
+    add("barcas_miel_dolor", 760, 420, barcas("dolor", miel=True))
+    add("jarra_leche", 280, 320, jarra_leche())
+    add("tarro_miel", 280, 300, tarro_miel())
+    add("mosca", 100, 80, mosca())
+    add("olor", 170, 220, olor(), anchor=(0.5, 1.0))
+    add("sierra", 900, 200, sierra())
+    add("cuchillo", 470, 140, cuchillo())
+    add("sombrero_bruja", 300, 270, sombrero_bruja())
+    add("corona", 300, 240, corona())
+    add("poste", 200, 900, poste(), anchor=(0.5, 1.0))
+    add("cuerdas", 360, 420, cuerdas())
+    add("cuerda", 40, 700, cuerda_vertical(), anchor=(0.5, 0.0))
+    add("microbio_verde", 300, 300, microbio("#8BD06A", "#5FA845"))
+    add("microbio_violeta", 300, 300, microbio("#B79CFF", "#8E6EE8", "sorpresa"))
+    add("gota", 120, 170, gota())
+    add("antorcha", 160, 300, antorcha(), anchor=(0.5, 1.0))
+    add("calavera", 260, 240, calavera())
     for name, fn in [("fondo_liso", fondo_liso), ("fondo_burst", fondo_burst), ("fondo_piel", fondo_piel),
+                     ("fondo_mazmorra", fondo_mazmorra), ("fondo_pantano", fondo_pantano),
                      ("fondo_exterior", fondo_exterior), ("fondo_cabeza", fondo_cabeza),
                      ("fondo_espacio", fondo_espacio_azul), ("fondo_espacio_rojo", fondo_espacio_rojo),
                      ("fondo_espacio_violeta", fondo_espacio_violeta)]:

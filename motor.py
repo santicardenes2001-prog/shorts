@@ -11,7 +11,7 @@ Extras (todo opcional desde el JSON):
   - elemento "particulas": lluvia/viento/estrellas con semilla fija (clase Particles).
   - idle "latido" (la opacidad late: halos, brasas) y "titila" (estrellas).
   - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
-  - sonidos: viento, cristal, brillo, tictac, zumbido.
+  - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe.
 """
 import argparse
 import difflib
@@ -467,6 +467,9 @@ class Element:
                 # brillo que late: la opacidad sube y baja (halos, brasas)
                 v = .5 + .5 * math.sin(2 * math.pi * idl.get("vel", 1.2) * t + ph)
                 st["alpha"] *= 1 - .5 * min(a, 2) * (1 - v)
+            elif f == "vaiven":
+                # ida y vuelta horizontal (serrucho, péndulo); fuerza 1 = ±40 px
+                st["x"] += 40 * a * math.sin(2 * math.pi * idl.get("vel", 2.5) * t + ph)
             elif f == "titila":
                 # parpadeo irregular de estrella: suma de dos senos rápidos
                 v = math.sin(2 * math.pi * 2.3 * t + ph) * math.sin(2 * math.pi * 3.7 * t + 2 * ph)
@@ -490,7 +493,8 @@ class Particles(Element):
     "particulas": {"a": ["vidrio_a", "vidrio_b"], "n": 40, "semilla": 1,
                    "zona": [x0, y0, x1, y1], "vx": [900, 1400], "vy": [-40, 60],
                    "s": [.5, 1], "r": [-8, 8], "giro": [0, 0], "alpha": [.7, 1],
-                   "titila": 0, "orientar": false}
+                   "titila": 0, "orientar": false, "ondula": [amplitud_px, vueltas_por_seg]}
+    "ondula" suma un vaivén circular propio de cada partícula (moscas que zumban).
     in/out, fx_in/fx_out (fade, pop...), x/y/s/alpha y keys afectan a todo el grupo
     (x/y desplazan respecto de la posición de reposo W/2, H/2).
     """
@@ -511,6 +515,7 @@ class Particles(Element):
         self.names = names
         self.titila = pc.get("titila", 0)
         self.orientar = pc.get("orientar", False)
+        self.ondula = pc.get("ondula")
 
     def draw(self, frame, t):
         base = Element.state(self, t)
@@ -523,6 +528,11 @@ class Particles(Element):
             x = x0 + (p["x"][i] - x0 + p["vx"][i] * dt) % zw + dx
             y = y0 + (p["y"][i] - y0 + p["vy"][i] * dt) % zh + dy
             r = p["r"][i] + p["giro"][i] * dt
+            if self.ondula:
+                amp, f = self.ondula
+                w = 2 * math.pi * f * (1 + .3 * math.sin(p["ph"][i] * 3))
+                x += amp * math.sin(w * t + p["ph"][i])
+                y += amp * .7 * math.sin(1.3 * w * t + 2 * p["ph"][i])
             if self.orientar:
                 r += math.degrees(math.atan2(p["vy"][i], p["vx"][i]))
             a = base["alpha"] * p["alpha"][i]
@@ -901,6 +911,47 @@ def synth(kind, ph=0.0):
         sig = (np.sin(2 * np.pi * np.cumsum(f) / SR) + .4 * np.sin(2 * np.pi * np.cumsum(2 * f) / SR))
         env = np.minimum(1, t / .25) * np.exp(-np.clip(t - .5, 0, None) * 6)
         return (sig / 1.4 * env * .8).astype(np.float32)
+    if kind == "mosca":
+        # zumbido de moscas: diente de sierra grave con trémolo y vibrato
+        d = 1.6
+        t = np.arange(int(d * SR)) / SR
+        f = 210 * var + 18 * np.sin(2 * np.pi * 7 * t)
+        phase = np.cumsum(f) / SR
+        saw = 2 * (phase % 1) - 1
+        trem = .6 + .4 * np.sin(2 * np.pi * 23 * t)
+        env = np.minimum(1, t / .2) * np.minimum(1, (d - t) / .4)
+        sig = np.convolve(saw * trem * env, np.ones(6, dtype=np.float32) / 6, mode="same")
+        return (sig * .35).astype(np.float32)
+    if kind == "sierra":
+        # serrucho: tres pasadas de ruido áspero que suben y bajan
+        d = 1.2
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        x = _noise(n, 4)
+        hp = x - np.convolve(x, np.ones(8, dtype=np.float32) / 8, mode="same")
+        grain = .6 + .4 * np.sign(np.sin(2 * np.pi * 90 * t))
+        env = np.abs(np.sin(np.pi * t / .4)) ** .7
+        return (hp / (np.abs(hp).max() + 1e-6) * grain * env * .6).astype(np.float32)
+    if kind == "filo":
+        # "shing" metálico de cuchillo: barrido agudo + resonancia
+        d = .8
+        t = np.arange(int(d * SR)) / SR
+        x = _noise(len(t), 5)
+        hp = x - np.convolve(x, np.ones(4, dtype=np.float32) / 4, mode="same")
+        swish = hp * np.exp(-((t - .08) ** 2) / .003)
+        ring = (np.sin(2 * np.pi * 3400 * t) + .6 * np.sin(2 * np.pi * 5100 * t)) * np.exp(-t * 5) * (t > .05)
+        sig = .5 * swish / (np.abs(swish).max() + 1e-6) + .4 * ring
+        return (sig * .7).astype(np.float32)
+    if kind == "golpe":
+        # golpe dramático: bombo grave + ruido corto (para ganchos y cortes)
+        d = .7
+        t = np.arange(int(d * SR)) / SR
+        f = 45 + 110 * np.exp(-t * 18)
+        boom = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 5)
+        x = _noise(len(t), 6)
+        click = np.convolve(x, np.ones(20, dtype=np.float32) / 20, mode="same") * np.exp(-t * 40)
+        sig = boom + 2 * click
+        return (sig / (np.abs(sig).max() + 1e-6) * .95).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 
