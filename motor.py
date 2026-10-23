@@ -6,6 +6,12 @@
 Las acciones se anclan a palabras del guion ("b3:gravedad" = cuando se dice
 "gravedad" en el bloque 3). Sin audio, los tiempos se estiman por largo de
 palabra; con una grabación + palabras.json (Whisper) se usan los tiempos reales.
+
+Extras (todo opcional desde el JSON):
+  - elemento "particulas": lluvia/viento/estrellas con semilla fija (clase Particles).
+  - idle "latido" (la opacidad late: halos, brasas) y "titila" (estrellas).
+  - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
+  - sonidos: viento, cristal, brillo, tictac, zumbido.
 """
 import argparse
 import difflib
@@ -457,6 +463,14 @@ class Element:
                 v = math.sin(2 * math.pi * 3 * t + ph)
                 st["sy"] *= 1 + .035 * a * v
                 st["sx"] *= 1 - .02 * a * v
+            elif f == "latido":
+                # brillo que late: la opacidad sube y baja (halos, brasas)
+                v = .5 + .5 * math.sin(2 * math.pi * idl.get("vel", 1.2) * t + ph)
+                st["alpha"] *= 1 - .5 * min(a, 2) * (1 - v)
+            elif f == "titila":
+                # parpadeo irregular de estrella: suma de dos senos rápidos
+                v = math.sin(2 * math.pi * 2.3 * t + ph) * math.sin(2 * math.pi * 3.7 * t + 2 * ph)
+                st["alpha"] *= clamp(1 - .6 * a * (.5 + .5 * v))
             else:
                 raise ValueError(f"idle desconocido: {f}")
         # parpadeo
@@ -466,6 +480,100 @@ class Element:
                 asset = asset + "__blink"
         st["asset"] = asset
         return st
+
+
+class Particles(Element):
+    """Muchas copias de uno o varios recursos con posición, velocidad, escala, rotación
+    y giro aleatorios (semilla fija). Se mueven en línea recta y reaparecen del otro
+    lado de la zona, así que sirven para lluvias, viento, nieve o estrellas que titilan.
+
+    "particulas": {"a": ["vidrio_a", "vidrio_b"], "n": 40, "semilla": 1,
+                   "zona": [x0, y0, x1, y1], "vx": [900, 1400], "vy": [-40, 60],
+                   "s": [.5, 1], "r": [-8, 8], "giro": [0, 0], "alpha": [.7, 1],
+                   "titila": 0, "orientar": false}
+    in/out, fx_in/fx_out (fade, pop...), x/y/s/alpha y keys afectan a todo el grupo
+    (x/y desplazan respecto de la posición de reposo W/2, H/2).
+    """
+
+    def __init__(self, spec, tl, scene=None, idx=0):
+        pc = spec["particulas"]
+        names = pc["a"] if isinstance(pc["a"], list) else [pc["a"]]
+        super().__init__(dict(spec, a=names[0]), tl, scene, idx)
+        self.assets_extra = names
+        rnd = np.random.default_rng(pc.get("semilla", 1))
+        n = pc.get("n", 30)
+        self.zona = pc.get("zona", [0, 0, W, H])
+        x0, y0, x1, y1 = self.zona
+        U = lambda key, d: rnd.uniform(*pc.get(key, d), size=n)
+        self.p = dict(x=rnd.uniform(x0, x1, n), y=rnd.uniform(y0, y1, n), vx=U("vx", [0, 0]), vy=U("vy", [0, 0]),
+                      s=U("s", [1, 1]), r=U("r", [0, 0]), giro=U("giro", [0, 0]), alpha=U("alpha", [1, 1]),
+                      ph=rnd.uniform(0, 2 * math.pi, n), k=rnd.integers(0, len(names), n))
+        self.names = names
+        self.titila = pc.get("titila", 0)
+        self.orientar = pc.get("orientar", False)
+
+    def draw(self, frame, t):
+        base = Element.state(self, t)
+        dx, dy = base["x"] - self.sp.get("x", W / 2), base["y"] - self.sp.get("y", H / 2)
+        x0, y0, x1, y1 = self.zona
+        zw, zh = x1 - x0, y1 - y0
+        dt = t - self.tin
+        p = self.p
+        for i in range(len(p["x"])):
+            x = x0 + (p["x"][i] - x0 + p["vx"][i] * dt) % zw + dx
+            y = y0 + (p["y"][i] - y0 + p["vy"][i] * dt) % zh + dy
+            r = p["r"][i] + p["giro"][i] * dt
+            if self.orientar:
+                r += math.degrees(math.atan2(p["vy"][i], p["vx"][i]))
+            a = base["alpha"] * p["alpha"][i]
+            if self.titila:
+                a *= clamp(1 - self.titila * (.5 + .5 * math.sin(2 * math.pi * 2.6 * t + p["ph"][i])))
+            st = dict(x=x, y=y, s=base["s"] * p["s"][i], sx=1.0, sy=1.0, r=round(r), alpha=a, crop=1.0,
+                      asset=self.names[p["k"][i]])
+            draw_element(frame, self, st)
+
+
+# ================================================================ cámara
+class Camera:
+    """Zoom/paneo de la escena entera (fondo + elementos; no afecta persistentes ni subtítulos).
+
+    "camara": {"keys": [{"at": "b3:vientos", "dur": .8, "zoom": 1.2, "x": 540, "y": 800, "ease": "inout"}],
+               "temblor": [{"from": "b5", "to": "b5>", "fuerza": 1}]}
+    x/y = punto de la escena que queda en el centro del encuadre.
+    """
+
+    def __init__(self, spec, tl, scene):
+        R = lambda r: tl.resolve(r, scene)
+        self.keys = sorted([dict(k, t=R(k["at"])) for k in spec.get("keys", [])], key=lambda k: k["t"])
+        self.shake = [dict(s, t0=R(s["from"]), t1=R(s["to"])) for s in spec.get("temblor", [])]
+
+    def state(self, t):
+        st = dict(zoom=1.0, x=W / 2, y=H / 2)
+        for k in self.keys:
+            if t < k["t"]:
+                break
+            p = ease(k.get("ease", "inout"), (t - k["t"]) / max(k.get("dur", .6), 1e-6))
+            for prop in ("zoom", "x", "y"):
+                if prop in k:
+                    st[prop] += (k[prop] - st[prop]) * p
+        for sh in self.shake:
+            if sh["t0"] <= t < sh["t1"]:
+                a = sh.get("fuerza", 1.0)
+                st["x"] += 9 * a * math.sin(2 * math.pi * 13 * t) + 5 * a * math.sin(2 * math.pi * 7 * t)
+                st["y"] += 7 * a * math.sin(2 * math.pi * 11 * t + 1)
+                st["zoom"] = max(st["zoom"], 1.03)   # un poco de margen para que no se vean bordes
+        return st
+
+    def apply(self, frame, t):
+        st = self.state(t)
+        z = max(st["zoom"], 1.0)
+        if z == 1.0 and st["x"] == W / 2 and st["y"] == H / 2:
+            return frame
+        cw, ch = W / z, H / z
+        cx = clamp(st["x"], cw / 2, W - cw / 2)
+        cy = clamp(st["y"], ch / 2, H - ch / 2)
+        box = (cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2)
+        return frame.resize((W, H), Image.BICUBIC, box=box)
 
 
 # ================================================================ dibujo
@@ -603,13 +711,17 @@ class Project:
             self.words = estimate_times(beats, doc.get("velocidad", 1.0))
         self.tl = Timeline(doc, self.words)
         self.scenes = []
+        make = lambda e, sc_i, j: (Particles if "particulas" in e else Element)(e, self.tl, sc_i, j)
         for i, sc in enumerate(doc["escenas"]):
-            els = [Element(e, self.tl, i, j) for j, e in enumerate(sc.get("elementos", []))]
-            self.scenes.append(dict(sc, els=els))
-        self.persist = [Element(dict(e, z=e.get("z", 50)), self.tl, None, j) for j, e in enumerate(doc.get("persistentes", []))]
+            els = [make(e, i, j) for j, e in enumerate(sc.get("elementos", []))]
+            cam = Camera(sc["camara"], self.tl, i) if sc.get("camara") else None
+            self.scenes.append(dict(sc, els=els, cam=cam))
+        self.persist = [make(dict(e, z=e.get("z", 50)), None, j) for j, e in enumerate(doc.get("persistentes", []))]
         self.caps = Captions(self.words, doc.get("subtitulos", {})) if doc.get("subtitulos", {}).get("activos", True) else None
         for el in self.all_elements():
             img_key(el.asset)
+            for a in getattr(el, "assets_extra", []):
+                img_key(a)
             for sw in el.swaps:
                 img_key(sw["a"])
             if el.seq:
@@ -641,9 +753,17 @@ class Project:
         si = self.scene_at(t)
         sc = self.scenes[si]
         frame = self.bg[sc["fondo"]].copy()
-        els = [e for e in sc["els"] + self.persist if e.active(t)]
-        for el in sorted(els, key=lambda e: e.z):
-            draw_element(frame, el, el.state(t))
+        cam = sc["cam"]
+        # con cámara, los persistentes se dibujan después del encuadre (quedan fijos)
+        groups = [sc["els"], self.persist] if cam else [sc["els"] + self.persist]
+        for gi, group in enumerate(groups):
+            for el in sorted([e for e in group if e.active(t)], key=lambda e: e.z):
+                if isinstance(el, Particles):
+                    el.draw(frame, t)
+                else:
+                    draw_element(frame, el, el.state(t))
+            if cam and gi == 0:
+                frame = cam.apply(frame, t)
         if sc.get("flash"):
             q = (t - self.tl.scene_start[si]) / .25
             if q < 1:
@@ -725,6 +845,62 @@ def synth(kind, ph=0.0):
         tone = np.sin(2 * np.pi * np.cumsum(200 + 900 * t / d) / SR) * .3
         sig = (lp / (np.abs(lp).max() + 1e-6) + tone) * env
         return (sig / (np.abs(sig).max() + 1e-6) * .8).astype(np.float32)
+    if kind == "viento":
+        # ráfaga larga: ruido filtrado con un "silbido" de banda que sube y baja
+        d = 2.2
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        x = _noise(n, 3)
+        lp = np.convolve(x, np.ones(30, dtype=np.float32) / 30, mode="same")
+        band = lp - np.convolve(lp, np.ones(300, dtype=np.float32) / 300, mode="same")
+        swell = .55 + .45 * np.sin(2 * np.pi * .9 * t + ph)
+        env = np.minimum(1, t / .35) * np.minimum(1, (d - t) / .7)
+        sig = band / (np.abs(band).max() + 1e-6) * swell * env
+        return (sig * .8).astype(np.float32)
+    if kind == "cristal":
+        # tintineo de vidrio: parciales agudas desafinadas que se apagan rápido, en tres golpecitos
+        d = .7
+        t = np.arange(int(d * SR)) / SR
+        sig = np.zeros_like(t)
+        for k, (t0, f) in enumerate([(0, 2637), (.07, 3520), (.15, 3136)]):
+            tt = np.clip(t - t0, 0, None)
+            on = (t >= t0).astype(np.float32)
+            ff = f * var
+            sig += on * (np.sin(2 * np.pi * ff * tt) + .5 * np.sin(2 * np.pi * ff * 2.76 * tt)) * np.exp(-tt * 14)
+        return (sig / (np.abs(sig).max() + 1e-6) * .55).astype(np.float32)
+    if kind == "brillo":
+        # destello mágico: arpegio rápido ascendente de campanitas
+        d = 1.0
+        t = np.arange(int(d * SR)) / SR
+        sig = np.zeros_like(t)
+        for k, f in enumerate([1319, 1568, 1976, 2637, 3136]):
+            t0 = k * .06
+            tt = np.clip(t - t0, 0, None)
+            sig += (t >= t0) * np.sin(2 * np.pi * f * tt) * np.exp(-tt * 6)
+        return (sig / (np.abs(sig).max() + 1e-6) * .5).astype(np.float32)
+    if kind == "tictac":
+        # reloj acelerado: clics cada vez más seguidos
+        d = 1.0
+        n = int(d * SR)
+        sig = np.zeros(n, dtype=np.float32)
+        click = np.sin(2 * np.pi * 2200 * np.arange(int(.012 * SR)) / SR) * np.exp(-np.arange(int(.012 * SR)) / SR * 400)
+        tk, gap, hi = 0.0, .16, True
+        while tk < d - .02:
+            i0 = int(tk * SR)
+            c = click * (1 if hi else .7)
+            sig[i0:i0 + len(c)] += c[:n - i0]
+            tk += gap
+            gap = max(.05, gap * .85)
+            hi = not hi
+        return (sig * .7).astype(np.float32)
+    if kind == "zumbido":
+        # tono grave que crece (aparición de algo enorme o amenazante)
+        d = .9
+        t = np.arange(int(d * SR)) / SR
+        f = 70 + 30 * t / d
+        sig = (np.sin(2 * np.pi * np.cumsum(f) / SR) + .4 * np.sin(2 * np.pi * np.cumsum(2 * f) / SR))
+        env = np.minimum(1, t / .25) * np.exp(-np.clip(t - .5, 0, None) * 6)
+        return (sig / 1.4 * env * .8).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 

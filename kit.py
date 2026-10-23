@@ -148,13 +148,15 @@ def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra=""
     return "".join(s)
 
 
-def arms(kind):
+def arms(kind, skin=None, sleeve=None):
+    skin = skin or P["piel"]
+    sleeve = sleeve or P["remera"]
     def arm(d, hand):
         hx, hy = hand
-        return (stroke_path(d, P["piel"], 28)
-                + f'<circle cx="{hx}" cy="{hy}" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    sleeves = (f'<circle cx="186" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>'
-               f'<circle cx="334" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        return (stroke_path(d, skin, 28)
+                + f'<circle cx="{hx}" cy="{hy}" r="25" fill="{skin}" stroke="{INK}" stroke-width="{SW}"/>')
+    sleeves = (f'<circle cx="186" cy="500" r="30" fill="{sleeve}" stroke="{INK}" stroke-width="{SW}"/>'
+               f'<circle cx="334" cy="500" r="30" fill="{sleeve}" stroke="{INK}" stroke-width="{SW}"/>')
     if kind == "down":
         return arm("M 182 505 Q 150 575 148 652", (148, 655)) + arm("M 338 505 Q 370 575 372 652", (372, 655)) + sleeves, ""
     if kind == "up":   # detrás de la cabeza
@@ -162,26 +164,52 @@ def arms(kind):
         return sleeves, back
     if kind == "thumb":
         left = arm("M 182 505 Q 150 575 148 652", (148, 655))
-        right = (stroke_path("M 338 505 L 420 562 L 440 432", P["piel"], 28)
-                 + f'<rect x="428" y="368" width="24" height="52" rx="12" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
-                 + f'<circle cx="440" cy="432" r="28" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
+        right = (stroke_path("M 338 505 L 420 562 L 440 432", skin, 28)
+                 + f'<rect x="428" y="368" width="24" height="52" rx="12" fill="{skin}" stroke="{INK}" stroke-width="{SW}"/>'
+                 + f'<circle cx="440" cy="432" r="28" fill="{skin}" stroke="{INK}" stroke-width="{SW}"/>'
                  + ln("M 424 440 L 452 440", 5))
         return left + right + sleeves, ""
     raise ValueError(kind)
 
 
-def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=(0, 0), extra=""):
+TRAJE, TRAJE2, GUANTE = "#EEF2F7", "#C9D2E0", "#F7F7F2"
+
+
+def casco():
+    """Escafandra de astronauta: burbuja de vidrio sobre la cabeza de Vos."""
+    return (f'<circle cx="260" cy="268" r="212" fill="#BDEBFF" opacity=".22"/>'
+            f'<circle cx="260" cy="268" r="212" fill="none" stroke="{INK}" stroke-width="{SW + 1}"/>'
+            f'<circle cx="260" cy="268" r="203" fill="none" stroke="#fff" stroke-width="5" opacity=".55"/>'
+            + ln("M 110 200 Q 130 110 220 78", 16, "#fff", extra='opacity=".75"')
+            + ln("M 96 262 L 98 240", 14, "#fff", extra='opacity=".75"')
+            + ln("M 392 400 Q 420 360 430 320", 9, "#fff", extra='opacity=".4"'))
+
+
+def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=(0, 0), extra="", astro=False):
     s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
-    front, back = arms(arm_kind)
+    if astro:   # mochila de oxígeno, detrás de todo
+        s.append(f'<rect x="120" y="440" width="280" height="250" rx="40" fill="{TRAJE2}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<rect x="132" y="470" width="30" height="120" rx="15" fill="{P["coral"]}" stroke="{INK}" stroke-width="6"/>')
+    front, back = arms(arm_kind, GUANTE if astro else None, TRAJE if astro else None)
     s.append(back)
+    legs = TRAJE if astro else P["pantalon"]
     for x in (205, 269):
-        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{P["pantalon"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{legs}" stroke="{INK}" stroke-width="{SW}"/>')
     for x in (220, 300):
         s.append(f'<ellipse cx="{x}" cy="794" rx="40" ry="21" fill="{INK}"/>')
-    s.append(f'<rect x="158" y="452" width="204" height="228" rx="72" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(ln("M 224 462 Q 260 494 296 462", 6))
+    body = TRAJE if astro else P["remera"]
+    s.append(f'<rect x="158" y="452" width="204" height="228" rx="72" fill="{body}" stroke="{INK}" stroke-width="{SW}"/>')
+    if astro:   # panel del pecho y cuello de la escafandra
+        s.append(f'<rect x="212" y="540" width="96" height="66" rx="14" fill="{TRAJE2}" stroke="{INK}" stroke-width="6"/>')
+        for i, c in enumerate([P["rojo"], P["amarillo"], P["verde"]]):
+            s.append(f'<circle cx="{234 + i * 26}" cy="573" r="9" fill="{c}" stroke="{INK}" stroke-width="4"/>')
+        s.append(f'<rect x="176" y="452" width="168" height="40" rx="20" fill="{TRAJE2}" stroke="{INK}" stroke-width="{SW}"/>')
+    else:
+        s.append(ln("M 224 462 Q 260 494 296 462", 6))
     s.append(front)
     s.append(head(eyes, brows, mouth_kind, look, extra))
+    if astro:
+        s.append(casco())
     return "".join(s)
 
 
@@ -196,9 +224,17 @@ VOS_VARIANTS = {
     "vos_estira": dict(eyes="closed", brows="neutral", mouth_kind="yawn", arm_kind="up"),
     "vos_cansado": dict(eyes="tired", brows="sad", mouth_kind="flat"),
     "vos_mira": dict(look=(1, -0.3)),
+    # astronauta (escafandra + traje)
+    "vos_astro": dict(astro=True),
+    "vos_astro_mira": dict(astro=True, look=(1, -0.3)),
+    "vos_astro_sorpresa": dict(astro=True, eyes="wide", brows="up", mouth_kind="o"),
+    "vos_astro_contento": dict(astro=True, eyes="happy", brows="happy", mouth_kind="open_smile"),
+    "vos_astro_pulgar": dict(astro=True, eyes="happy", brows="happy", mouth_kind="open_smile", arm_kind="thumb"),
+    "vos_astro_susto": dict(astro=True, eyes="wide", brows="sad", mouth_kind="o", look=(-1, 0)),
 }
 # Variantes de parpadeo automáticas para las que tienen ojos abiertos
-BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa"]
+BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa",
+             "vos_astro", "vos_astro_mira", "vos_astro_sorpresa", "vos_astro_susto"]
 
 # Bocas para lip sync (cabeza neutral con distintas bocas)
 LIPSYNC = {"vos_boca_cerrada": "flat", "vos_boca_media": "mid", "vos_boca_abierta": "o"}
@@ -580,8 +616,398 @@ def marco_foto():
     return "".join(s)
 
 
+# ---------------------------------------------------------------- planetas (short "3 planetas")
+def cara(kind, cx, cy, k=1.0, uid="c", fill_lid=None, tinta=INK):
+    """Cara genérica para planetas y objetos, en coordenadas locales (ojos en x=±62)
+    y escalada por k. kind: neutral lindo malo sorpresa contento susto cool celoso.
+    tinta: color de cejas y boca (más claro sobre objetos oscuros)."""
+    s = []
+
+    def L(d, w, fill="none"):
+        return ln(d, w, tinta, fill)
+    lid = fill_lid or INK
+
+    def ojo(x, rx, ry, pr, look=(0, 0), hl=True, i=0):
+        cid = f"{uid}o{i}"
+        px, py = x + look[0] * rx * .35, look[1] * ry * .35 + 4
+        o = (f'<clipPath id="{cid}"><ellipse cx="{x}" cy="0" rx="{rx}" ry="{ry}"/></clipPath>'
+             f'<ellipse cx="{x}" cy="0" rx="{rx}" ry="{ry}" fill="#fff" stroke="{INK}" stroke-width="6"/>'
+             f'<g clip-path="url(#{cid})"><circle cx="{px}" cy="{py}" r="{pr}" fill="{INK}"/>')
+        if hl:
+            o += (f'<circle cx="{px - pr * .35}" cy="{py - pr * .4}" r="{max(3, pr * .32)}" fill="#fff"/>'
+                  f'<circle cx="{px + pr * .4}" cy="{py + pr * .35}" r="{max(2, pr * .14)}" fill="#fff"/>')
+        return o + '</g>'
+
+    if kind in ("neutral", "lindo", "celoso"):
+        big = kind == "lindo"
+        rx, ry, pr = (36, 42, 22) if big else (30, 36, 15)
+        look = (1, 0) if kind == "celoso" else (0, 0)
+        s += [ojo(-62, rx, ry, pr, look, i=0), ojo(62, rx, ry, pr, look, i=1)]
+        if kind == "celoso":   # párpados a media asta y boca torcida
+            s.append(f'<path d="M -96 -40 L -28 -40 L -28 -6 Q -62 -14 -96 -6 Z" fill="{lid}" stroke="{INK}" stroke-width="6"/>'
+                     f'<path d="M 28 -40 L 96 -40 L 96 -6 Q 62 -14 28 -6 Z" fill="{lid}" stroke="{INK}" stroke-width="6"/>')
+            s.append(L("M -30 70 Q 0 58 34 64", 8))
+        elif big:
+            s.append(L("M -26 62 Q -13 76 0 64 Q 13 76 26 62", 7))
+        else:
+            s.append(L("M -26 62 Q 0 82 26 62", 8))
+    elif kind == "malo":
+        s += [ojo(-62, 32, 30, 12, (.6, .3), hl=False, i=0), ojo(62, 32, 30, 12, (-.6, .3), hl=False, i=1)]
+        # cejas en V
+        s.append(L("M -108 -52 L -24 -14", 14) + L("M 108 -52 L 24 -14", 14))
+        # sonrisa malvada con dientes
+        mouth = "M -70 44 Q 0 66 70 44 Q 40 112 0 112 Q -40 112 -70 44 Z"
+        s.append(f'<clipPath id="{uid}m"><path d="{mouth}"/></clipPath>'
+                 f'<path d="{mouth}" fill="{P["boca"]}"/>'
+                 f'<g clip-path="url(#{uid}m)"><rect x="-80" y="30" width="160" height="34" fill="#fff"/>'
+                 + "".join(L(f"M {x} 40 L {x} 66", 4) for x in (-36, -12, 12, 36))
+                 + L("M -80 64 L 80 64", 4) + '</g>' + L(mouth, 7))
+    elif kind in ("sorpresa", "susto"):
+        s += [ojo(-62, 36, 44, 10, i=0), ojo(62, 36, 44, 10, i=1)]
+        if kind == "sorpresa":
+            s.append(L("M -96 -66 Q -62 -88 -28 -70", 11) + L("M 28 -70 Q 62 -88 96 -66", 11))
+            s.append(f'<ellipse cx="0" cy="76" rx="20" ry="26" fill="{P["boca"]}" stroke="{INK}" stroke-width="7"/>')
+        else:
+            s.append(L("M -96 -56 L -30 -72", 11) + L("M 30 -72 L 96 -56", 11))
+            s.append(L("M -40 76 Q -27 62 -13 76 Q 0 90 13 76 Q 27 62 40 76", 8))
+    elif kind == "contento":
+        s.append(L("M -94 10 Q -62 -28 -30 10", 10) + L("M 30 10 Q 62 -28 94 10", 10))
+        mouth = "M -46 50 Q 0 110 46 50 Z"
+        s.append(f'<clipPath id="{uid}m"><path d="{mouth}"/></clipPath><path d="{mouth}" fill="{P["boca"]}"/>'
+                 f'<g clip-path="url(#{uid}m)"><ellipse cx="0" cy="96" rx="26" ry="16" fill="{P["lengua"]}"/></g>'
+                 + L(mouth, 7))
+    elif kind == "cool":   # anteojos de sol
+        glass = "M -112 -30 L -18 -30 L -22 8 Q -26 34 -64 34 Q -102 34 -108 8 Z"
+        glass2 = "M 112 -30 L 18 -30 L 22 8 Q 26 34 64 34 Q 102 34 108 8 Z"
+        s.append(L(glass, 7, "#14121A") + L(glass2, 7, "#14121A"))
+        s.append(L("M -18 -24 Q 0 -32 18 -24", 7))
+        s.append(ln("M -92 -18 L -70 -18", 7, "#fff", extra='opacity=".7"') + ln("M 38 -18 L 60 -18", 7, "#fff", extra='opacity=".7"'))
+        s.append(L("M -20 70 Q 14 84 40 60", 8))
+    else:
+        raise ValueError(kind)
+    return f'<g transform="translate({cx} {cy}) scale({k})">' + "".join(s) + '</g>'
+
+
+def mejillas(cx, cy, k, color=None, op=.5):
+    color = color or P["rosa"]
+    return (f'<ellipse cx="{cx - 100 * k}" cy="{cy + 40 * k}" rx="{24 * k}" ry="{13 * k}" fill="{color}" opacity="{op}"/>'
+            f'<ellipse cx="{cx + 100 * k}" cy="{cy + 40 * k}" rx="{24 * k}" ry="{13 * k}" fill="{color}" opacity="{op}"/>')
+
+
+def esfera(cx, cy, r, base, bandas, uid, sombra="#000", brillo=True, contorno=INK):
+    """Planeta: círculo con bandas recortadas, sombra lateral y brillo."""
+    s = [f'<clipPath id="{uid}"><circle cx="{cx}" cy="{cy}" r="{r}"/></clipPath>',
+         f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{base}"/>', f'<g clip-path="url(#{uid})">']
+    s += bandas
+    s.append(f'<circle cx="{cx + r * .35}" cy="{cy + r * .3}" r="{r}" fill="none" stroke="{sombra}" '
+             f'stroke-width="{r * .5}" opacity=".18"/>')
+    s.append('</g>')
+    if brillo:
+        s.append(ln(f"M {cx - r * .72} {cy - r * .18} Q {cx - r * .66} {cy - r * .62} {cx - r * .22} {cy - r * .76}",
+                    r * .07, "#fff", extra='opacity=".55"'))
+    s.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{contorno}" stroke-width="{SW + 1}"/>')
+    return "".join(s)
+
+
+def banda(cy, h, color, cx=300, w=700, curva=18, op=1):
+    return (f'<path d="M {cx - w / 2} {cy} Q {cx} {cy + curva} {cx + w / 2} {cy} L {cx + w / 2} {cy + h} '
+            f'Q {cx} {cy + h + curva} {cx - w / 2} {cy + h} Z" fill="{color}" opacity="{op}"/>')
+
+
+def hd189733b(face="lindo"):
+    """Gigante gaseoso azul cobalto (600x600, radio 250)."""
+    bands = [banda(150, 40, "#4C7DFF"), banda(230, 26, "#2346A8"), banda(330, 50, "#4C7DFF", op=.8),
+             banda(420, 30, "#2346A8"), banda(470, 22, "#6E97FF", op=.7),
+             f'<ellipse cx="170" cy="455" rx="54" ry="20" fill="#2346A8" stroke="#1B3580" stroke-width="5"/>']
+    s = esfera(300, 300, 250, "#2F5BD8", bands, "hdc")
+    s += mejillas(300, 300, 1.1, P["rosa"] if face in ("lindo", "contento") else "#7A9BFF", .6)
+    s += cara(face, 300, 300, 1.1, "hd")
+    return s
+
+
+def tres2b(face="neutral", brasa=0.0):
+    """TrES-2b: esfera casi negra. brasa (0-1) agrega borde y grietas rojas encendidas."""
+    bands = [banda(170, 30, "#2E2A33"), banda(260, 20, "#17141B"), banda(360, 40, "#2E2A33"), banda(450, 24, "#17141B")]
+    if brasa > 0:
+        bands.append(f'<circle cx="300" cy="300" r="250" fill="none" stroke="#FF4A2A" stroke-width="{46 * brasa}" '
+                     f'opacity="{.55 * brasa}"/>')
+        bands.append(f'<circle cx="300" cy="300" r="250" fill="none" stroke="#FFB13B" stroke-width="{12 * brasa}" '
+                     f'opacity="{.7 * brasa}"/>')
+        for d in ["M 90 360 L 140 380 L 170 430", "M 470 160 L 430 200 L 452 240", "M 380 500 L 420 470 L 470 480"]:
+            bands.append(ln(d, 7, "#FF6A3D", extra=f'opacity="{.8 * brasa}"'))
+    s = esfera(300, 300, 250, "#221F27", bands, "trc", contorno=INK)
+    # borde gris para que se lea sobre el fondo oscuro
+    s += f'<circle cx="300" cy="300" r="244" fill="none" stroke="#5B5566" stroke-width="5" opacity=".7"/>'
+    s += cara(face, 300, 300, 1.1, "tr", fill_lid="#221F27", tinta="#FFB13B" if brasa else "#CFC8DA")
+    return s
+
+
+def jupiter(face="neutral"):
+    bands = [banda(110, 40, "#E8C9A0"), banda(170, 46, "#C98B5A"), banda(250, 30, "#F1DDBE"),
+             banda(320, 56, "#D9A06C"), banda(410, 36, "#B97A4D"), banda(470, 40, "#E8C9A0"),
+             f'<ellipse cx="420" cy="440" rx="60" ry="30" fill="#D9573E" stroke="#A8432F" stroke-width="6"/>']
+    s = esfera(300, 300, 250, "#F0D8B4", bands, "jpc")
+    s += mejillas(300, 300, 1.1)
+    s += cara(face, 300, 300, 1.1, "jp")
+    return s
+
+
+def tierra(face="contento"):
+    land = [ln("M 120 150 Q 180 90 250 130 Q 300 170 260 220 Q 220 260 240 320 Q 200 360 150 300 Q 110 240 120 150 Z",
+               0, "none", "#5BC46A"),
+            ln("M 360 110 Q 440 120 470 190 Q 480 260 420 250 Q 380 220 350 170 Z", 0, "none", "#5BC46A"),
+            ln("M 330 380 Q 400 360 450 420 Q 430 490 360 480 Q 310 440 330 380 Z", 0, "none", "#5BC46A"),
+            f'<ellipse cx="300" cy="560" rx="200" ry="60" fill="#fff"/>',
+            f'<ellipse cx="300" cy="40" rx="180" ry="50" fill="#fff"/>']
+    s = esfera(300, 300, 250, "#3E8EF0", land, "tic")
+    s += mejillas(300, 300, 1.1)
+    s += cara(face, 300, 300, 1.1, "ti")
+    return s
+
+
+def cancri(face="neutral", corte=False):
+    """55 Cancri e: roca oscura con grietas de lava. corte=True: cuña abierta con el interior de diamante."""
+    cx = cy = 300
+    r = 250
+    rnd = random.Random(55)
+    bands = []
+    for _ in range(14):   # manchas de roca
+        x, y, rr = rnd.uniform(80, 520), rnd.uniform(80, 520), rnd.uniform(20, 55)
+        bands.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rr:.0f}" fill="#3A2F45" opacity=".8"/>')
+    for d in ["M 50 380 L 100 400 L 120 370 L 160 390", "M 380 70 L 360 120 L 410 160",
+              "M 120 430 L 180 420 L 210 470 L 270 470", "M 470 330 L 520 360", "M 330 520 L 360 470 L 420 480"]:
+        bands.append(ln(d, 16, "#FF5A1F") + ln(d, 7, "#FFC23E"))
+    s = esfera(cx, cy, r, "#4E3F5C", bands, "cac")
+    if corte:
+        # cuña de 90° hacia abajo a la derecha (de 0° a 90°): capas de corteza, manto y núcleo de diamante
+        def sector(rad, fill, w=SW):
+            return (f'<path d="M {cx} {cy} L {cx + rad} {cy} A {rad} {rad} 0 0 1 {cx} {cy + rad} Z" '
+                    f'fill="{fill}" stroke="{INK}" stroke-width="{w}" stroke-linejoin="round"/>')
+        s += sector(r, "#2A2230")
+        s += sector(r - 34, "#6B5A73")          # manto de carbono
+        s += sector(r - 74, "#9FE8FF")          # diamante
+        # facetas del diamante
+        for a in range(0, 91, 18):
+            t = math.radians(a)
+            s += ln(f"M {cx} {cy} L {cx + (r - 74) * math.cos(t):.1f} {cy + (r - 74) * math.sin(t):.1f}", 4, "#5CC8F0")
+        for rr in (60, 120):
+            s += (f'<path d="M {cx + rr} {cy} A {rr} {rr} 0 0 1 {cx} {cy + rr}" fill="none" stroke="#5CC8F0" stroke-width="4"/>')
+        s += ln(f"M {cx + 40} {cy + 30} L {cx + 120} {cy + 50}", 9, "#fff", extra='opacity=".85"')
+        s += ln(f"M {cx + 30} {cy + 90} L {cx + 60} {cy + 140}", 9, "#fff", extra='opacity=".7"')
+        s += estrella4(cx + 110, cy + 110, 22, "#fff", 4)
+        # la cara se corre arriba a la izquierda para dejar ver el corte
+        s += cara(face, 230, 230, .9, "ca")
+    else:
+        s += mejillas(300, 300, 1.1, "#FF7A4A", .5)
+        s += cara(face, 300, 300, 1.1, "ca")
+    return s
+
+
+def halo(color, op=0.85):
+    """Resplandor redondo (degradado radial) para poner detrás de algo que brilla."""
+    defs = (f'<radialGradient id="hg" cx="0.5" cy="0.5" r="0.5">'
+            f'<stop offset="0.35" stop-color="{color}" stop-opacity="{op}"/>'
+            f'<stop offset="0.6" stop-color="{color}" stop-opacity="{op * .4}"/>'
+            f'<stop offset="1" stop-color="{color}" stop-opacity="0"/></radialGradient>')
+    return '<circle cx="400" cy="400" r="400" fill="url(#hg)"/>', defs
+
+
+def estrella_anfitriona():
+    """Estrella con más rayos que el sol y cara entrecerrada por el brillo."""
+    s = []
+    for i in range(14):
+        a = i * 360 / 14
+        L = 60 if i % 2 == 0 else 40
+        s.append(f'<rect x="{200 - 11}" y="{40 + (60 - L)}" width="22" height="{L}" rx="11" fill="#FFE27A" stroke="{INK}" '
+                 f'stroke-width="6" transform="rotate({a} 200 200)"/>')
+    s.append(f'<circle cx="200" cy="200" r="98" fill="#FFF4C2" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="200" cy="200" r="76" fill="#FFE27A"/>')
+    s.append(ln("M 160 196 Q 172 182 184 196", 7) + ln("M 216 196 Q 228 182 240 196", 7)
+             + ln("M 176 226 Q 200 246 224 226", 7))
+    s.append(f'<ellipse cx="150" cy="222" rx="14" ry="8" fill="{P["coral"]}" opacity=".6"/>'
+             f'<ellipse cx="250" cy="222" rx="14" ry="8" fill="{P["coral"]}" opacity=".6"/>')
+    return "".join(s)
+
+
+def rayo_luz():
+    """Haz de luz amarilla semitransparente que apunta a la derecha (ancla a la izquierda)."""
+    return (f'<path d="M 0 90 L 700 0 L 700 260 L 0 170 Z" fill="#FFE27A" opacity=".45"/>'
+            f'<path d="M 0 112 L 700 70 L 700 190 L 0 148 Z" fill="#FFF4C2" opacity=".55"/>')
+
+
+def vidrio(kind, fill="#9ADCFF"):
+    """Fragmento de vidrio filoso, alargado en horizontal (vuela hacia la derecha)."""
+    shapes = {"a": "M 10 40 L 150 20 L 190 34 L 60 62 Z",
+              "b": "M 8 30 L 120 8 L 150 30 L 110 52 L 30 50 Z",
+              "c": "M 10 36 L 90 14 L 120 40 L 40 58 Z"}
+    d = shapes[kind]
+    return (ln(d, 6, INK, fill)
+            + ln({"a": "M 50 42 L 140 28", "b": "M 40 32 L 110 18", "c": "M 34 38 L 86 24"}[kind], 6, "#fff",
+                 extra='opacity=".85"'))
+
+
+def viento():
+    return (ln("M 10 40 L 300 40 Q 350 40 350 10", 9, "#fff", extra='opacity=".85"'))
+
+
+def termometro(p):
+    """p de 0 a 1 = nivel del líquido."""
+    s = [f'<rect x="50" y="20" width="80" height="420" rx="40" fill="#fff" stroke="{INK}" stroke-width="{SW}"/>']
+    top = 420 - p * 360
+    s.append(f'<rect x="72" y="{top}" width="36" height="{440 - top}" rx="18" fill="{P["rojo"]}"/>')
+    s.append(f'<circle cx="90" cy="470" r="62" fill="{P["rojo"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="50" y="20" width="80" height="420" rx="40" fill="none" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="72" y="380" width="36" height="80" fill="{P["rojo"]}"/>')
+    for i in range(1, 9):
+        y = 420 - i * 45
+        s.append(ln(f"M 130 {y} L {150 if i % 2 else 160} {y}", 6))
+    s.append(ln("M 70 70 L 70 300", 9, "#fff", extra='opacity=".7"'))
+    s.append(f'<circle cx="70" cy="452" r="14" fill="#fff" opacity=".6"/>')
+    return "".join(s)
+
+
+def velocimetro():
+    """Dial semicircular (400x270). La aguja va aparte (velocimetro_aguja)."""
+    cx, cy, r = 200, 220, 180
+    s = [ln(f"M {cx - r} {cy} A {r} {r} 0 0 1 {cx + r} {cy} Z", SW, INK, "#fff")]
+    s.append(f'<path d="M {cx + r * math.cos(math.radians(-40)):.1f} {cy + r * math.sin(math.radians(-40)):.1f} '
+             f'A {r} {r} 0 0 1 {cx + r} {cy}" fill="none" stroke="{P["rojo"]}" stroke-width="30"/>')
+    s.append(f'<path d="M {cx - r} {cy} A {r} {r} 0 0 1 {cx + r * math.cos(math.radians(-140)):.1f} '
+             f'{cy + r * math.sin(math.radians(-140)):.1f}" fill="none" stroke="{P["verde"]}" stroke-width="30"/>')
+    for i in range(11):
+        a = math.radians(180 + i * 18)
+        L = 34 if i % 5 == 0 else 20
+        s.append(ln(f"M {cx + (r - 22) * math.cos(a):.1f} {cy + (r - 22) * math.sin(a):.1f} "
+                    f"L {cx + (r - 22 - L) * math.cos(a):.1f} {cy + (r - 22 - L) * math.sin(a):.1f}", 6))
+    s.append(ln(f"M {cx - r} {cy} A {r} {r} 0 0 1 {cx + r} {cy} Z", SW))
+    s.append(f'<rect x="{cx - r - 12}" y="{cy - 4}" width="{2 * r + 24}" height="40" rx="14" fill="{TRAJE2}" stroke="{INK}" stroke-width="{SW}"/>')
+    return "".join(s)
+
+
+def velocimetro_aguja():
+    """Aguja apuntando a la derecha; pivote en (30, 30). r=-180 apunta a la izquierda (0)."""
+    return (ln("M 30 18 L 170 28 L 170 32 L 30 42 Z", 6, INK, P["rojo"])
+            + f'<circle cx="30" cy="30" r="22" fill="{INK}"/><circle cx="30" cy="30" r="9" fill="#fff"/>')
+
+
+def carbon(face="celoso", brasa=False):
+    pts = "M 40 150 L 70 60 L 160 30 L 250 60 L 290 140 L 260 230 L 160 260 L 70 230 Z"
+    fill = "#3A353D" if not brasa else "#5A2A24"
+    s = [ln(pts, SW, INK, fill)]
+    s.append(ln("M 70 60 L 120 120 L 160 30", 5, "#55505A") + ln("M 250 60 L 200 130 L 290 140", 5, "#55505A"))
+    if brasa:
+        for d in ["M 60 180 L 110 170 L 140 210", "M 200 200 L 240 180 L 270 200", "M 120 110 L 170 130 L 210 110"]:
+            s.append(ln(d, 14, "#FF5A1F") + ln(d, 6, "#FFD23F"))
+        s.append(f'<path d="{pts}" fill="#FF7A1A" opacity=".18"/>')
+    s.append(cara(face, 165, 140, .62, "cb", fill_lid=fill, tinta="#FFD23F" if brasa else "#CFC8DA"))
+    s.append(ln("M 80 90 L 110 70", 8, "#fff", extra='opacity=".3"'))
+    return "".join(s)
+
+
+def diamante(face="contento"):
+    s = [ln("M 40 120 L 100 40 L 260 40 L 320 120 L 180 300 Z", SW, INK, "#9FE8FF")]
+    s.append(ln("M 40 120 L 320 120", 5, "#5CC8F0") + ln("M 100 40 L 140 120 L 180 300", 5, "#5CC8F0")
+             + ln("M 260 40 L 220 120 L 180 300", 5, "#5CC8F0") + ln("M 140 120 L 180 40 L 220 120", 5, "#5CC8F0"))
+    s.append(f'<path d="M 100 40 L 140 120 L 40 120 Z" fill="#fff" opacity=".55"/>')
+    s.append(ln("M 40 120 L 100 40 L 260 40 L 320 120 L 180 300 Z", SW))
+    s.append(cara(face, 180, 170, .5, "dm"))
+    return "".join(s)
+
+
+def reloj():
+    s = [f'<rect x="150" y="10" width="60" height="40" rx="10" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="{SW}"/>',
+         f'<circle cx="180" cy="200" r="150" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="{SW}"/>',
+         f'<circle cx="180" cy="200" r="122" fill="#fff" stroke="{INK}" stroke-width="{SW}"/>']
+    for i in range(12):
+        a = math.radians(i * 30)
+        L = 22 if i % 3 == 0 else 12
+        s.append(ln(f"M {180 + 108 * math.sin(a):.1f} {200 - 108 * math.cos(a):.1f} "
+                    f"L {180 + (108 - L) * math.sin(a):.1f} {200 - (108 - L) * math.cos(a):.1f}", 6))
+    s.append(ln("M 180 200 L 180 140", 12))
+    return "".join(s)
+
+
+def reloj_aguja():
+    """Aguja larga apuntando arriba; pivote en el centro de abajo (ancla 0.5, 0.9)."""
+    return ln("M 20 20 L 20 180", 10, INK) + f'<circle cx="20" cy="180" r="14" fill="{INK}"/>'
+
+
+def llama():
+    out = "M 110 20 Q 190 110 180 180 Q 172 250 110 260 Q 40 250 34 180 Q 30 120 80 90 Q 76 130 100 140 Q 90 80 110 20 Z"
+    inn = "M 110 120 Q 150 170 146 205 Q 140 240 110 242 Q 76 240 74 205 Q 74 170 110 120 Z"
+    return ln(out, SW, INK, "#FF7A1A") + ln(inn, 0, "none", P["amarillo"])
+
+
+def atomo_c():
+    s = [f'<ellipse cx="110" cy="110" rx="100" ry="38" fill="none" stroke="{INK}" stroke-width="6" transform="rotate({a} 110 110)"/>'
+         for a in (0, 60, 120)]
+    s.append(f'<circle cx="110" cy="110" r="44" fill="#55505A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 126 92 Q 96 80 92 110 Q 96 140 126 128", 10, "#fff"))
+    for a in (0, 120, 240):
+        t = math.radians(a + 30)
+        s.append(f'<circle cx="{110 + 100 * math.cos(t) * .9:.1f}" cy="{110 + 38 * math.sin(t) * 1.2:.1f}" r="10" '
+                 f'fill="{P["cielo"]}" stroke="{INK}" stroke-width="5"/>')
+    return "".join(s)
+
+
+def flecha(color):
+    """Flecha gruesa que apunta hacia abajo (rotar con r)."""
+    d = ("M 75 15 Q 75 8 82 8 L 138 8 Q 145 8 145 15 L 145 120 L 200 120 "
+         "L 110 225 L 20 120 L 75 120 Z")
+    return ln(d, 8, INK, color) + ln("M 96 28 L 96 108", 10, "#fff", extra='opacity=".45"')
+
+
+def corazon():
+    d = "M 80 140 Q 10 90 14 52 Q 18 14 52 14 Q 72 14 80 38 Q 88 14 108 14 Q 142 14 146 52 Q 150 90 80 140 Z"
+    return ln(d, SW, INK, P["rosa"]) + ln("M 36 44 Q 40 30 52 28", 8, "#fff", extra='opacity=".7"')
+
+
+def estrellita(fill="#FFF6D6"):
+    return estrella4(30, 30, 26, fill, 0)
+
+
+def punto_estrella():
+    return f'<circle cx="10" cy="10" r="7" fill="#FFF6D6"/>'
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
+
+
+def fondo_espacio(tema="azul"):
+    """Cielo estrellado con nebulosas suaves. tema: azul, rojo, violeta."""
+    temas = {"azul": ("#1B2259", "#0A0D2B", ["#5B3FB8", "#1E7FA8"]),
+             "rojo": ("#24142E", "#0B070F", ["#7A1E2E", "#4A1E5E"]),
+             "violeta": ("#3A1A5E", "#120A26", ["#B23A8E", "#3F4FC8"])}
+    c0, c1, neb = temas[tema]
+    rnd = random.Random({"azul": 1, "rojo": 2, "violeta": 3}[tema])
+    s = [f'<rect width="{W}" height="{H}" fill="url(#esp)"/>']
+    for i, (x, y, rx, ry) in enumerate([(220, 520, 520, 300), (860, 1250, 560, 340), (500, 1700, 420, 220)]):
+        s.append(f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" fill="url(#neb{i % 2})" '
+                 f'transform="rotate({rnd.uniform(-25, 25):.0f} {x} {y})"/>')
+    for _ in range(170):
+        x, y = rnd.uniform(0, W), rnd.uniform(0, H)
+        r = rnd.choice([1.5, 2, 2, 2.5, 3, 4])
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="#fff" opacity="{rnd.uniform(.35, .9):.2f}"/>')
+    for _ in range(16):
+        s.append(estrella4(rnd.uniform(40, 1040), rnd.uniform(40, 1880), rnd.uniform(7, 14), "#FFF6D6", 0))
+    defs = (f'<radialGradient id="esp" cx="0.5" cy="0.42" r="0.85"><stop offset="0" stop-color="{c0}"/>'
+            f'<stop offset="1" stop-color="{c1}"/></radialGradient>'
+            + "".join(f'<radialGradient id="neb{i}" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="{c}" stop-opacity=".55"/>'
+                      f'<stop offset="1" stop-color="{c}" stop-opacity="0"/></radialGradient>' for i, c in enumerate(neb)))
+    return "".join(s), defs
+
+
+def fondo_espacio_azul():
+    return fondo_espacio("azul")
+
+
+def fondo_espacio_rojo():
+    return fondo_espacio("rojo")
+
+
+def fondo_espacio_violeta():
+    return fondo_espacio("violeta")
 
 
 def fondo_liso():
@@ -726,8 +1152,48 @@ def build():
     add("engranaje_gris", 300, 300, engranaje("#B8C2D6"))
     add("engranaje_amarillo", 300, 300, engranaje(P["amarillo"], n=8, ro=120, ri=96))
     add("marco_foto", 440, 360, marco_foto())
+    # ---- short "3 planetas"
+    for f in ("lindo", "contento", "malo", "susto"):
+        add(f"hd189733b_{f}", 600, 600, hd189733b(f))
+    for f in ("neutral", "cool", "sorpresa", "contento"):
+        add(f"tres2b_{f}", 600, 600, tres2b(f))
+    add("tres2b_brasa", 600, 600, tres2b("contento", brasa=1.0))
+    for f in ("neutral", "sorpresa"):
+        add(f"jupiter_{f}", 600, 600, jupiter(f))
+    add("tierra", 600, 600, tierra())
+    for f in ("neutral", "contento", "sorpresa"):
+        add(f"cancri_{f}", 600, 600, cancri(f))
+    add("cancri_corte", 600, 600, cancri("contento", corte=True))
+    for name, col in [("halo_rojo", "#FF4A2A"), ("halo_blanco", "#FFFFFF"), ("halo_celeste", "#9FE8FF"),
+                      ("halo_amarillo", "#FFE27A"), ("halo_azul", "#6E97FF")]:
+        body, defs = halo(col)
+        add(name, 800, 800, body, defs)
+    add("estrella", 400, 400, estrella_anfitriona())
+    add("rayo_luz", 700, 260, rayo_luz(), anchor=(0.0, 0.5))
+    for k in "abc":
+        add(f"vidrio_{k}", 200, 70, vidrio(k))
+        add(f"vidrio_fundido_{k}", 200, 70, vidrio(k, "#FFB13B"))
+    add("viento", 360, 60, viento())
+    for i in range(11):
+        add(f"termometro_{i:02d}", 180, 550, termometro(i / 10), anchor=(0.5, 1.0))
+    add("velocimetro", 400, 270, velocimetro(), anchor=(0.5, 220 / 270))
+    add("velocimetro_aguja", 180, 60, velocimetro_aguja(), anchor=(30 / 180, 0.5))
+    add("carbon", 330, 290, carbon("celoso"))
+    add("carbon_sorpresa", 330, 290, carbon("sorpresa"))
+    add("brasa", 330, 290, carbon("contento", brasa=True))
+    add("diamante", 360, 320, diamante())
+    add("reloj", 360, 360, reloj(), anchor=(0.5, 200 / 360))
+    add("reloj_aguja", 40, 200, reloj_aguja(), anchor=(0.5, 0.9))
+    add("llama", 220, 280, llama(), anchor=(0.5, 1.0))
+    add("atomo_c", 220, 220, atomo_c())
+    add("flecha_roja", 220, 240, flecha(P["rojo"]))
+    add("corazon", 160, 160, corazon())
+    add("estrellita", 60, 60, estrellita())
+    add("punto_estrella", 20, 20, punto_estrella())
     for name, fn in [("fondo_liso", fondo_liso), ("fondo_burst", fondo_burst), ("fondo_piel", fondo_piel),
-                     ("fondo_exterior", fondo_exterior), ("fondo_cabeza", fondo_cabeza)]:
+                     ("fondo_exterior", fondo_exterior), ("fondo_cabeza", fondo_cabeza),
+                     ("fondo_espacio", fondo_espacio_azul), ("fondo_espacio_rojo", fondo_espacio_rojo),
+                     ("fondo_espacio_violeta", fondo_espacio_violeta)]:
         body, defs = fn()
         add(name, W, H, body, defs)
     add("dormitorio", W, H, dormitorio(False))
