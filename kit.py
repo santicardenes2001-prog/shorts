@@ -209,7 +209,16 @@ def casco():
             + ln("M 392 400 Q 420 360 430 320", 9, "#fff", extra='opacity=".4"'))
 
 
-def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=(0, 0), extra="", astro=False):
+def casco_safari():
+    """Casco de explorador (salacot) sobre la cabeza de Vos."""
+    return (ln("M 70 190 Q 260 120 450 190 Q 460 214 430 218 Q 260 176 90 218 Q 60 214 70 190 Z", SW, INK, "#D9C08A")
+            + ln("M 110 196 Q 116 40 260 36 Q 404 40 410 196 Q 260 160 110 196 Z", SW, INK, "#E8D3A0")
+            + ln("M 112 182 Q 260 146 408 182", 14, "#8A6A3A")
+            + ln("M 170 110 Q 200 70 250 60", 10, "#fff", extra='opacity=".5"'))
+
+
+def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=(0, 0), extra="", astro=False,
+        explorador=False):
     s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
     if astro:   # mochila de oxígeno, detrás de todo
         s.append(f'<rect x="120" y="440" width="280" height="250" rx="40" fill="{TRAJE2}" stroke="{INK}" stroke-width="{SW}"/>')
@@ -234,6 +243,8 @@ def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=
     s.append(head(eyes, brows, mouth_kind, look, extra))
     if astro:
         s.append(casco())
+    if explorador:
+        s.append(casco_safari())
     return "".join(s)
 
 
@@ -256,9 +267,19 @@ VOS_VARIANTS = {
     "vos_astro_contento": dict(astro=True, eyes="happy", brows="happy", mouth_kind="open_smile"),
     "vos_astro_pulgar": dict(astro=True, eyes="happy", brows="happy", mouth_kind="open_smile", arm_kind="thumb"),
     "vos_astro_susto": dict(astro=True, eyes="wide", brows="sad", mouth_kind="o", look=(-1, 0)),
+    # explorador (casco de safari)
+    "vos_explo": dict(explorador=True),
+    "vos_explo_mira": dict(explorador=True, look=(1, -0.3)),
+    "vos_explo_sorpresa": dict(explorador=True, eyes="wide", brows="up", mouth_kind="o"),
+    "vos_explo_asco": dict(explorador=True, **{k: v for k, v in dict(eyes="squint", brows="asco", mouth_kind="bleh").items()},
+                           extra=f'<ellipse cx="165" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'
+                                 f'<ellipse cx="355" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'),
+    "vos_explo_miedo": dict(explorador=True, eyes="wide", brows="sad", mouth_kind="nervio"),
+    "vos_explo_pulgar": dict(explorador=True, eyes="happy", brows="happy", mouth_kind="open_smile", arm_kind="thumb"),
 }
 # Variantes de parpadeo automáticas para las que tienen ojos abiertos
 BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa", "vos_miedo",
+             "vos_explo", "vos_explo_mira", "vos_explo_sorpresa", "vos_explo_miedo",
              "vos_astro", "vos_astro_mira", "vos_astro_sorpresa", "vos_astro_susto"]
 
 # Bocas para lip sync (cabeza neutral con distintas bocas)
@@ -1366,6 +1387,289 @@ def calavera():
     return "".join(s)
 
 
+# ---------------------------------------------------------------- plantas (short "3 plantas")
+def arbusto(face="contento"):
+    """Planta huésped (arbusto suculento tipo euforbia, 340x320, ancla abajo) con cara."""
+    s = []
+    for x, h, r in [(110, 200, -18), (170, 260, -6), (230, 240, 8), (290, 180, 20)]:
+        d = f"M {x} 300 Q {x - 6} {300 - h / 2} {x + r} {300 - h}"
+        s.append(stroke_path(d, "#6FB35A", 42))
+        for k in range(1, 4):
+            yy = 300 - h * k / 4
+            s.append(ln(f"M {x - 12} {yy:.0f} L {x - 26} {yy - 10:.0f}", 5) + ln(f"M {x + 12} {yy:.0f} L {x + 26} {yy - 10:.0f}", 5))
+    s.append(ln("M 60 300 Q 200 230 330 300 Z", SW, INK, "#5FA845"))
+    s.append(cara(face, 200, 250, .42, "ar"))
+    return "".join(s)
+
+
+def raices():
+    """Raíces de la planta huésped, vistas en corte (500x520, ancla arriba al centro)."""
+    s = []
+    for d in ["M 250 0 Q 240 120 180 200 Q 130 280 60 330", "M 250 0 Q 270 140 330 230 Q 380 310 470 360",
+              "M 250 0 Q 250 200 240 330 Q 230 420 260 510", "M 180 200 Q 120 210 70 190",
+              "M 330 230 Q 360 300 340 400", "M 240 330 Q 300 360 360 420"]:
+        s.append(stroke_path(d, "#C9A46A", 14, INK, 24))
+    return "".join(s)
+
+
+def hydnora_rizoma(face="neutral"):
+    """Cuerpo subterráneo de Hydnora: tallo verrugoso marrón (440x260)."""
+    s = [ln("M 30 150 Q 40 70 140 80 Q 220 40 300 80 Q 410 70 420 150 Q 430 230 320 220 Q 220 250 130 220 Q 20 230 30 150 Z",
+            SW, INK, "#8A5A44")]
+    rnd = random.Random(4)
+    for _ in range(18):
+        x, y = rnd.uniform(70, 380), rnd.uniform(100, 210)
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rnd.uniform(6, 11):.0f}" fill="#6E4535" stroke="{INK}" stroke-width="3"/>')
+    s.append(cara(face, 225, 150, .55, "hz", tinta=INK))
+    return "".join(s)
+
+
+def hydnora(apertura=0.0, face="neutral", llena=False):
+    """Flor de Hydnora africana (400x440, ancla abajo). apertura 0 = capullo, 1 = abierta
+    en tres labios gruesos color carne. Cara en la base; la boca es la cavidad."""
+    cx, base = 200, 430
+    s = [f'<ellipse cx="{cx}" cy="{base - 4}" rx="140" ry="16" fill="#000" opacity=".15"/>']
+    # base verrugosa
+    s.append(ln(f"M 90 {base} Q 80 300 200 280 Q 320 300 310 {base} Z", SW, INK, "#8A5A44"))
+    for x, y in [(130, 360), (160, 400), (240, 330), (270, 390), (200, 380), (120, 410)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="8" fill="#6E4535"/>')
+    a = apertura
+    # tres lóbulos: el del medio atrás, dos a los costados
+    for k, ang in enumerate([0, -1, 1]):
+        rot = ang * (8 + 52 * a)
+        tip_y = 40 + 40 * a
+        lobe = (f"M 150 300 Q 120 {170 - 30 * a} {cx} {tip_y} Q 280 {170 - 30 * a} 250 300 Z")
+        g = f'<g transform="rotate({rot:.1f} {cx} 300)">'
+        g += ln(lobe, SW, INK, "#8A5A44")
+        if a > 0.2:   # cara interna color carne con cerdas
+            inner = f"M 168 296 Q 146 {190 - 20 * a} {cx} {tip_y + 30} Q 254 {190 - 20 * a} 232 296 Z"
+            g += f'<path d="{inner}" fill="#F08C78" opacity="{min(1, a * 1.3):.2f}" stroke="{INK}" stroke-width="5"/>'
+            for yy in range(int(tip_y + 60), 290, 26):
+                g += ln(f"M {cx - 22} {yy} L {cx + 22} {yy}", 4, "#FBD3C4", extra=f'opacity="{min(1, a * 1.3):.2f}"')
+        g += '</g>'
+        s.insert(2 if k == 0 else len(s), g)
+    # boca/cavidad y cara en la base
+    if a > 0.5:
+        s.append(f'<ellipse cx="{cx}" cy="300" rx="{40 + 20 * a:.0f}" ry="22" fill="#5A1E1E" stroke="{INK}" stroke-width="5"/>')
+        if llena:
+            for x in (182, 214):
+                s.append(f'<ellipse cx="{x}" cy="296" rx="14" ry="10" fill="#2F3A5C" stroke="{INK}" stroke-width="4"/>'
+                         f'<circle cx="{x + 6}" cy="292" r="3" fill="#fff"/>')
+    s.append(cara(face, cx, 372, .45, "hy"))
+    return "".join(s)
+
+
+def tallo():
+    """Tallo subterráneo que une el cuerpo de Hydnora con la flor (60x240, ancla arriba)."""
+    return (f'<rect x="12" y="4" width="36" height="232" rx="16" fill="#8A5A44" stroke="{INK}" stroke-width="{SW}"/>'
+            + "".join(f'<circle cx="{x}" cy="{y}" r="5" fill="#6E4535"/>' for x, y in [(26, 50), (36, 110), (24, 170), (34, 210)]))
+
+
+def burbuja():
+    return (f'<circle cx="22" cy="22" r="18" fill="#fff" opacity=".35" stroke="#fff" stroke-width="4"/>'
+            f'<circle cx="16" cy="15" r="5" fill="#fff"/>')
+
+
+def hoja():
+    d = "M 20 160 Q 30 40 170 20 Q 160 150 20 160 Z"
+    return ln(d, SW, INK, "#6FB35A") + ln("M 30 150 Q 90 90 160 30", 6, "#4E8A3A")
+
+
+def prohibido():
+    return (f'<circle cx="110" cy="110" r="90" fill="none" stroke="{INK}" stroke-width="34"/>'
+            f'<circle cx="110" cy="110" r="90" fill="none" stroke="{P["rojo"]}" stroke-width="22"/>'
+            + ln("M 48 48 L 172 172", 34) + ln("M 48 48 L 172 172", 22, P["rojo"]))
+
+
+def escarabajo(face="contento"):
+    """Escarabajo pelotero mirando a la derecha (240x170)."""
+    s = []
+    for x in (70, 110, 150):
+        s.append(ln(f"M {x} 120 L {x - 16} 158", 7) + ln(f"M {x} 120 L {x + 14} 158", 7))
+    s.append(f'<ellipse cx="110" cy="96" rx="80" ry="54" fill="#2E4A5C" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 110 44 L 110 148", 5, "#1E3240"))
+    s.append(ln("M 60 70 Q 80 54 104 52", 8, "#fff", extra='opacity=".35"'))
+    s.append(f'<circle cx="196" cy="96" r="34" fill="#2E4A5C" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 214 68 L 236 44", 6) + ln("M 222 78 L 238 70", 6))
+    s.append(cara(face, 198, 96, .26, "es", tinta="#E8E2F0"))
+    return "".join(s)
+
+
+def bola_estiercol():
+    s = [f'<circle cx="80" cy="80" r="70" fill="#7A5236" stroke="{INK}" stroke-width="{SW}"/>']
+    rnd = random.Random(3)
+    for _ in range(10):
+        x, y = rnd.uniform(30, 130), rnd.uniform(30, 130)
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rnd.uniform(5, 10):.0f}" fill="#5E3E28"/>')
+    return "".join(s)
+
+
+def punto(color, r=10):
+    return f'<circle cx="{r + 2}" cy="{r + 2}" r="{r}" fill="{color}" stroke="{INK}" stroke-width="3"/>'
+
+
+def jarra(face="neutral", corte=False):
+    """Jarra de Nepenthes rajah (460x700, ancla abajo): cuerpo verde-rojizo con pintas,
+    boca con peristoma rojo acanalado y tapa arriba. corte=True: se ve el líquido adentro."""
+    s = [f'<ellipse cx="230" cy="690" rx="150" ry="14" fill="#000" opacity=".15"/>']
+    body = "M 120 300 Q 40 420 60 560 Q 90 690 230 690 Q 370 690 400 560 Q 420 420 340 300 Z"
+    # tapa
+    s.append(stroke_path("M 300 268 Q 330 230 320 200", "#7A9A3A", 18))
+    s.append(ln("M 120 200 Q 130 110 250 110 Q 370 116 350 214 Q 290 186 225 196 Q 160 206 120 200 Z", SW, INK, "#9C3B45"))
+    s.append(ln("M 150 180 Q 170 140 230 134", 8, "#fff", extra='opacity=".3"'))
+    if corte:
+        s.append(f'<clipPath id="jc"><path d="{body}"/></clipPath>')
+        s.append(ln(body, SW, INK, "#E8F4D8"))
+        s.append('<g clip-path="url(#jc)">'
+                 f'<rect x="0" y="430" width="460" height="300" fill="#7FC8F0"/>'
+                 f'<rect x="0" y="560" width="460" height="200" fill="#B5D84A"/>'
+                 + ln("M 40 430 Q 120 418 230 430 Q 340 442 430 430", 6, "#fff", extra='opacity=".7"')
+                 + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#fff" opacity=".7"/>'
+                           for x, y, r in [(150, 600, 10), (260, 640, 7), (310, 590, 12), (200, 520, 8), (290, 480, 6)])
+                 + '</g>')
+        s.append(ln(body, SW))
+    else:
+        s.append(ln(body, SW, INK, "#8DBF4A"))
+        s.append(f'<clipPath id="jc"><path d="{body}"/></clipPath><g clip-path="url(#jc)">'
+                 f'<rect x="0" y="520" width="460" height="200" fill="#B5474F" opacity=".55"/>'
+                 + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#9C3B45" opacity=".8"/>'
+                           for x, y, r in [(110, 420, 12), (300, 380, 10), (330, 480, 14), (150, 520, 10), (250, 600, 12),
+                                           (90, 600, 9), (360, 590, 10), (200, 350, 8)])
+                 + ln("M 80 380 Q 100 330 140 312", 14, "#fff", extra='opacity=".35"') + '</g>')
+        s.append(ln("M 150 330 L 140 640", 6, "#6E9A34") + ln("M 310 330 L 320 640", 6, "#6E9A34"))
+    # peristoma (borde acanalado)
+    s.append(f'<ellipse cx="230" cy="300" rx="125" ry="42" fill="#C0392B" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="230" cy="300" rx="90" ry="24" fill="#3A1E22" stroke="{INK}" stroke-width="5"/>')
+    for i in range(14):
+        a = math.pi * (i / 13)
+        x0, y0 = 230 + 108 * math.cos(a), 300 + 34 * math.sin(a)
+        s.append(ln(f"M {x0:.0f} {y0:.0f} L {230 + 124 * math.cos(a):.0f} {300 + 41 * math.sin(a):.0f}", 4, "#8E2A20"))
+    if face:
+        s.append(cara(face, 230, 420 if not corte else 380, .7, "jr"))
+    return "".join(s)
+
+
+def botella():
+    s = [ln("M 40 70 L 80 70 L 80 100 Q 110 120 110 160 L 110 280 Q 110 300 90 300 L 30 300 Q 10 300 10 280 "
+            "L 10 160 Q 10 120 40 100 Z", SW, INK, "#CFEFFF")]
+    s.append(f'<rect x="12" y="170" width="96" height="128" fill="#7FC8F0" opacity=".9"/>')
+    s.append(f'<rect x="36" y="40" width="48" height="34" rx="8" fill="{P["remera"]}" stroke="{INK}" stroke-width="6"/>')
+    s.append(ln("M 40 70 L 80 70 L 80 100 Q 110 120 110 160 L 110 280 Q 110 300 90 300 L 30 300 Q 10 300 10 280 "
+                "L 10 160 Q 10 120 40 100 Z", SW))
+    s.append(ln("M 30 150 L 30 260", 8, "#fff", extra='opacity=".7"'))
+    return "".join(s)
+
+
+def rana():
+    s = [ln("M 30 150 Q 20 80 110 70 Q 200 80 190 150 Q 180 190 110 190 Q 40 190 30 150 Z", SW, INK, "#6FC46A")]
+    for x in (70, 150):
+        s.append(f'<circle cx="{x}" cy="62" r="30" fill="#6FC46A" stroke="{INK}" stroke-width="{SW}"/>'
+                 f'<circle cx="{x}" cy="62" r="17" fill="#fff" stroke="{INK}" stroke-width="5"/><circle cx="{x + 3}" cy="66" r="8" fill="{INK}"/>')
+    s.append(ln("M 70 130 Q 110 160 150 130", 7))
+    s.append(f'<ellipse cx="50" cy="186" rx="34" ry="14" fill="#5AAE56" stroke="{INK}" stroke-width="5"/>'
+             f'<ellipse cx="170" cy="186" rx="34" ry="14" fill="#5AAE56" stroke="{INK}" stroke-width="5"/>')
+    return "".join(s)
+
+
+def lagartija():
+    s = [stroke_path("M 40 120 Q 10 90 30 60 Q 50 40 80 70", "#E0A030", 22)]
+    for x, d in [(110, 1), (180, -1)]:
+        s.append(stroke_path(f"M {x} 130 L {x - 14} 160", "#E0A030", 12) + stroke_path(f"M {x} 100 L {x - 14} 70", "#E0A030", 12))
+    s.append(ln("M 70 115 Q 150 80 230 100 Q 270 112 270 120 Q 270 132 230 140 Q 150 150 70 125 Z", SW, INK, "#F0B840"))
+    s += [f'<circle cx="{x}" cy="{y}" r="6" fill="#C98A20"/>' for x, y in [(120, 110), (150, 118), (180, 108), (200, 124)]]
+    s.append(f'<circle cx="240" cy="110" r="10" fill="#fff" stroke="{INK}" stroke-width="4"/><circle cx="243" cy="111" r="5" fill="{INK}"/>')
+    s.append(ln("M 248 128 Q 258 132 266 126", 4))
+    return "".join(s)
+
+
+def ave():
+    s = [ln("M 40 110 L 10 90 L 14 130 Z", SW, INK, "#4C8DFF")]
+    s.append(f'<ellipse cx="100" cy="110" rx="70" ry="52" fill="#6FA8FF" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 70 100 Q 100 70 130 104 Q 100 130 70 100 Z", 6, INK, "#4C8DFF"))
+    s.append(f'<circle cx="150" cy="70" r="40" fill="#6FA8FF" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 186 66 L 216 76 L 186 86 Z", 5, INK, P["amarillo"]))
+    s.append(f'<circle cx="160" cy="62" r="12" fill="#fff" stroke="{INK}" stroke-width="4"/><circle cx="163" cy="64" r="6" fill="{INK}"/>')
+    s.append(ln("M 90 160 L 86 180", 5) + ln("M 116 160 L 120 180", 5))
+    return "".join(s)
+
+
+def rata():
+    s = [stroke_path("M 40 130 Q 0 120 10 80", "#F3B6B0", 8)]
+    s.append(ln("M 40 130 Q 40 70 120 70 Q 200 70 220 120 Q 230 140 200 146 L 60 146 Q 40 146 40 130 Z", SW, INK, "#9A9AA8"))
+    s.append(f'<circle cx="150" cy="70" r="22" fill="#9A9AA8" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="150" cy="70" r="11" fill="#F3B6B0"/>')
+    s.append(f'<circle cx="190" cy="104" r="8" fill="{INK}"/><circle cx="226" cy="124" r="8" fill="#F3B6B0" stroke="{INK}" stroke-width="3"/>')
+    s.append(ln("M 214 128 L 246 120", 3) + ln("M 214 132 L 246 138", 3))
+    return "".join(s)
+
+
+def welwitschia(hojas=1.0, rasgada=False, face="neutral"):
+    """Welwitschia (1000x440, ancla abajo): tronco leñoso bajo con cara y dos hojas
+    larguísimas tiradas en el suelo. hojas (0-1) = largo; rasgada = hecha tiras (tentáculos)."""
+    cx, base = 500, 420
+    s = [f'<ellipse cx="{cx}" cy="{base - 4}" rx="{120 + 360 * hojas:.0f}" ry="18" fill="#000" opacity=".15"/>']
+    L = 100 + 260 * hojas
+    for side in (-1, 1):
+        x0 = cx + side * 130
+        if rasgada:   # tiras onduladas
+            for k in range(5):
+                yk = 330 + k * 18
+                lk = L * (0.75 + 0.25 * ((k * 37) % 5) / 4)
+                d = (f"M {x0} {yk} Q {x0 + side * lk * .35:.0f} {yk - 40 + k * 12} {x0 + side * lk * .6:.0f} {yk + 10} "
+                     f"Q {x0 + side * lk * .85:.0f} {yk + 40} {x0 + side * lk:.0f} {yk - 10 + k * 8}")
+                s.append(stroke_path(d, "#6E8A3A" if k % 2 else "#86A24A", 30))
+        else:
+            d = (f"M {x0} 290 Q {x0 + side * L * .5:.0f} 270 {x0 + side * L:.0f} 370 "
+                 f"Q {x0 + side * L * .5:.0f} 430 {x0} 414 Z")
+            s.append(ln(d, SW, INK, "#86A24A"))
+            for k in (1, 2, 3):
+                s.append(ln(f"M {x0} {330 + k * 18} Q {x0 + side * L * .5:.0f} {320 + k * 16} {x0 + side * L * .95:.0f} {378 + k * 4}",
+                            4, "#6E8A3A"))
+            # puntas secas
+            s.append(ln(f"M {x0 + side * L * .85:.0f} 370 Q {x0 + side * L * .95:.0f} 372 {x0 + side * L:.0f} 380", 10, "#B59A5A"))
+    # tronco (como una mesa leñosa)
+    s.append(ln(f"M {cx - 150} {base} Q {cx - 175} 280 {cx - 125} 230 Q {cx} 196 {cx + 125} 230 Q {cx + 175} 280 {cx + 150} {base} Z",
+                SW, INK, "#8A6A4A"))
+    s.append(f'<ellipse cx="{cx}" cy="236" rx="126" ry="34" fill="#A0805A" stroke="{INK}" stroke-width="6"/>')
+    s.append(ln(f"M {cx - 80} 238 Q {cx} 218 {cx + 80} 238", 5, "#7A5A3A"))
+    s.append(cara(face, cx, 330, .72, "ww"))
+    return "".join(s)
+
+
+def dino():
+    """Dinosaurio cuello largo (440x420, ancla abajo), con cara simpática."""
+    s = []
+    for x in (150, 210, 300, 360):
+        s.append(f'<rect x="{x - 22}" y="320" width="44" height="100" rx="16" fill="#6FB35A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(stroke_path("M 120 300 Q 40 300 10 360", "#6FB35A", 40))
+    s.append(f'<ellipse cx="250" cy="290" rx="150" ry="80" fill="#7FC46A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(stroke_path("M 360 260 Q 400 160 380 70", "#7FC46A", 54))
+    s.append(f'<ellipse cx="370" cy="60" rx="56" ry="40" fill="#7FC46A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="384" cy="50" r="12" fill="#fff" stroke="{INK}" stroke-width="4"/><circle cx="388" cy="52" r="6" fill="{INK}"/>')
+    s.append(ln("M 390 76 Q 404 84 418 72", 5))
+    s += [f'<circle cx="{x}" cy="{y}" r="{r}" fill="#5FA845"/>' for x, y, r in [(200, 260, 14), (260, 240, 10), (300, 290, 12)]]
+    return "".join(s)
+
+
+def torta():
+    """Torta de cumpleaños con muchas velitas (320x320, ancla abajo)."""
+    s = [f'<rect x="40" y="200" width="240" height="110" rx="20" fill="#F7C6D0" stroke="{INK}" stroke-width="{SW}"/>',
+         ln("M 40 230 Q 70 260 100 230 Q 130 260 160 230 Q 190 260 220 230 Q 250 260 280 230", SW, INK, "#fff"),
+         f'<rect x="80" y="120" width="160" height="90" rx="16" fill="#FFE4A8" stroke="{INK}" stroke-width="{SW}"/>',
+         ln("M 80 146 Q 120 170 160 146 Q 200 170 240 146", 6, INK, "#fff")]
+    for i, x in enumerate(range(96, 240, 18)):
+        h = 46 + (i % 3) * 8
+        s.append(f'<rect x="{x - 5}" y="{120 - h}" width="10" height="{h}" rx="4" fill="{[P["rojo"], P["remera"], P["verde"]][i % 3]}" '
+                 f'stroke="{INK}" stroke-width="3"/>')
+        s.append(ln(f"M {x} {112 - h} Q {x + 7} {104 - h} {x} {92 - h} Q {x - 7} {104 - h} {x} {112 - h} Z", 3, INK, "#FFB13B"))
+    return "".join(s)
+
+
+def gota_agua():
+    d = "M 60 10 C 60 10 110 80 110 112 A 50 50 0 0 1 10 112 C 10 80 60 10 60 10 Z"
+    return ln(d, SW, INK, "#5CC8F0") + ln("M 36 104 Q 36 84 50 70", 8, "#fff", extra='opacity=".7"')
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
 
@@ -1473,6 +1777,90 @@ def fondo_pantano():
             '<stop offset="0.55" stop-color="#2F4A3E"/></linearGradient>'
             '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5A3A" stop-opacity="0"/>'
             '<stop offset="1" stop-color="#1A2A1C" stop-opacity=".8"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_burst_verde():
+    """Rayos como fondo_burst, en verdes (para el gancho de plantas)."""
+    cx, cy = 540, 950
+    s = [f'<rect width="{W}" height="{H}" fill="#7CCB5A"/>']
+    n = 28
+    for i in range(0, n, 2):
+        a1, a2 = i * 2 * math.pi / n, (i + 1) * 2 * math.pi / n
+        s.append(f'<path d="M {cx} {cy} L {cx + 2400 * math.cos(a1):.0f} {cy + 2400 * math.sin(a1):.0f} '
+                 f'L {cx + 2400 * math.cos(a2):.0f} {cy + 2400 * math.sin(a2):.0f} Z" fill="#9BDB72"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#vig)"/>')
+    defs = ('<radialGradient id="vig" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stop-color="#2E7A3A" stop-opacity="0"/>'
+            '<stop offset="1" stop-color="#1E5A2A" stop-opacity="0.45"/></radialGradient>')
+    return "".join(s), defs
+
+
+def fondo_subsuelo():
+    """Corte del suelo: cielo arriba, superficie de arena en y=700 y tierra con capas y piedras."""
+    rnd = random.Random(41)
+    s = [f'<rect width="{W}" height="700" fill="url(#cielo)"/>']
+    s.append(f'<circle cx="880" cy="430" r="80" fill="{P["amarillo"]}" opacity=".9"/>')
+    s.append(f'<rect x="0" y="690" width="{W}" height="{H - 690}" fill="#8A5E3E"/>')
+    for y, c in [(880, "#7A5236"), (1150, "#6B4630"), (1450, "#5E3E28")]:
+        s.append(ln(f"M -10 {y} Q 270 {y - 30} 540 {y} Q 810 {y + 30} 1090 {y} L 1090 1930 L -10 1930 Z", 0, "none", c))
+    for _ in range(26):
+        x, y, r = rnd.uniform(0, W), rnd.uniform(780, 1880), rnd.uniform(10, 28)
+        s.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{r:.0f}" ry="{r * .7:.0f}" fill="#A08060" stroke="#4E3420" stroke-width="4"/>')
+    s.append(ln(f"M -10 700 Q 270 680 540 700 Q 810 720 1090 696 L 1090 760 L -10 760 Z", SW, INK, "#E8C98A"))
+    for _ in range(14):
+        x = rnd.uniform(20, 1060)
+        s.append(ln(f"M {x:.0f} 700 l -10 -26 M {x:.0f} 700 l 8 -30 M {x:.0f} 700 l 22 -18", 5, "#A89A5A"))
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CC8F0"/>'
+            '<stop offset="1" stop-color="#F6E3B0"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_sabana():
+    """Sabana seca: cielo, acacia lejana y suelo de arena desde y=1150."""
+    rnd = random.Random(42)
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    s.append(f'<circle cx="820" cy="460" r="110" fill="{P["amarillo"]}" opacity=".9"/>')
+    s.append(f'<path d="M 140 1150 L 150 900 L 170 900 L 180 1150 Z" fill="#6B5A40" opacity=".55"/>'
+             f'<ellipse cx="160" cy="880" rx="150" ry="40" fill="#5E7A3A" opacity=".55"/>')
+    s.append(ln(f"M -10 1150 Q 270 1120 540 1150 Q 810 1180 1090 1140 L 1090 1930 L -10 1930 Z", SW, INK, "#E8C98A"))
+    for _ in range(30):
+        x, y = rnd.uniform(0, W), rnd.uniform(1200, 1880)
+        s.append(ln(f"M {x:.0f} {y:.0f} l -8 -20 M {x:.0f} {y:.0f} l 6 -24", 5, "#C9A86A"))
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6CC0F0"/>'
+            '<stop offset="0.6" stop-color="#FCE6B8"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_selva():
+    """Selva de Borneo: verdes profundos, hojas grandes en los bordes, lianas y rayos de luz."""
+    s = [f'<rect width="{W}" height="{H}" fill="url(#selva)"/>']
+    for x0, w in [(260, 120), (620, 160), (860, 90)]:
+        s.append(f'<path d="M {x0} 0 L {x0 + w} 0 L {x0 + w * 2.4:.0f} {H} L {x0 + w * .8:.0f} {H} Z" fill="#E8F7C0" opacity=".08"/>')
+    for x in (180, 520, 900):
+        s.append(stroke_path(f"M {x} 0 Q {x + 40} 300 {x - 20} 600 Q {x - 60} 800 {x + 10} 980", "#4E7A2A", 12, "#1E3A14", 20))
+    for (x, y, r, k) in [(-40, 300, 30, 1.2), (1120, 520, 200, 1.1), (-60, 1000, -20, 1.4), (1130, 1250, 210, 1.3),
+                         (120, 1700, 10, 1.2), (980, 1780, 190, 1.2)]:
+        s.append(f'<g transform="translate({x} {y}) rotate({r}) scale({k})">'
+                 + ln("M 0 0 Q 120 -90 300 -20 Q 160 70 0 0 Z", SW, INK, "#3E8A3A")
+                 + ln("M 10 0 Q 150 -30 290 -20", 5, "#2E6A2A") + '</g>')
+    s.append(ln(f"M -10 1300 Q 270 1260 540 1300 Q 810 1340 1090 1290 L 1090 1930 L -10 1930 Z", SW, INK, "#3E6A2A"))
+    defs = ('<linearGradient id="selva" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E6A3A"/>'
+            '<stop offset="1" stop-color="#14361E"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_desierto():
+    """Desierto de Namibia: dunas naranjas, cielo pálido y sol fuerte."""
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    s.append(f'<circle cx="800" cy="480" r="120" fill="#FFF1B0"/><circle cx="800" cy="480" r="200" fill="#FFF1B0" opacity=".25"/>')
+    s.append(ln("M -10 1000 Q 200 760 460 980 Q 600 1080 760 900 Q 900 780 1090 960 L 1090 1930 L -10 1930 Z", SW, INK, "#E8894A"))
+    s.append(ln("M 460 980 Q 600 1080 760 900", 6, "#C96A34"))
+    s.append(ln("M -10 1180 Q 300 1080 600 1170 Q 860 1240 1090 1150 L 1090 1930 L -10 1930 Z", SW, INK, "#F0A060"))
+    s.append(ln(f"M -10 1330 Q 270 1300 540 1330 Q 810 1360 1090 1320 L 1090 1930 L -10 1930 Z", SW, INK, "#F6C089"))
+    for y in range(1420, H, 110):
+        s.append(ln(f"M 60 {y} Q 300 {y - 20} 540 {y} Q 780 {y + 20} 1020 {y}", 5, "#E0A070", extra='opacity=".6"'))
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD0F0"/>'
+            '<stop offset="0.6" stop-color="#FCE3C0"/></linearGradient>')
     return "".join(s), defs
 
 
@@ -1692,7 +2080,46 @@ def build():
     add("gota", 120, 170, gota())
     add("antorcha", 160, 300, antorcha(), anchor=(0.5, 1.0))
     add("calavera", 260, 240, calavera())
+    # ---- short "3 plantas"
+    for f in ("contento", "susto"):
+        add(f"arbusto_{f}", 340, 320, arbusto(f), anchor=(0.5, 300 / 320))
+    add("raices", 500, 520, raices(), anchor=(0.5, 0.0))
+    for f in ("neutral", "malo", "contento"):
+        add(f"hydnora_rizoma_{f}", 440, 260, hydnora_rizoma(f))
+    for i, a in enumerate([0, .35, .7, 1]):
+        add(f"hydnora_{i}", 400, 440, hydnora(a, "neutral"), anchor=(0.5, 1.0))
+    add("hydnora_malo", 400, 440, hydnora(1, "malo"), anchor=(0.5, 1.0))
+    add("hydnora_llena", 400, 440, hydnora(1, "contento", llena=True), anchor=(0.5, 1.0))
+    add("hydnora_contento", 400, 440, hydnora(1, "contento"), anchor=(0.5, 1.0))
+    add("hydnora_cerrada_malo", 400, 440, hydnora(0, "malo"), anchor=(0.5, 1.0))
+    add("hoja", 190, 180, hoja())
+    add("tallo", 60, 240, tallo(), anchor=(0.5, 0.0))
+    add("burbuja", 44, 44, burbuja())
+    add("prohibido", 220, 220, prohibido())
+    add("escarabajo", 240, 170, escarabajo(), anchor=(0.5, 1.0))
+    add("escarabajo_susto", 240, 170, escarabajo("susto"), anchor=(0.5, 1.0))
+    add("bola_estiercol", 160, 160, bola_estiercol(), anchor=(0.5, 1.0))
+    add("polen", 24, 24, punto(P["amarillo"]))
+    add("nutriente", 24, 24, punto("#8BD06A"))
+    for f in ("neutral", "malo", "contento", "sorpresa"):
+        add(f"jarra_{f}", 460, 700, jarra(f), anchor=(0.5, 1.0))
+    add("jarra_corte", 460, 700, jarra("neutral", corte=True), anchor=(0.5, 1.0))
+    add("botella", 120, 310, botella())
+    add("rana", 220, 200, rana())
+    add("lagartija", 280, 180, lagartija())
+    add("ave", 220, 190, ave())
+    add("rata", 250, 160, rata())
+    for i, h in enumerate([0, .25, .5, .75, 1]):
+        add(f"welwitschia_{i}", 1000, 440, welwitschia(h), anchor=(0.5, 1.0))
+    add("welwitschia_rasgada", 1000, 440, welwitschia(1, True, "sorpresa"), anchor=(0.5, 1.0))
+    add("welwitschia_monstruo", 1000, 440, welwitschia(1, True, "malo"), anchor=(0.5, 1.0))
+    add("welwitschia_contento", 1000, 440, welwitschia(1, True, "contento"), anchor=(0.5, 1.0))
+    add("dino", 440, 420, dino(), anchor=(0.5, 1.0))
+    add("torta", 320, 320, torta(), anchor=(0.5, 310 / 320))
+    add("gota_agua", 120, 170, gota_agua())
     for name, fn in [("fondo_liso", fondo_liso), ("fondo_burst", fondo_burst), ("fondo_piel", fondo_piel),
+                     ("fondo_burst_verde", fondo_burst_verde), ("fondo_subsuelo", fondo_subsuelo),
+                     ("fondo_sabana", fondo_sabana), ("fondo_selva", fondo_selva), ("fondo_desierto", fondo_desierto),
                      ("fondo_mazmorra", fondo_mazmorra), ("fondo_pantano", fondo_pantano),
                      ("fondo_exterior", fondo_exterior), ("fondo_cabeza", fondo_cabeza),
                      ("fondo_espacio", fondo_espacio_azul), ("fondo_espacio_rojo", fondo_espacio_rojo),

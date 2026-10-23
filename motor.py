@@ -11,7 +11,7 @@ Extras (todo opcional desde el JSON):
   - elemento "particulas": lluvia/viento/estrellas con semilla fija (clase Particles).
   - idle "latido" (la opacidad late: halos, brasas) y "titila" (estrellas).
   - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
-  - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe.
+  - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe, glup.
 """
 import argparse
 import difflib
@@ -952,6 +952,18 @@ def synth(kind, ph=0.0):
         click = np.convolve(x, np.ones(20, dtype=np.float32) / 20, mode="same") * np.exp(-t * 40)
         sig = boom + 2 * click
         return (sig / (np.abs(sig).max() + 1e-6) * .95).astype(np.float32)
+    if kind == "glup":
+        # algo que cae en un líquido: "plop" grave + burbujitas
+        d = .6
+        t = np.arange(int(d * SR)) / SR
+        f = 900 * np.exp(-t * 30) + 180
+        plop = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 14)
+        bub = np.zeros_like(t)
+        for k, t0 in enumerate([.12, .2, .3]):
+            tt = np.clip(t - t0, 0, None)
+            bub += (t >= t0) * np.sin(2 * np.pi * (500 + 300 * k) * (1 + 3 * tt) * tt) * np.exp(-tt * 40) * .5
+        sig = plop + bub
+        return (sig / (np.abs(sig).max() + 1e-6) * .7).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 

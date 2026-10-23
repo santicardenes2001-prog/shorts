@@ -1,0 +1,1622 @@
+{
+ "cola": 1.4,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 76
+ },
+ "estilos": {
+  "titulo": {
+   "size": 84,
+   "color": "#FFFFFF",
+   "stroke": 12
+  },
+  "titulo_verde": {
+   "size": 100,
+   "color": "#FFFFFF",
+   "stroke": 14,
+   "stroke_color": "#1E5A2A"
+  },
+  "num": {
+   "size": 96,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "circle": true,
+   "pad": [
+    22,
+    14
+   ]
+  },
+  "cartel": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFFFFF"
+  },
+  "cartel_rojo": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#FF5D5D",
+   "stroke": 9
+  },
+  "cartel_amarillo": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFD23F"
+  },
+  "cartel_celeste": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#9ADCFF"
+  },
+  "cartel_verde": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#8BD06A"
+  },
+  "cartel_violeta": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5CFF",
+   "stroke": 9
+  },
+  "cartel_marron": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5236",
+   "stroke": 9
+  },
+  "cartel_rosa": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F7A08C"
+  },
+  "cartel_naranja": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F0A060"
+  }
+ },
+ "narracion": [
+  {
+   "texto": "Te cuento sobre 3 plantas extrañas!"
+  },
+  {
+   "texto": "1. Hydnora africana (La flor subterránea):"
+  },
+  {
+   "texto": "Esta extraña planta africana vive completamente bajo tierra y carece de hojas o clorofila,"
+  },
+  {
+   "texto": "ya que es un parásito que absorbe nutrientes de las raíces de otras plantas."
+  },
+  {
+   "texto": "Solo emerge a la superficie su flor de aspecto alienígena,"
+  },
+  {
+   "texto": "la cual se abre como tres gruesos labios de color carne"
+  },
+  {
+   "texto": "y emite un fuerte olor a heces para atraer a los escarabajos peloteros,"
+  },
+  {
+   "texto": "atrapándolos temporalmente en su interior para asegurar su polinización antes de liberarlos."
+  },
+  {
+   "texto": "2. Nepenthes rajah (La planta carnívora gigante):"
+  },
+  {
+   "texto": "Originaria de las selvas de Borneo, esta espectacular planta carnívora posee trampas en forma de jarra tan inmensas"
+  },
+  {
+   "texto": "que pueden contener hasta 3.5 litros de agua y más de 2 litros de jugos digestivos."
+  },
+  {
+   "texto": "Aunque su dieta principal se compone de insectos,"
+  },
+  {
+   "texto": "es tan grande que se han documentado casos reales donde ha atrapado, ahogado y digerido por completo a pequeños vertebrados,"
+  },
+  {
+   "texto": "como ranas, lagartijas, aves e incluso ratas."
+  },
+  {
+   "texto": "3. Welwitschia mirabilis (La planta inmortal):"
+  },
+  {
+   "texto": "Esta planta desértica originaria de Namibia posee únicamente dos hojas que crecen continuamente a lo largo de toda su vida,"
+  },
+  {
+   "texto": "las cuales son rasgadas por el viento dándole el aspecto de un monstruo tentacular."
+  },
+  {
+   "texto": "Es un auténtico fósil viviente capaz de sobrevivir en condiciones extremas de sequía extrema,"
+  },
+  {
+   "texto": "y algunos ejemplares han llegado a vivir más de 1,500 años."
+  }
+ ],
+ "persistentes": [
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b1",
+   "out": "e4",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Hydnora africana",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b1+0.15",
+   "out": "e4",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b8",
+   "out": "e7",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Nepenthes rajah",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b8+0.15",
+   "out": "e7",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b14",
+   "out": "fin",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Welwitschia mirabilis",
+    "estilo": "titulo",
+    "size": 66
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b14+0.15",
+   "out": "fin",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0
+   ],
+   "fondo": "fondo_burst_verde",
+   "elementos": [
+    {
+     "texto": {
+      "t": "3 PLANTAS\nEXTRAÑAS",
+      "estilo": "titulo_verde",
+      "size": 110
+     },
+     "x": 540,
+     "y": 330,
+     "in": "b0:3",
+     "fx_in": "pop",
+     "idle": "breathe"
+    },
+    {
+     "a": "hydnora_malo",
+     "x": 230,
+     "y": 920,
+     "s": 0.72,
+     "in": "b0:plantas",
+     "fx_in": "pop",
+     "idle": "sway"
+    },
+    {
+     "a": "jarra_malo",
+     "x": 540,
+     "y": 880,
+     "s": 0.62,
+     "in": "b0:plantas+0.15",
+     "fx_in": "pop",
+     "idle": "sway"
+    },
+    {
+     "a": "welwitschia_monstruo",
+     "x": 850,
+     "y": 930,
+     "s": 0.44,
+     "in": "b0:plantas+0.3",
+     "fx_in": "pop",
+     "idle": "wiggle"
+    },
+    {
+     "a": "vos_explo",
+     "x": 540,
+     "y": 1330,
+     "s": 0.55,
+     "in": "b0+0.1",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b0:extrañas",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nombre": "hydnora_subsuelo",
+   "beats": [
+    1,
+    2,
+    3
+   ],
+   "fondo": "fondo_subsuelo",
+   "flash": true,
+   "sonidos": [
+    {
+     "at": "b3:parásito",
+     "s": "zumbido",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "raices",
+     "x": 300,
+     "y": 700,
+     "s": 0.9,
+     "z": -2
+    },
+    {
+     "a": "arbusto_contento",
+     "x": 300,
+     "y": 705,
+     "s": 0.8,
+     "idle": "sway",
+     "swaps": [
+      {
+       "at": "b3:raíces",
+       "a": "arbusto_susto",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "tallo",
+     "x": 720,
+     "y": 690,
+     "s": 0.9,
+     "in": "b1:hydnora",
+     "fx_in": "fade",
+     "z": -1
+    },
+    {
+     "a": "hydnora_rizoma_neutral",
+     "x": 720,
+     "y": 1000,
+     "s": 0.85,
+     "in": "b1:hydnora",
+     "fx_in": "pop",
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b3:parásito",
+       "a": "hydnora_rizoma_malo",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "hydnora_0",
+     "x": 720,
+     "y": 705,
+     "s": 0.55,
+     "in": "b1:hydnora+0.2",
+     "fx_in": "grow",
+     "idle": "sway",
+     "swaps": [
+      {
+       "at": "b3:parásito",
+       "a": "hydnora_cerrada_malo"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "(LA FLOR SUBTERRÁNEA)",
+      "estilo": "cartel",
+      "size": 60
+     },
+     "x": 540,
+     "y": 420,
+     "in": "b1:flor",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b2",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "BAJO TIERRA",
+      "estilo": "cartel_marron",
+      "size": 70
+     },
+     "x": 720,
+     "y": 1260,
+     "in": "b2:bajo",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b2:hojas",
+     "fx_out": "pop"
+    },
+    {
+     "a": "hoja",
+     "x": 200,
+     "y": 1270,
+     "s": 0.55,
+     "in": "b2:hojas",
+     "fx_in": "pop",
+     "out": "b3",
+     "fx_out": "pop"
+    },
+    {
+     "a": "prohibido",
+     "x": 200,
+     "y": 1270,
+     "s": 0.6,
+     "in": "b2:hojas+0.15",
+     "fx_in": "pop",
+     "sfx": "boing",
+     "out": "b3",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "NI HOJAS NI CLOROFILA",
+      "estilo": "cartel",
+      "size": 54
+     },
+     "x": 650,
+     "y": 1270,
+     "in": "b2:clorofila",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b3",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡PARÁSITO!",
+      "estilo": "cartel_rojo",
+      "size": 84
+     },
+     "x": 700,
+     "y": 1270,
+     "in": "b3:parásito",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "pulse"
+    },
+    {
+     "particulas": {
+      "a": "nutriente",
+      "n": 14,
+      "semilla": 3,
+      "zona": [
+       400,
+       930,
+       640,
+       1080
+      ],
+      "vx": [
+       120,
+       200
+      ],
+      "vy": [
+       -10,
+       10
+      ],
+      "s": [
+       0.8,
+       1.3
+      ],
+      "ondula": [
+       8,
+       0.8
+      ]
+     },
+     "in": "b3:absorbe",
+     "fx_in": "fade",
+     "z": 2
+    }
+   ]
+  },
+  {
+   "nombre": "hydnora_flor",
+   "beats": [
+    4,
+    5
+   ],
+   "fondo": "fondo_sabana",
+   "sonidos": [
+    {
+     "at": "b5:abre",
+     "s": "whoosh_suave"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "hydnora_0",
+     "x": 540,
+     "y": 1180,
+     "s": 1.15,
+     "in": "b4:emerge",
+     "fx_in": "slide_up",
+     "idle": "sway",
+     "seq": {
+      "frames": [
+       "hydnora_0",
+       "hydnora_1",
+       "hydnora_2",
+       "hydnora_3"
+      ],
+      "at": "b5:abre",
+      "dur": 1.0
+     }
+    },
+    {
+     "a": "vos_explo",
+     "x": 170,
+     "y": 1330,
+     "s": 0.45,
+     "in": "b4",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b4:alienígena",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¿ALIENÍGENA?",
+      "estilo": "cartel_violeta",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b4:alienígena",
+     "fx_in": "pop",
+     "z": 20,
+     "r": -4,
+     "out": "b5:labios",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "3 LABIOS GRUESOS",
+      "estilo": "cartel_rosa",
+      "size": 72
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:labios",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b5:carne",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "COLOR CARNE",
+      "estilo": "cartel_rosa",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:carne",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "pulse"
+    }
+   ]
+  },
+  {
+   "nombre": "hydnora_escarabajos",
+   "beats": [
+    6,
+    7
+   ],
+   "fondo": "fondo_sabana",
+   "sonidos": [
+    {
+     "at": "b6:heces",
+     "s": "boing"
+    },
+    {
+     "at": "b7:atrapándolos",
+     "s": "glup"
+    },
+    {
+     "at": "b7:polinización",
+     "s": "brillo",
+     "vol": 0.7
+    },
+    {
+     "at": "b7:liberarlos",
+     "s": "pop"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "hydnora_3",
+     "x": 540,
+     "y": 1180,
+     "s": 1.0,
+     "idle": "sway",
+     "swaps": [
+      {
+       "at": "b7:atrapándolos+0.4",
+       "a": "hydnora_llena",
+       "fx": "punch"
+      },
+      {
+       "at": "b7:liberarlos",
+       "a": "hydnora_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "olor",
+     "x": 450,
+     "y": 760,
+     "s": 0.6,
+     "in": "b6:olor",
+     "fx_in": "fade",
+     "idle": "sway"
+    },
+    {
+     "a": "olor",
+     "x": 640,
+     "y": 750,
+     "s": 0.55,
+     "in": "b6:olor+0.15",
+     "fx_in": "fade",
+     "idle": "sway",
+     "flip": true
+    },
+    {
+     "a": "vos_explo",
+     "x": 160,
+     "y": 1330,
+     "s": 0.45,
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b6:heces",
+       "a": "vos_explo_asco",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "OLOR A HECES",
+      "estilo": "cartel_marron",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:heces",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b6:escarabajos",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "ESCARABAJOS PELOTEROS",
+      "estilo": "cartel",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:escarabajos",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b7",
+     "fx_out": "pop"
+    },
+    {
+     "a": "bola_estiercol",
+     "x": 760,
+     "y": 1200,
+     "s": 0.55,
+     "in": "b6:escarabajos",
+     "fx_in": "slide_left",
+     "idle": "bob"
+    },
+    {
+     "a": "escarabajo",
+     "x": 870,
+     "y": 1200,
+     "s": 0.6,
+     "flip": true,
+     "in": "b6:escarabajos",
+     "fx_in": "slide_left",
+     "idle": "work",
+     "keys": [
+      {
+       "at": "b7:atrapándolos",
+       "dur": 0.6,
+       "x": 540,
+       "y": 900,
+       "s": 0.15,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "bola_estiercol",
+     "x": 820,
+     "y": 1330,
+     "s": 0.45,
+     "in": "b6:peloteros",
+     "fx_in": "slide_left",
+     "idle": "bob"
+    },
+    {
+     "a": "escarabajo",
+     "x": 920,
+     "y": 1330,
+     "s": 0.5,
+     "flip": true,
+     "in": "b6:peloteros",
+     "fx_in": "slide_left",
+     "idle": "work",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b7:atrapándolos+0.15",
+       "dur": 0.6,
+       "x": 540,
+       "y": 900,
+       "s": 0.15,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¡ATRAPADOS!",
+      "estilo": "cartel_rojo",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:atrapándolos",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b7:polinización",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "POLINIZACIÓN",
+      "estilo": "cartel_amarillo",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:polinización",
+     "fx_in": "pop",
+     "z": 20
+    },
+    {
+     "particulas": {
+      "a": "polen",
+      "n": 22,
+      "semilla": 4,
+      "zona": [
+       300,
+       640,
+       780,
+       1100
+      ],
+      "vy": [
+       -40,
+       -10
+      ],
+      "s": [
+       0.7,
+       1.3
+      ],
+      "titila": 0.5,
+      "ondula": [
+       20,
+       0.5
+      ]
+     },
+     "in": "b7:polinización",
+     "fx_in": "fade",
+     "z": 8
+    },
+    {
+     "a": "escarabajo_susto",
+     "x": 540,
+     "y": 900,
+     "s": 0.5,
+     "in": "b7:liberarlos",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b7:liberarlos",
+       "dur": 0.5,
+       "x": 820,
+       "y": 1250,
+       "ease": "out"
+      }
+     ],
+     "idle": "work"
+    }
+   ]
+  },
+  {
+   "nombre": "nepenthes_intro",
+   "beats": [
+    8,
+    9
+   ],
+   "fondo": "fondo_selva",
+   "flash": true,
+   "sonidos": [
+    {
+     "at": "b9:inmensas",
+     "s": "boing"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "jarra_neutral",
+     "x": 540,
+     "y": 1300,
+     "s": 1.0,
+     "in": "b8:nepenthes",
+     "fx_in": "grow",
+     "idle": "sway",
+     "swaps": [
+      {
+       "at": "b8:carnívora",
+       "a": "jarra_malo",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b9:inmensas",
+       "dur": 0.5,
+       "s": 1.12,
+       "ease": "back"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "(LA PLANTA CARNÍVORA GIGANTE)",
+      "estilo": "cartel",
+      "size": 54
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:planta",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b9",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "BORNEO",
+      "estilo": "cartel_verde",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b9:borneo",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b9:trampas",
+     "fx_out": "pop"
+    },
+    {
+     "a": "vos_explo",
+     "x": 150,
+     "y": 1330,
+     "s": 0.4,
+     "in": "b9:trampas",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b9:inmensas",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¡ENORMES!",
+      "estilo": "cartel_amarillo",
+      "size": 86
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b9:inmensas",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "pulse"
+    }
+   ]
+  },
+  {
+   "nombre": "nepenthes_liquido",
+   "beats": [
+    10
+   ],
+   "fondo": "fondo_selva",
+   "sonidos": [
+    {
+     "at": "b10:litros",
+     "s": "glup"
+    },
+    {
+     "at": "b10:jugos",
+     "s": "glup"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "jarra_corte",
+     "x": 540,
+     "y": 1300,
+     "s": 1.12,
+     "idle": "sway"
+    },
+    {
+     "particulas": {
+      "a": "burbuja",
+      "n": 10,
+      "semilla": 2,
+      "zona": [
+       400,
+       1170,
+       680,
+       1300
+      ],
+      "vy": [
+       -50,
+       -25
+      ],
+      "s": [
+       0.5,
+       1
+      ],
+      "ondula": [
+       6,
+       0.6
+      ]
+     },
+     "in": "b10:jugos",
+     "fx_in": "fade",
+     "z": 3
+    },
+    {
+     "a": "botella",
+     "x": 880,
+     "y": 1150,
+     "s": 0.6,
+     "in": "b10:litros",
+     "fx_in": "pop",
+     "idle": "bob"
+    },
+    {
+     "texto": {
+      "t": "3.5 L DE AGUA",
+      "estilo": "cartel_celeste",
+      "size": 78
+     },
+     "x": 540,
+     "y": 450,
+     "in": "b10:litros",
+     "fx_in": "pop",
+     "z": 20
+    },
+    {
+     "texto": {
+      "t": "+ 2 L DE JUGOS DIGESTIVOS",
+      "estilo": "cartel_verde",
+      "size": 54
+     },
+     "x": 540,
+     "y": 580,
+     "in": "b10:jugos",
+     "fx_in": "pop",
+     "z": 20
+    },
+    {
+     "a": "vos_explo_sorpresa",
+     "x": 150,
+     "y": 1330,
+     "s": 0.4,
+     "idle": "breathe",
+     "blink": true
+    }
+   ]
+  },
+  {
+   "nombre": "nepenthes_presas",
+   "beats": [
+    11,
+    12,
+    13
+   ],
+   "fondo": "fondo_selva",
+   "sonidos": [
+    {
+     "at": "b11:insectos",
+     "s": "mosca"
+    },
+    {
+     "at": "b12:atrapado",
+     "s": "golpe",
+     "vol": 0.6
+    },
+    {
+     "at": "b13:ratas+1.3",
+     "s": "boing"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "jarra_malo",
+     "x": 540,
+     "y": 1300,
+     "s": 1.05,
+     "idle": "sway",
+     "keys": [
+      {
+       "at": "b12:grande",
+       "dur": 0.5,
+       "s": 1.12,
+       "ease": "back"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b13:ratas+1.3",
+       "a": "jarra_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "mosca",
+      "n": 10,
+      "semilla": 3,
+      "zona": [
+       320,
+       640,
+       760,
+       900
+      ],
+      "vx": [
+       -40,
+       40
+      ],
+      "vy": [
+       -30,
+       30
+      ],
+      "s": [
+       0.35,
+       0.55
+      ],
+      "ondula": [
+       40,
+       0.7
+      ]
+     },
+     "in": "b11:insectos",
+     "fx_in": "fade",
+     "out": "b12:vertebrados",
+     "fx_out": "fade",
+     "z": 5
+    },
+    {
+     "texto": {
+      "t": "CASOS REALES",
+      "estilo": "cartel",
+      "size": 78
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:casos",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b12:atrapado",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡ATRAPADO!",
+      "estilo": "cartel_rojo",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:atrapado",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b12:ahogado",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡AHOGADO!",
+      "estilo": "cartel_celeste",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:ahogado",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b12:digerido",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡DIGERIDO!",
+      "estilo": "cartel_verde",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:digerido",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b13",
+     "fx_out": "pop"
+    },
+    {
+     "a": "vos_explo",
+     "x": 150,
+     "y": 1330,
+     "s": 0.4,
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b12:vertebrados",
+       "a": "vos_explo_miedo",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rana",
+     "x": 830,
+     "y": 650,
+     "s": 1.0,
+     "flip": false,
+     "in": "b13:ranas",
+     "fx_in": "pop",
+     "idle": "shake",
+     "z": 6,
+     "keys": [
+      {
+       "at": "b13:ranas+0.7",
+       "dur": 0.5,
+       "x": 540,
+       "y": 870,
+       "s": 0.15,
+       "r": 200,
+       "alpha": 0,
+       "ease": "in",
+       "sfx": "glup"
+      }
+     ]
+    },
+    {
+     "a": "lagartija",
+     "x": 250,
+     "y": 650,
+     "s": 0.9,
+     "flip": false,
+     "in": "b13:lagartijas",
+     "fx_in": "pop",
+     "idle": "shake",
+     "z": 6,
+     "keys": [
+      {
+       "at": "b13:lagartijas+0.7",
+       "dur": 0.5,
+       "x": 540,
+       "y": 870,
+       "s": 0.15,
+       "r": 200,
+       "alpha": 0,
+       "ease": "in",
+       "sfx": "glup"
+      }
+     ]
+    },
+    {
+     "a": "ave",
+     "x": 830,
+     "y": 650,
+     "s": 1.0,
+     "flip": false,
+     "in": "b13:aves",
+     "fx_in": "pop",
+     "idle": "shake",
+     "z": 6,
+     "keys": [
+      {
+       "at": "b13:aves+0.7",
+       "dur": 0.5,
+       "x": 540,
+       "y": 870,
+       "s": 0.15,
+       "r": 200,
+       "alpha": 0,
+       "ease": "in",
+       "sfx": "glup"
+      }
+     ]
+    },
+    {
+     "a": "rata",
+     "x": 250,
+     "y": 650,
+     "s": 1.0,
+     "flip": false,
+     "in": "b13:ratas",
+     "fx_in": "pop",
+     "idle": "shake",
+     "z": 6,
+     "keys": [
+      {
+       "at": "b13:ratas+0.7",
+       "dur": 0.5,
+       "x": 540,
+       "y": 870,
+       "s": 0.15,
+       "r": 200,
+       "alpha": 0,
+       "ease": "in",
+       "sfx": "glup"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nombre": "welwitschia_intro",
+   "beats": [
+    14,
+    15
+   ],
+   "fondo": "fondo_desierto",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "welwitschia_0",
+     "x": 540,
+     "y": 1300,
+     "s": 1.05,
+     "in": "b14:welwitschia",
+     "fx_in": "grow",
+     "idle": "breathe",
+     "seq": {
+      "frames": [
+       "welwitschia_0",
+       "welwitschia_1",
+       "welwitschia_2",
+       "welwitschia_3",
+       "welwitschia_4"
+      ],
+      "at": "b15:crecen",
+      "dur": 2.6,
+      "ease": "linear"
+     }
+    },
+    {
+     "texto": {
+      "t": "(LA PLANTA INMORTAL)",
+      "estilo": "cartel",
+      "size": 64
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b14:planta",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b15",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "NAMIBIA",
+      "estilo": "cartel_naranja",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b15:namibia",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b15:dos",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "SOLO 2 HOJAS",
+      "estilo": "cartel_verde",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b15:dos",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b15:crecen",
+     "fx_out": "pop"
+    },
+    {
+     "a": "flecha_roja",
+     "x": 330,
+     "y": 960,
+     "s": 0.35,
+     "in": "b15:hojas",
+     "fx_in": "pop",
+     "idle": "work",
+     "out": "b15:crecen",
+     "fx_out": "pop"
+    },
+    {
+     "a": "flecha_roja",
+     "x": 750,
+     "y": 960,
+     "s": 0.35,
+     "in": "b15:hojas+0.1",
+     "fx_in": "pop",
+     "idle": "work",
+     "sfx": "none",
+     "out": "b15:crecen",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡NUNCA DEJAN DE CRECER!",
+      "estilo": "cartel_amarillo",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b15:continuamente",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "pulse"
+    }
+   ]
+  },
+  {
+   "nombre": "welwitschia_monstruo",
+   "beats": [
+    16
+   ],
+   "fondo": "fondo_desierto",
+   "sonidos": [
+    {
+     "at": "b16:viento",
+     "s": "viento"
+    },
+    {
+     "at": "b16:monstruo",
+     "s": "zumbido"
+    }
+   ],
+   "camara": {
+    "keys": [
+     {
+      "at": "b16:monstruo",
+      "dur": 0.6,
+      "zoom": 1.12,
+      "y": 1050,
+      "ease": "back"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "vos_explo",
+     "x": 180,
+     "y": 1010,
+     "s": 0.38,
+     "z": -1,
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b16:monstruo",
+       "a": "vos_explo_miedo",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "welwitschia_4",
+     "x": 540,
+     "y": 1300,
+     "s": 1.05,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b16:rasgadas",
+       "a": "welwitschia_rasgada",
+       "fx": "punch"
+      },
+      {
+       "at": "b16:monstruo",
+       "a": "welwitschia_monstruo",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b16:monstruo",
+       "dur": 0.4,
+       "s": 1.05
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "viento",
+      "n": 10,
+      "semilla": 3,
+      "zona": [
+       -400,
+       500,
+       1480,
+       1300
+      ],
+      "vx": [
+       1500,
+       2100
+      ],
+      "s": [
+       0.6,
+       1.1
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ]
+     },
+     "in": "b16:rasgadas",
+     "fx_in": "fade",
+     "z": 8
+    },
+    {
+     "texto": {
+      "t": "¡MONSTRUO TENTACULAR!",
+      "estilo": "cartel_violeta",
+      "size": 64
+     },
+     "x": 540,
+     "y": 560,
+     "in": "b16:monstruo",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "shake"
+    }
+   ]
+  },
+  {
+   "nombre": "welwitschia_final",
+   "beats": [
+    17,
+    18
+   ],
+   "fondo": "fondo_desierto",
+   "sonidos": [
+    {
+     "at": "b18:años",
+     "s": "brillo"
+    },
+    {
+     "at": "b18:años+0.4",
+     "s": "ding",
+     "vol": 0.5
+    }
+   ],
+   "elementos": [
+    {
+     "a": "welwitschia_rasgada",
+     "x": 540,
+     "y": 1300,
+     "s": 1.05,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b18:años",
+       "a": "welwitschia_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "dino",
+     "x": 860,
+     "y": 1010,
+     "s": 0.55,
+     "z": -1,
+     "in": "b17:fósil",
+     "fx_in": "slide_left",
+     "idle": "bob",
+     "out": "b17:sobrevivir",
+     "fx_out": "slide_right"
+    },
+    {
+     "texto": {
+      "t": "FÓSIL VIVIENTE",
+      "estilo": "cartel_verde",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b17:fósil",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b17:sequía",
+     "fx_out": "pop"
+    },
+    {
+     "a": "termometro_10",
+     "x": 160,
+     "y": 1000,
+     "s": 0.5,
+     "z": -1,
+     "in": "b17:condiciones",
+     "fx_in": "pop",
+     "idle": "shake",
+     "out": "b18:años",
+     "fx_out": "pop"
+    },
+    {
+     "a": "gota_agua",
+     "x": 880,
+     "y": 820,
+     "s": 0.6,
+     "in": "b17:sequía",
+     "fx_in": "pop",
+     "out": "b18:años",
+     "fx_out": "pop"
+    },
+    {
+     "a": "prohibido",
+     "x": 880,
+     "y": 830,
+     "s": 0.55,
+     "in": "b17:sequía+0.15",
+     "fx_in": "pop",
+     "sfx": "boing",
+     "out": "b18:años",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "SEQUÍA EXTREMA",
+      "estilo": "cartel_naranja",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b17:sequía",
+     "fx_in": "pop",
+     "z": 20,
+     "out": "b18:1500",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "+1500 AÑOS",
+      "estilo": "cartel_amarillo",
+      "size": 100
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b18:1500",
+     "fx_in": "pop",
+     "z": 20,
+     "idle": "pulse"
+    },
+    {
+     "a": "torta",
+     "x": 540,
+     "y": 1050,
+     "s": 0.55,
+     "in": "b18:años",
+     "fx_in": "drop",
+     "sfx": "none"
+    },
+    {
+     "a": "vos_explo_pulgar",
+     "x": 180,
+     "y": 1010,
+     "s": 0.38,
+     "z": -1,
+     "in": "b18:vivir",
+     "fx_in": "jump",
+     "idle": "breathe"
+    }
+   ]
+  }
+ ],
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}
