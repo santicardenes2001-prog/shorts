@@ -1388,17 +1388,28 @@ def calavera():
 
 
 # ---------------------------------------------------------------- plantas (short "3 plantas")
-def arbusto(face="contento"):
-    """Planta huésped (arbusto suculento tipo euforbia, 340x320, ancla abajo) con cara."""
-    s = []
-    for x, h, r in [(110, 200, -18), (170, 260, -6), (230, 240, 8), (290, 180, 20)]:
-        d = f"M {x} 300 Q {x - 6} {300 - h / 2} {x + r} {300 - h}"
-        s.append(stroke_path(d, "#6FB35A", 42))
-        for k in range(1, 4):
-            yy = 300 - h * k / 4
-            s.append(ln(f"M {x - 12} {yy:.0f} L {x - 26} {yy - 10:.0f}", 5) + ln(f"M {x + 12} {yy:.0f} L {x + 26} {yy - 10:.0f}", 5))
-    s.append(ln("M 60 300 Q 200 230 330 300 Z", SW, INK, "#5FA845"))
-    s.append(cara(face, 200, 250, .42, "ar"))
+def euforbia(face="contento"):
+    """Euforbia (planta huésped de Hydnora, 360x320, ancla abajo): mata de tallos finos,
+    lisos y verdes, sin espinas ni hojas, con florcitas amarillas en las puntas."""
+    rnd = random.Random(12)
+    s, tips = [], []
+
+    def rama(x, y, ang, largo, n):
+        x1 = x + largo * math.sin(math.radians(ang))
+        y1 = y - largo * math.cos(math.radians(ang))
+        s.append(stroke_path(f"M {x:.0f} {y:.0f} Q {x + (x1 - x) * .4 + 6:.0f} {y + (y1 - y) * .5:.0f} {x1:.0f} {y1:.0f}",
+                             "#9CC453", 13, INK, 23))
+        if n > 0:
+            for d in (-1, 1):
+                rama(x1, y1, ang + d * rnd.uniform(14, 26), largo * .62, n - 1)
+        else:
+            tips.append((x1, y1))
+    for ang in (-52, -26, 0, 24, 50):
+        rama(180, 300, ang, rnd.uniform(110, 135), 1)
+    for x, y in tips:
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="9" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="4"/>')
+    s.append(ln("M 70 300 Q 180 236 290 300 Z", SW, INK, "#86B046"))
+    s.append(cara(face, 180, 266, .36, "eu"))
     return "".join(s)
 
 
@@ -1425,37 +1436,45 @@ def hydnora_rizoma(face="neutral"):
 
 
 def hydnora(apertura=0.0, face="neutral", llena=False):
-    """Flor de Hydnora africana (400x440, ancla abajo). apertura 0 = capullo, 1 = abierta
-    en tres labios gruesos color carne. Cara en la base; la boca es la cavidad."""
+    """Flor de Hydnora africana (400x440, ancla abajo): tubo verrugoso marrón y tres lóbulos
+    gruesos y carnosos unidos en la punta. Al abrirse (apertura 0-1) se separan un poco y
+    muestran la cara interna color salmón con cerdas. Cara en la base del tubo."""
     cx, base = 200, 430
-    s = [f'<ellipse cx="{cx}" cy="{base - 4}" rx="140" ry="16" fill="#000" opacity=".15"/>']
-    # base verrugosa
-    s.append(ln(f"M 90 {base} Q 80 300 200 280 Q 320 300 310 {base} Z", SW, INK, "#8A5A44"))
-    for x, y in [(130, 360), (160, 400), (240, 330), (270, 390), (200, 380), (120, 410)]:
-        s.append(f'<circle cx="{x}" cy="{y}" r="8" fill="#6E4535"/>')
     a = apertura
-    # tres lóbulos: el del medio atrás, dos a los costados
-    for k, ang in enumerate([0, -1, 1]):
-        rot = ang * (8 + 52 * a)
-        tip_y = 40 + 40 * a
-        lobe = (f"M 150 300 Q 120 {170 - 30 * a} {cx} {tip_y} Q 280 {170 - 30 * a} 250 300 Z")
-        g = f'<g transform="rotate({rot:.1f} {cx} 300)">'
-        g += ln(lobe, SW, INK, "#8A5A44")
-        if a > 0.2:   # cara interna color carne con cerdas
-            inner = f"M 168 296 Q 146 {190 - 20 * a} {cx} {tip_y + 30} Q 254 {190 - 20 * a} 232 296 Z"
-            g += f'<path d="{inner}" fill="#F08C78" opacity="{min(1, a * 1.3):.2f}" stroke="{INK}" stroke-width="5"/>'
-            for yy in range(int(tip_y + 60), 290, 26):
-                g += ln(f"M {cx - 22} {yy} L {cx + 22} {yy}", 4, "#FBD3C4", extra=f'opacity="{min(1, a * 1.3):.2f}"')
-        g += '</g>'
-        s.insert(2 if k == 0 else len(s), g)
-    # boca/cavidad y cara en la base
-    if a > 0.5:
-        s.append(f'<ellipse cx="{cx}" cy="300" rx="{40 + 20 * a:.0f}" ry="22" fill="#5A1E1E" stroke="{INK}" stroke-width="5"/>')
-        if llena:
-            for x in (182, 214):
-                s.append(f'<ellipse cx="{x}" cy="296" rx="14" ry="10" fill="#2F3A5C" stroke="{INK}" stroke-width="4"/>'
-                         f'<circle cx="{x + 6}" cy="292" r="3" fill="#fff"/>')
-    s.append(cara(face, cx, 372, .45, "hy"))
+    s = [f'<ellipse cx="{cx}" cy="{base - 4}" rx="130" ry="16" fill="#000" opacity=".15"/>']
+    # cavidad oscura que se ve entre los lóbulos al abrirse
+    if a > 0:
+        s.append(f'<path d="M 120 300 Q {cx} {110 - 20 * a:.0f} 280 300 Z" fill="#3A1414"/>')
+
+    def lobulo(rot, ancho, tip_y, frente):
+        x0, x1 = cx - ancho / 2, cx + ancho / 2
+        d = f"M {x0:.0f} 306 Q {x0 - 26:.0f} 190 {cx} {tip_y:.0f} Q {x1 + 26:.0f} 190 {x1:.0f} 306 Z"
+        g = f'<g transform="rotate({rot:.1f} {cx} 306)">' + ln(d, SW + 2, INK, "#7E5442")
+        for (px, py) in [(cx - 30, 250), (cx + 24, 220), (cx - 10, 180), (cx + 30, 280)]:
+            g += f'<circle cx="{px}" cy="{py}" r="7" fill="#64402F"/>'
+        if a > 0.15 and frente:   # cara interna salmón con cerdas blancas en el borde
+            inner = f"M {x0 + 22:.0f} 300 Q {x0 + 2:.0f} 200 {cx} {tip_y + 34:.0f} Q {x1 - 2:.0f} 200 {x1 - 22:.0f} 300 Z"
+            op = min(1, (a - .15) * 1.6)
+            g += f'<path d="{inner}" fill="#F0805A" opacity="{op:.2f}" stroke="{INK}" stroke-width="5"/>'
+            for k in range(7):
+                t = k / 6
+                yy = tip_y + 50 + t * (250 - tip_y - 50)
+                g += ln(f"M {cx - 30 + 8 * t:.0f} {yy:.0f} l -10 -6 M {cx + 30 - 8 * t:.0f} {yy:.0f} l 10 -6", 4, "#FFE2D2",
+                        extra=f'opacity="{op:.2f}"')
+        return g + '</g>'
+    # lóbulo de atrás (centro) y los dos de adelante
+    s.append(lobulo(0, 110, 70 + 26 * a, a > 0.15))
+    s.append(lobulo(-(14 + 22 * a), 130, 74 + 20 * a, True))
+    s.append(lobulo(14 + 22 * a, 130, 74 + 20 * a, True))
+    # tubo verrugoso
+    s.append(ln(f"M 100 {base} Q 90 330 128 296 L 272 296 Q 310 330 300 {base} Z", SW, INK, "#8A5A44"))
+    for x, y in [(130, 360), (160, 404), (244, 330), (270, 392), (204, 412), (118, 412), (286, 350)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="8" fill="#6E4535"/>')
+    if llena and a > 0.5:   # escarabajos espiando entre los lóbulos
+        for x, y in [(cx - 52, 262), (cx + 52, 250)]:
+            s.append(f'<ellipse cx="{x}" cy="{y}" rx="20" ry="14" fill="#2E4A5C" stroke="{INK}" stroke-width="4"/>'
+                     f'<circle cx="{x - 6}" cy="{y - 3}" r="4" fill="#fff"/><circle cx="{x + 7}" cy="{y - 3}" r="4" fill="#fff"/>')
+    s.append(cara(face, cx, 368, .45, "hy"))
     return "".join(s)
 
 
@@ -1509,17 +1528,22 @@ def punto(color, r=10):
 
 
 def jarra(face="neutral", corte=False):
-    """Jarra de Nepenthes rajah (460x700, ancla abajo): cuerpo verde-rojizo con pintas,
-    boca con peristoma rojo acanalado y tapa arriba. corte=True: se ve el líquido adentro."""
+    """Jarra de Nepenthes rajah (460x700, ancla abajo): urna rojo-púrpura con pintas, boca con
+    peristoma rojo acanalado y la tapa pegada atrás del borde; abajo la hoja con su zarcillo.
+    corte=True: se ve el líquido adentro (agua arriba y jugos digestivos abajo)."""
     s = [f'<ellipse cx="230" cy="690" rx="150" ry="14" fill="#000" opacity=".15"/>']
     body = "M 120 300 Q 40 420 60 560 Q 90 690 230 690 Q 370 690 400 560 Q 420 420 340 300 Z"
-    # tapa
-    s.append(stroke_path("M 300 268 Q 330 230 320 200", "#7A9A3A", 18))
-    s.append(ln("M 120 200 Q 130 110 250 110 Q 370 116 350 214 Q 290 186 225 196 Q 160 206 120 200 Z", SW, INK, "#9C3B45"))
-    s.append(ln("M 150 180 Q 170 140 230 134", 8, "#fff", extra='opacity=".3"'))
+    # hoja y zarcillo que sostiene la jarra
+    s.append(ln("M 210 694 Q 100 704 16 650 Q 110 636 210 694 Z", SW, INK, "#6FA84A"))
+    s.append(ln("M 30 652 Q 110 668 196 690", 4, "#4E8A3A"))
+    s.append(stroke_path("M 22 650 Q 0 600 40 580 Q 70 572 78 600", "#6FA84A", 10))
+    # tapa: pegada atrás del peristoma, inclinada sobre la boca
+    s.append(ln("M 170 268 Q 110 150 220 112 Q 360 86 336 214 Q 326 252 296 268 Z", SW, INK, "#C04658"))
+    s.append(ln("M 200 230 Q 210 160 280 140", 5, "#8E2A3C") + ln("M 250 240 Q 280 190 320 170", 5, "#8E2A3C"))
+    s.append(ln("M 150 180 Q 160 140 200 126", 8, "#fff", extra='opacity=".35"'))
     if corte:
         s.append(f'<clipPath id="jc"><path d="{body}"/></clipPath>')
-        s.append(ln(body, SW, INK, "#E8F4D8"))
+        s.append(ln(body, SW, INK, "#F6D6DA"))
         s.append('<g clip-path="url(#jc)">'
                  f'<rect x="0" y="430" width="460" height="300" fill="#7FC8F0"/>'
                  f'<rect x="0" y="560" width="460" height="200" fill="#B5D84A"/>'
@@ -1527,23 +1551,23 @@ def jarra(face="neutral", corte=False):
                  + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#fff" opacity=".7"/>'
                            for x, y, r in [(150, 600, 10), (260, 640, 7), (310, 590, 12), (200, 520, 8), (290, 480, 6)])
                  + '</g>')
-        s.append(ln(body, SW))
+        s.append(ln(body, SW + 3, "#B8404F") + ln(body, 3))
     else:
-        s.append(ln(body, SW, INK, "#8DBF4A"))
+        s.append(ln(body, SW, INK, "#B8404F"))
         s.append(f'<clipPath id="jc"><path d="{body}"/></clipPath><g clip-path="url(#jc)">'
-                 f'<rect x="0" y="520" width="460" height="200" fill="#B5474F" opacity=".55"/>'
-                 + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#9C3B45" opacity=".8"/>'
+                 f'<rect x="0" y="560" width="460" height="200" fill="#8E2A3C" opacity=".6"/>'
+                 + "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#7A2238" opacity=".85"/>'
                            for x, y, r in [(110, 420, 12), (300, 380, 10), (330, 480, 14), (150, 520, 10), (250, 600, 12),
                                            (90, 600, 9), (360, 590, 10), (200, 350, 8)])
-                 + ln("M 80 380 Q 100 330 140 312", 14, "#fff", extra='opacity=".35"') + '</g>')
-        s.append(ln("M 150 330 L 140 640", 6, "#6E9A34") + ln("M 310 330 L 320 640", 6, "#6E9A34"))
+                 + ln("M 80 380 Q 100 330 140 312", 14, "#fff", extra='opacity=".3"') + '</g>')
+        s.append(ln("M 150 330 L 140 640", 6, "#8E2A3C") + ln("M 310 330 L 320 640", 6, "#8E2A3C"))
     # peristoma (borde acanalado)
-    s.append(f'<ellipse cx="230" cy="300" rx="125" ry="42" fill="#C0392B" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="230" cy="300" rx="125" ry="42" fill="#E0404A" stroke="{INK}" stroke-width="{SW}"/>')
     s.append(f'<ellipse cx="230" cy="300" rx="90" ry="24" fill="#3A1E22" stroke="{INK}" stroke-width="5"/>')
     for i in range(14):
-        a = math.pi * (i / 13)
-        x0, y0 = 230 + 108 * math.cos(a), 300 + 34 * math.sin(a)
-        s.append(ln(f"M {x0:.0f} {y0:.0f} L {230 + 124 * math.cos(a):.0f} {300 + 41 * math.sin(a):.0f}", 4, "#8E2A20"))
+        ang = math.pi * (i / 13)
+        x0, y0 = 230 + 108 * math.cos(ang), 300 + 34 * math.sin(ang)
+        s.append(ln(f"M {x0:.0f} {y0:.0f} L {230 + 124 * math.cos(ang):.0f} {300 + 41 * math.sin(ang):.0f}", 4, "#9E2A2A"))
     if face:
         s.append(cara(face, 230, 420 if not corte else 380, .7, "jr"))
     return "".join(s)
@@ -2082,7 +2106,7 @@ def build():
     add("calavera", 260, 240, calavera())
     # ---- short "3 plantas"
     for f in ("contento", "susto"):
-        add(f"arbusto_{f}", 340, 320, arbusto(f), anchor=(0.5, 300 / 320))
+        add(f"euforbia_{f}", 360, 320, euforbia(f), anchor=(0.5, 300 / 320))
     add("raices", 500, 520, raices(), anchor=(0.5, 0.0))
     for f in ("neutral", "malo", "contento"):
         add(f"hydnora_rizoma_{f}", 440, 260, hydnora_rizoma(f))
@@ -2104,6 +2128,7 @@ def build():
     for f in ("neutral", "malo", "contento", "sorpresa"):
         add(f"jarra_{f}", 460, 700, jarra(f), anchor=(0.5, 1.0))
     add("jarra_corte", 460, 700, jarra("neutral", corte=True), anchor=(0.5, 1.0))
+    add("jarra_corte_malo", 460, 700, jarra("malo", corte=True), anchor=(0.5, 1.0))
     add("botella", 120, 310, botella())
     add("rana", 220, 200, rana())
     add("lagartija", 280, 180, lagartija())

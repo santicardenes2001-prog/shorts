@@ -10,6 +10,7 @@ palabra; con una grabación + palabras.json (Whisper) se usan los tiempos reales
 Extras (todo opcional desde el JSON):
   - elemento "particulas": lluvia/viento/estrellas con semilla fija (clase Particles).
   - idle "latido" (la opacidad late: halos, brasas) y "titila" (estrellas).
+  - fx_in/fx_out "suave" (carteles prolijos) y "sombra" en los textos con caja.
   - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
   - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe, glup.
 """
@@ -254,7 +255,7 @@ def render_text(spec_json):
     bh = lh * len(lines) + 2 * pady
     if sp.get("circle"):
         bw = bh = max(bw, bh)
-    sh = int(10 * k) if sp.get("box") and sp.get("shadow", True) else 0
+    sh = int(sp.get("sombra", 10) * k) if sp.get("box") and sp.get("shadow", True) else 0
     im = Image.new("RGBA", (int(bw + 8 * k), int(bh + 8 * k + sh)), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     ox, oy = 4 * k, 4 * k
@@ -299,9 +300,9 @@ def img_key(el_asset):
 
 
 # ================================================================ elementos
-FX_DUR = {"pop": .35, "grow": .35, "jump": .45, "drop": .6, "fade": .3, "wipe": .8,
+FX_DUR = {"pop": .35, "grow": .35, "jump": .45, "drop": .6, "fade": .3, "wipe": .8, "suave": .4,
           "slide_up": .45, "slide_down": .45, "slide_left": .45, "slide_right": .45, "none": 0}
-FX_SFX = {"pop": "pop", "grow": "pop", "jump": "pop", "drop": "pop", "slide_up": "whoosh",
+FX_SFX = {"pop": "pop", "grow": "pop", "jump": "pop", "drop": "pop", "suave": "pop", "slide_up": "whoosh",
           "slide_down": "whoosh", "slide_left": "whoosh", "slide_right": "whoosh", "wipe": "whoosh_suave"}
 
 
@@ -334,7 +335,8 @@ class Element:
             else:
                 self.idle.append(dict(i, t0=R(i["from"]) if "from" in i else -1e9, t1=R(i["to"]) if "to" in i else 1e9))
         self.z = spec.get("z", 0) + idx * 1e-3
-        self.ph = phase_of(json.dumps(spec, sort_keys=True))
+        # "fase" fija la fase de los idle: el mismo personaje queda sincronizado entre escenas
+        self.ph = float(spec["fase"]) if "fase" in spec else phase_of(json.dumps(spec, sort_keys=True))
         self.blink = spec.get("blink", False)
 
     # ------------------------------------------------------------ sonidos
@@ -404,6 +406,12 @@ class Element:
                 st["y"] -= (1 - ease("bounce", p)) * 700
             elif fx == "fade":
                 st["alpha"] *= p
+            elif fx == "suave":
+                # entrada prolija para carteles: aparece, crece desde 85 % y sube un poco
+                e = ease("out", p)
+                st["alpha"] *= clamp(p * 2.2)
+                st["s"] *= .85 + .15 * e
+                st["y"] += (1 - e) * 36
             elif fx == "wipe":
                 st["crop"] = max(ease("inout", p), 0.001)
             elif fx == "slide_up":
@@ -422,6 +430,10 @@ class Element:
                 st["s"] *= max(1 + .15 * math.sin(math.pi * q) - q, 0.001)
             elif fo == "fade":
                 st["alpha"] *= 1 - q
+            elif fo == "suave":
+                st["alpha"] *= 1 - ease("in", q)
+                st["s"] *= 1 - .08 * q
+                st["y"] -= 24 * ease("in", q)
             elif fo == "slide_down":
                 st["y"] += ease("in", q) * 1000
             elif fo == "slide_up":

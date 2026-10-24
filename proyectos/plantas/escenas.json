@@ -31,50 +31,68 @@
   "cartel": {
    "size": 80,
    "color": "#24201F",
-   "box": "#FFFFFF"
+   "box": "#FFFFFF",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_rojo": {
    "size": 80,
    "color": "#FFFFFF",
    "box": "#FF5D5D",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_amarillo": {
    "size": 80,
    "color": "#24201F",
-   "box": "#FFD23F"
+   "box": "#FFD23F",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_celeste": {
    "size": 80,
    "color": "#24201F",
-   "box": "#9ADCFF"
+   "box": "#9ADCFF",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_verde": {
    "size": 80,
    "color": "#24201F",
-   "box": "#8BD06A"
+   "box": "#8BD06A",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_violeta": {
    "size": 80,
    "color": "#FFFFFF",
    "box": "#7A5CFF",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_marron": {
    "size": 80,
    "color": "#FFFFFF",
    "box": "#7A5236",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_rosa": {
    "size": 80,
    "color": "#24201F",
-   "box": "#F7A08C"
+   "box": "#F7A08C",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_naranja": {
    "size": 80,
    "color": "#24201F",
-   "box": "#F0A060"
+   "box": "#F0A060",
+   "sombra": 6,
+   "box_stroke": 5
   }
  },
  "narracion": [
@@ -300,43 +318,20 @@
    ],
    "elementos": [
     {
-     "a": "raices",
-     "x": 300,
-     "y": 700,
-     "s": 0.9,
-     "z": -2
-    },
-    {
-     "a": "arbusto_contento",
-     "x": 300,
-     "y": 705,
-     "s": 0.8,
-     "idle": "sway",
-     "swaps": [
-      {
-       "at": "b3:raíces",
-       "a": "arbusto_susto",
-       "fx": "punch"
-      }
-     ]
-    },
-    {
-     "a": "tallo",
-     "x": 720,
-     "y": 690,
-     "s": 0.9,
-     "in": "b1:hydnora",
-     "fx_in": "fade",
-     "z": -1
-    },
-    {
      "a": "hydnora_rizoma_neutral",
-     "x": 720,
+     "x": 540,
      "y": 1000,
-     "s": 0.85,
+     "s": 0.9,
      "in": "b1:hydnora",
      "fx_in": "pop",
      "idle": "breathe",
+     "keys": [
+      {
+       "at": "b3:raíces",
+       "dur": 0.6,
+       "x": 740
+      }
+     ],
      "swaps": [
       {
        "at": "b3:parásito",
@@ -346,17 +341,40 @@
      ]
     },
     {
-     "a": "hydnora_0",
-     "x": 720,
+     "a": "flecha_roja",
+     "x": 540,
+     "y": 790,
+     "s": 0.35,
+     "in": "b2:bajo",
+     "fx_in": "pop",
+     "idle": "work",
+     "out": "b2:hojas",
+     "fx_out": "pop"
+    },
+    {
+     "a": "raices",
+     "x": 270,
+     "y": 700,
+     "s": 0.9,
+     "z": -2,
+     "in": "b3:raíces",
+     "fx_in": "grow",
+     "dur_in": 0.6,
+     "sfx": "none"
+    },
+    {
+     "a": "euforbia_contento",
+     "x": 270,
      "y": 705,
-     "s": 0.55,
-     "in": "b1:hydnora+0.2",
+     "s": 0.8,
+     "in": "b3:otras",
      "fx_in": "grow",
      "idle": "sway",
      "swaps": [
       {
-       "at": "b3:parásito",
-       "a": "hydnora_cerrada_malo"
+       "at": "b3:plantas+0.2",
+       "a": "euforbia_susto",
+       "fx": "punch"
       }
      ]
     },
@@ -369,10 +387,11 @@
      "x": 540,
      "y": 420,
      "in": "b1:flor",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b2",
-     "fx_out": "pop"
+     "out": "b2"
     },
     {
      "texto": {
@@ -380,13 +399,14 @@
       "estilo": "cartel_marron",
       "size": 70
      },
-     "x": 720,
+     "x": 540,
      "y": 1260,
      "in": "b2:bajo",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b2:hojas",
-     "fx_out": "pop"
+     "out": "b2:hojas"
     },
     {
      "a": "hoja",
@@ -418,10 +438,11 @@
      "x": 650,
      "y": 1270,
      "in": "b2:clorofila",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b3",
-     "fx_out": "pop"
+     "out": "b3"
     },
     {
      "texto": {
@@ -429,22 +450,24 @@
       "estilo": "cartel_rojo",
       "size": 84
      },
-     "x": 700,
+     "x": 540,
      "y": 1270,
      "in": "b3:parásito",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     },
     {
      "particulas": {
       "a": "nutriente",
-      "n": 14,
+      "n": 12,
       "semilla": 3,
       "zona": [
-       400,
+       430,
        930,
-       640,
+       600,
        1080
       ],
       "vx": [
@@ -464,7 +487,7 @@
        0.8
       ]
      },
-     "in": "b3:absorbe",
+     "in": "b3:raíces+0.4",
      "fx_in": "fade",
      "z": 2
     }
@@ -492,6 +515,7 @@
      "in": "b4:emerge",
      "fx_in": "slide_up",
      "idle": "sway",
+     "fase": 0,
      "seq": {
       "frames": [
        "hydnora_0",
@@ -512,6 +536,7 @@
      "fx_in": "jump",
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b4:alienígena",
@@ -529,11 +554,12 @@
      "x": 540,
      "y": 470,
      "in": "b4:alienígena",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "pop",
+     "vol": 0.6,
      "z": 20,
      "r": -4,
-     "out": "b5:labios",
-     "fx_out": "pop"
+     "out": "b5:labios"
     },
     {
      "texto": {
@@ -544,10 +570,11 @@
      "x": 540,
      "y": 470,
      "in": "b5:labios",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b5:carne",
-     "fx_out": "pop"
+     "out": "b5:carne"
     },
     {
      "texto": {
@@ -558,7 +585,9 @@
      "x": 540,
      "y": 470,
      "in": "b5:carne",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -595,8 +624,9 @@
      "a": "hydnora_3",
      "x": 540,
      "y": 1180,
-     "s": 1.0,
+     "s": 1.15,
      "idle": "sway",
+     "fase": 0,
      "swaps": [
       {
        "at": "b7:atrapándolos+0.4",
@@ -630,12 +660,13 @@
      "flip": true
     },
     {
-     "a": "vos_explo",
-     "x": 160,
+     "a": "vos_explo_sorpresa",
+     "x": 170,
      "y": 1330,
      "s": 0.45,
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b6:heces",
@@ -653,10 +684,11 @@
      "x": 540,
      "y": 470,
      "in": "b6:heces",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b6:escarabajos",
-     "fx_out": "pop"
+     "out": "b6:escarabajos"
     },
     {
      "texto": {
@@ -667,10 +699,11 @@
      "x": 540,
      "y": 470,
      "in": "b6:escarabajos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b7",
-     "fx_out": "pop"
+     "out": "b7"
     },
     {
      "a": "bola_estiercol",
@@ -742,10 +775,11 @@
      "x": 540,
      "y": 470,
      "in": "b7:atrapándolos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b7:polinización",
-     "fx_out": "pop"
+     "out": "b7:polinización"
     },
     {
      "texto": {
@@ -756,7 +790,9 @@
      "x": 540,
      "y": 470,
      "in": "b7:polinización",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -833,6 +869,7 @@
      "in": "b8:nepenthes",
      "fx_in": "grow",
      "idle": "sway",
+     "fase": 0,
      "swaps": [
       {
        "at": "b8:carnívora",
@@ -858,10 +895,11 @@
      "x": 540,
      "y": 470,
      "in": "b8:planta",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b9",
-     "fx_out": "pop"
+     "out": "b9"
     },
     {
      "texto": {
@@ -872,10 +910,11 @@
      "x": 540,
      "y": 470,
      "in": "b9:borneo",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b9:trampas",
-     "fx_out": "pop"
+     "out": "b9:trampas"
     },
     {
      "a": "vos_explo",
@@ -886,6 +925,7 @@
      "fx_in": "jump",
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b9:inmensas",
@@ -903,7 +943,9 @@
      "x": 540,
      "y": 470,
      "in": "b9:inmensas",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -927,11 +969,33 @@
    ],
    "elementos": [
     {
-     "a": "jarra_corte",
+     "a": "jarra_corte_malo",
      "x": 540,
      "y": 1300,
      "s": 1.12,
-     "idle": "sway"
+     "idle": "sway",
+     "fase": 0
+    },
+    {
+     "a": "jarra_malo",
+     "x": 540,
+     "y": 1300,
+     "s": 1.12,
+     "idle": "sway",
+     "fase": 0,
+     "z": 1,
+     "keys": [
+      {
+       "at": "b10:contener",
+       "dur": 0.7,
+       "alpha": 0
+      },
+      {
+       "at": "esc>-0.5",
+       "dur": 0.45,
+       "alpha": 1
+      }
+     ]
     },
     {
      "particulas": {
@@ -957,8 +1021,10 @@
        0.6
       ]
      },
-     "in": "b10:jugos",
+     "in": "b10:agua",
      "fx_in": "fade",
+     "out": "esc>-0.4",
+     "fx_out": "fade",
      "z": 3
     },
     {
@@ -979,7 +1045,9 @@
      "x": 540,
      "y": 450,
      "in": "b10:litros",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -991,7 +1059,9 @@
      "x": 540,
      "y": 580,
      "in": "b10:jugos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -1000,7 +1070,8 @@
      "y": 1330,
      "s": 0.4,
      "idle": "breathe",
-     "blink": true
+     "blink": true,
+     "fase": 0
     }
    ]
   },
@@ -1032,13 +1103,14 @@
      "a": "jarra_malo",
      "x": 540,
      "y": 1300,
-     "s": 1.05,
+     "s": 1.12,
      "idle": "sway",
+     "fase": 0,
      "keys": [
       {
        "at": "b12:grande",
        "dur": 0.5,
-       "s": 1.12,
+       "s": 1.2,
        "ease": "back"
       }
      ],
@@ -1093,10 +1165,11 @@
      "x": 540,
      "y": 470,
      "in": "b12:casos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b12:atrapado",
-     "fx_out": "pop"
+     "out": "b12:atrapado"
     },
     {
      "texto": {
@@ -1107,10 +1180,11 @@
      "x": 540,
      "y": 470,
      "in": "b12:atrapado",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b12:ahogado",
-     "fx_out": "pop"
+     "out": "b12:ahogado"
     },
     {
      "texto": {
@@ -1121,10 +1195,11 @@
      "x": 540,
      "y": 470,
      "in": "b12:ahogado",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b12:digerido",
-     "fx_out": "pop"
+     "out": "b12:digerido"
     },
     {
      "texto": {
@@ -1135,18 +1210,20 @@
      "x": 540,
      "y": 470,
      "in": "b12:digerido",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b13",
-     "fx_out": "pop"
+     "out": "b13"
     },
     {
-     "a": "vos_explo",
+     "a": "vos_explo_sorpresa",
      "x": 150,
      "y": 1330,
      "s": 0.4,
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b12:vertebrados",
@@ -1270,6 +1347,7 @@
      "in": "b14:welwitschia",
      "fx_in": "grow",
      "idle": "breathe",
+     "fase": 0,
      "seq": {
       "frames": [
        "welwitschia_0",
@@ -1292,10 +1370,11 @@
      "x": 540,
      "y": 470,
      "in": "b14:planta",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b15",
-     "fx_out": "pop"
+     "out": "b15"
     },
     {
      "texto": {
@@ -1306,10 +1385,11 @@
      "x": 540,
      "y": 470,
      "in": "b15:namibia",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b15:dos",
-     "fx_out": "pop"
+     "out": "b15:dos"
     },
     {
      "texto": {
@@ -1320,10 +1400,11 @@
      "x": 540,
      "y": 470,
      "in": "b15:dos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b15:crecen",
-     "fx_out": "pop"
+     "out": "b15:crecen"
     },
     {
      "a": "flecha_roja",
@@ -1357,7 +1438,9 @@
      "x": 540,
      "y": 470,
      "in": "b15:continuamente",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -1397,8 +1480,11 @@
      "y": 1010,
      "s": 0.38,
      "z": -1,
+     "in": "b16",
+     "fx_in": "jump",
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b16:monstruo",
@@ -1413,6 +1499,7 @@
      "y": 1300,
      "s": 1.05,
      "idle": "breathe",
+     "fase": 0,
      "swaps": [
       {
        "at": "b16:rasgadas",
@@ -1423,13 +1510,6 @@
        "at": "b16:monstruo",
        "a": "welwitschia_monstruo",
        "fx": "punch"
-      }
-     ],
-     "keys": [
-      {
-       "at": "b16:monstruo",
-       "dur": 0.4,
-       "s": 1.05
       }
      ]
     },
@@ -1470,7 +1550,9 @@
      "x": 540,
      "y": 560,
      "in": "b16:monstruo",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "shake"
     }
@@ -1483,6 +1565,22 @@
     18
    ],
    "fondo": "fondo_desierto",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.12,
+      "y": 1050
+     },
+     {
+      "at": "b17+0.2",
+      "dur": 0.8,
+      "zoom": 1.0,
+      "y": 960
+     }
+    ]
+   },
    "sonidos": [
     {
      "at": "b18:años",
@@ -1496,15 +1594,38 @@
    ],
    "elementos": [
     {
-     "a": "welwitschia_rasgada",
+     "a": "welwitschia_monstruo",
      "x": 540,
      "y": 1300,
      "s": 1.05,
      "idle": "breathe",
+     "fase": 0,
      "swaps": [
+      {
+       "at": "b17:fósil",
+       "a": "welwitschia_rasgada",
+       "fx": "punch"
+      },
       {
        "at": "b18:años",
        "a": "welwitschia_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "vos_explo_miedo",
+     "x": 180,
+     "y": 1010,
+     "s": 0.38,
+     "z": -1,
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b18:vivir",
+       "a": "vos_explo_pulgar",
        "fx": "punch"
       }
      ]
@@ -1530,10 +1651,11 @@
      "x": 540,
      "y": 470,
      "in": "b17:fósil",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b17:sequía",
-     "fx_out": "pop"
+     "out": "b17:sequía"
     },
     {
      "a": "termometro_10",
@@ -1577,10 +1699,11 @@
      "x": 540,
      "y": 470,
      "in": "b17:sequía",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b18:1500",
-     "fx_out": "pop"
+     "out": "b18:1500"
     },
     {
      "texto": {
@@ -1591,7 +1714,9 @@
      "x": 540,
      "y": 470,
      "in": "b18:1500",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     },
@@ -1603,16 +1728,6 @@
      "in": "b18:años",
      "fx_in": "drop",
      "sfx": "none"
-    },
-    {
-     "a": "vos_explo_pulgar",
-     "x": 180,
-     "y": 1010,
-     "s": 0.38,
-     "z": -1,
-     "in": "b18:vivir",
-     "fx_in": "jump",
-     "idle": "breathe"
     }
    ]
   }
