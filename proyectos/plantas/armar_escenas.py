@@ -1,10 +1,10 @@
 """Genera escenas.json (python3 armar_escenas.py [--sin-audio]). Editá acá y volvé a correrlo."""
-import json
 import os
 import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(AQUI, "escenas.json")
+sys.path.insert(0, os.path.join(AQUI, "..", ".."))
+from comun import armar_doc, cartel, encabezado  # noqa: E402
 
 narracion = [
     "Te cuento sobre 3 plantas extrañas!",
@@ -29,14 +29,6 @@ narracion = [
 ]
 
 
-def cartel(t, x, y, at, size=76, estilo="cartel", **kw):
-    """Cartel con entrada y salida suaves; si no se indica "out", se va prolijo antes del corte de escena."""
-    e = {"texto": {"t": t, "estilo": estilo, "size": size}, "x": x, "y": y, "in": at, "fx_in": "suave",
-         "fx_out": "suave", "vol": .6, "z": 20}
-    e.update(kw)
-    return e
-
-
 def cae_en_jarra(a, x, y, at, s=1.0, flip=False):
     """Animal que aparece y a los 0,7 s cae dentro de la jarra (boca en 540, 860)."""
     return {"a": a, "x": x, "y": y, "s": s, "flip": flip, "in": at, "fx_in": "pop", "idle": "shake", "z": 6,
@@ -51,7 +43,7 @@ escenas.append({
     "nombre": "gancho", "beats": [0], "fondo": "fondo_burst_verde",
     "elementos": [
         {"texto": {"t": "3 PLANTAS\nEXTRAÑAS", "estilo": "titulo_verde", "size": 110}, "x": 540, "y": 330,
-         "in": "b0:3", "fx_in": "pop", "idle": "breathe"},
+         "in": "b0:3", "fx_in": "pop", "fx_out": "suave", "idle": "breathe"},
         {"a": "hydnora_malo", "x": 230, "y": 920, "s": .72, "in": "b0:plantas", "fx_in": "pop", "idle": "sway"},
         {"a": "jarra_malo", "x": 540, "y": 880, "s": .62, "in": "b0:plantas+0.15", "fx_in": "pop", "idle": "sway"},
         {"a": "welwitschia_monstruo", "x": 850, "y": 930, "s": .44, "in": "b0:plantas+0.3", "fx_in": "pop",
@@ -78,7 +70,7 @@ escenas.append({
         {"a": "hoja", "x": 200, "y": 1270, "s": .55, "in": "b2:hojas", "fx_in": "pop", "out": "b3", "fx_out": "pop"},
         {"a": "prohibido", "x": 200, "y": 1270, "s": .6, "in": "b2:hojas+0.15", "fx_in": "pop", "sfx": "boing",
          "out": "b3", "fx_out": "pop"},
-        cartel("NI HOJAS NI CLOROFILA", 650, 1270, "b2:clorofila", size=54, out="b3"),
+        cartel("NI HOJAS NI CLOROFILA", 610, 1270, "b2:clorofila", size=50, out="b3"),
         cartel("¡PARÁSITO!", 540, 1270, "b3:parásito", size=84, estilo="cartel_rojo", idle="pulse"),
         {"particulas": {"a": "nutriente", "n": 12, "semilla": 3, "zona": [430, 930, 600, 1080], "vx": [120, 200],
                         "vy": [-10, 10], "s": [.8, 1.3], "ondula": [8, .8]},
@@ -152,7 +144,7 @@ escenas.append({
     "nombre": "nepenthes_liquido", "beats": [10], "fondo": "fondo_selva",
     "sonidos": [{"at": "b10:litros", "s": "glup"}, {"at": "b10:jugos", "s": "glup"}],
     "elementos": [
-        {"a": "jarra_corte_malo", "x": 540, "y": 1300, "s": 1.12, "idle": "sway", "fase": 0},
+        {"a": "jarra_corte_malo", "x": 540, "y": 1300, "s": 1.12, "idle": "sway", "fase": 0, "out": "esc>-0.06"},
         {"a": "jarra_malo", "x": 540, "y": 1300, "s": 1.12, "idle": "sway", "fase": 0, "z": 1,
          "keys": [{"at": "b10:contener", "dur": .7, "alpha": 0}, {"at": "esc>-0.5", "dur": .45, "alpha": 1}]},
         {"particulas": {"a": "burbuja", "n": 10, "semilla": 2, "zona": [400, 1170, 680, 1300], "vy": [-50, -25],
@@ -247,46 +239,10 @@ escenas.append({
     ]})
 
 
-def planta_persistente(num, titulo, desde, hasta, size=80):
-    return [
-        {"texto": {"t": str(num), "estilo": "num"}, "x": 130, "y": 250, "in": desde, "out": hasta, "fx_in": "pop",
-         "fx_out": "pop", "idle": "breathe"},
-        {"texto": {"t": titulo, "estilo": "titulo", "size": size}, "x": 600, "y": 250, "in": desde + "+0.15", "out": hasta,
-         "fx_in": "slide_left", "fx_out": "fade"},
-    ]
-
-
-doc = {
-    "cola": 1.4,
-    "volumen_efectos": .5,
-    "subtitulos": {"activos": True, "y": 1470, "size": 76},
-    "estilos": {
-        "titulo": {"size": 84, "color": "#FFFFFF", "stroke": 12},
-        "titulo_verde": {"size": 100, "color": "#FFFFFF", "stroke": 14, "stroke_color": "#1E5A2A"},
-        "num": {"size": 96, "color": "#24201F", "box": "#FFD23F", "circle": True, "pad": [22, 14]},
-        "cartel": {"size": 80, "color": "#24201F", "box": "#FFFFFF", "sombra": 6, "box_stroke": 5},
-        "cartel_rojo": {"size": 80, "color": "#FFFFFF", "box": "#FF5D5D", "stroke": 9, "sombra": 6, "box_stroke": 5},
-        "cartel_amarillo": {"size": 80, "color": "#24201F", "box": "#FFD23F", "sombra": 6, "box_stroke": 5},
-        "cartel_celeste": {"size": 80, "color": "#24201F", "box": "#9ADCFF", "sombra": 6, "box_stroke": 5},
-        "cartel_verde": {"size": 80, "color": "#24201F", "box": "#8BD06A", "sombra": 6, "box_stroke": 5},
-        "cartel_violeta": {"size": 80, "color": "#FFFFFF", "box": "#7A5CFF", "stroke": 9, "sombra": 6, "box_stroke": 5},
-        "cartel_marron": {"size": 80, "color": "#FFFFFF", "box": "#7A5236", "stroke": 9, "sombra": 6, "box_stroke": 5},
-        "cartel_rosa": {"size": 80, "color": "#24201F", "box": "#F7A08C", "sombra": 6, "box_stroke": 5},
-        "cartel_naranja": {"size": 80, "color": "#24201F", "box": "#F0A060", "sombra": 6, "box_stroke": 5},
-    },
-    "narracion": [{"texto": t} for t in narracion],
-    "persistentes": (planta_persistente(1, "Hydnora africana", "b1", "e4")
-                     + planta_persistente(2, "Nepenthes rajah", "b8", "e7")
-                     + planta_persistente(3, "Welwitschia mirabilis", "b14", "fin", size=66)),
-    "escenas": escenas,
-}
-if "--sin-audio" not in sys.argv:
-    doc["audio_voz"] = "audio/voz.wav"
-    doc["palabras_json"] = "audio/palabras.json"
-
-# el texto de la narración tiene que ser el guion, palabra por palabra
-guion = " ".join(open(os.path.join(AQUI, "guion.txt")).read().split())
-assert " ".join(narracion) == guion, "la narración no coincide con guion.txt"
-
-json.dump(doc, open(OUT, "w"), ensure_ascii=False, indent=1)
-print("ok", OUT)
+armar_doc(
+    AQUI, narracion, escenas,
+    persistentes=(encabezado(1, "Hydnora africana", "b1", "e4")
+                  + encabezado(2, "Nepenthes rajah", "b8", "e7")
+                  + encabezado(3, "Welwitschia mirabilis", "b14", "fin", size=66)),
+    estilos={"titulo_verde": {"size": 100, "color": "#FFFFFF", "stroke": 14, "stroke_color": "#1E5A2A"}},
+    audio="--sin-audio" not in sys.argv)

@@ -1,0 +1,158 @@
+"""Revisor automático de un escenas.json: busca los errores que ya se corrigieron alguna vez.
+
+    python3 revisar.py proyectos/plantas/escenas.json
+
+Cada chequeo sale de una corrección real (ver PAUTAS.md). Avisa, no corrige:
+  - carteles que se pisan entre sí o con el título del número
+  - textos en la zona de botones (x>960, 1000<y<1650), sobre los subtítulos o fuera de cuadro
+  - cortes de escena donde un mismo personaje/objeto salta un poco (cara, posición o tamaño): un cambio
+    grande se lee como re-encuadre y no se avisa; uno chico parece un error
+  - carteles que desaparecen de golpe en un corte (sin fx_out)
+"""
+import argparse
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import motor  # noqa: E402
+from motor import H, RS, W, Particles, _IMG_REG, anchor_of, img_key  # noqa: E402
+
+PASO = 0.1
+ZONA_BOTONES = (960, 1000, W, 1650)
+SUBTITULOS = (0, 1420, W, 1525)
+
+
+def familia(asset):
+    """"jarra_malo" -> "jarra", "vos_explo_miedo" -> "vos": mismo personaje/objeto con otra cara."""
+    return asset.split("_")[0] if isinstance(asset, str) else None
+
+
+def caja(el, st, cam=None):
+    """Rectángulo aproximado (sin rotación) de un elemento en pantalla, o None si no se ve."""
+    asset = st["asset"]
+    src = _IMG_REG[img_key(asset)]
+    res = 1.0 if src.size == (W, H) else RS
+    w = src.width * abs(st["s"] * st["sx"]) / res
+    h = src.height * abs(st["s"] * st["sy"]) / res
+    if st["alpha"] < .5 or w < 2 or h < 2:
+        return None
+    ax, ay = anchor_of(el.sp, asset)
+    x0, y0 = st["x"] - ax * w, st["y"] - ay * h
+    box = [x0, y0, x0 + w, y0 + h]
+    if cam is not None:
+        c = cam.state(st["_t"])
+        z = max(c["zoom"], 1.0)
+        cx = motor.clamp(c["x"], W / z / 2, W - W / z / 2)
+        cy = motor.clamp(c["y"], H / z / 2, H - H / z / 2)
+        box = [(box[0] - cx) * z + W / 2, (box[1] - cy) * z + H / 2, (box[2] - cx) * z + W / 2, (box[3] - cy) * z + H / 2]
+    return box
+
+
+def cruza(a, b, margen=0):
+    return a[0] < b[2] - margen and b[0] < a[2] - margen and a[1] < b[3] - margen and b[1] < a[3] - margen
+
+
+def es_texto(el):
+    return isinstance(el.asset, dict)
+
+
+def nombre(el):
+    return ("«" + el.asset["t"].replace("\n", " ") + "»") if es_texto(el) else el.asset
+
+
+def revisar(path):
+    proj = motor.Project(path)
+    tl = proj.tl
+    avisos = {}
+
+    def avisar(clave, t):
+        r = avisos.setdefault(clave, [t, t])
+        r[1] = t
+
+    t = 0.0
+    while t < tl.total:
+        si = proj.scene_at(t)
+        sc = proj.scenes[si]
+        vis = []
+        for el in sc["els"] + proj.persist:
+            if isinstance(el, Particles) or not el.active(t):
+                continue
+            st = el.state(t)
+            st["_t"] = t
+            b = caja(el, st, sc["cam"] if el in sc["els"] else None)
+            if b:
+                vis.append((el, b))
+        textos = [(el, b) for el, b in vis if es_texto(el)]
+        pers = [(el, b) for el, b in textos if el in proj.persist]
+        for i, (e1, b1) in enumerate(textos):
+            esc = sc.get("nombre", si)
+            if t < e1.tin + e1.dur_in or t > e1.tout - e1.dur_out:
+                continue   # entrando o saliendo: puede venir de afuera a propósito
+            if e1 not in proj.persist:
+                for e2, b2 in textos[i + 1:]:
+                    if e2 not in proj.persist and cruza(b1, b2, 4):
+                        avisar(f"[{esc}] carteles que se pisan: {nombre(e1)} y {nombre(e2)}", t)
+                for e2, b2 in pers:
+                    if cruza(b1, b2, 4):
+                        avisar(f"[{esc}] {nombre(e1)} pisa el título {nombre(e2)}", t)
+                if cruza(b1, ZONA_BOTONES):
+                    avisar(f"[{esc}] {nombre(e1)} entra en la zona de botones (x>960, y 1000-1650)", t)
+                if cruza(b1, SUBTITULOS):
+                    avisar(f"[{esc}] {nombre(e1)} tapa los subtítulos", t)
+            if b1[0] < 0 or b1[2] > W or b1[1] < 0 or b1[3] > H:
+                avisar(f"[{esc}] {nombre(e1)} se sale del cuadro", t)
+        t += PASO
+
+    # cortes de escena
+    for i in range(1, len(proj.scenes)):
+        tc = tl.scene_start[i]
+        antes, despues = proj.scenes[i - 1], proj.scenes[i]
+        a_vis = []
+        for el in antes["els"]:
+            if not isinstance(el, Particles) and el.active(tc - 0.02):
+                st = el.state(tc - 0.02)
+                if es_texto(el):
+                    if el.fx_out == "none" and st["alpha"] > .5:
+                        avisar(f"[{antes.get('nombre', i - 1)}] {nombre(el)} desaparece de golpe en el corte "
+                               f"(poné fx_out o un out antes del final)", tc)
+                elif st["alpha"] > .5:
+                    a_vis.append(st)
+        d_vis = [el.state(tc + 0.02) for el in despues["els"]
+                 if not isinstance(el, Particles) and not es_texto(el) and el.active(tc + 0.02)]
+        d_vis = [st for st in d_vis if st["alpha"] > .5]
+        for s0 in a_vis:
+            mismos = [st for st in d_vis if familia(st["asset"]) == familia(s0["asset"])]
+            if not mismos:
+                continue
+            dist = lambda st: abs(st["x"] - s0["x"]) + abs(st["y"] - s0["y"])
+            if any(st["asset"] == s0["asset"] and dist(st) <= 12 and abs(st["s"] - s0["s"]) <= .03 * s0["s"] for st in mismos):
+                continue   # sigue igual del otro lado
+            st = min(mismos, key=dist)
+            d, ds = dist(st), abs(st["s"] - s0["s"]) / max(st["s"], s0["s"])
+            if d > 150 or ds > .25:
+                continue   # re-encuadre grande: se lee como corte a propósito
+            cambios = []
+            if s0["asset"] != st["asset"]:
+                cambios.append(f"dibujo {s0['asset']} → {st['asset']}")
+            if d > 12:
+                cambios.append(f"posición ({s0['x']:.0f},{s0['y']:.0f}) → ({st['x']:.0f},{st['y']:.0f})")
+            if ds > .03:
+                cambios.append(f"tamaño {s0['s']:.2f} → {st['s']:.2f}")
+            if cambios:
+                avisar(f"[corte {antes.get('nombre', i - 1)} → {despues.get('nombre', i)}] {familia(st['asset'])} "
+                       f"salta: " + ", ".join(cambios), tc)
+
+    if not avisos:
+        print("sin avisos")
+        return 0
+    for clave, (t0, t1) in sorted(avisos.items(), key=lambda kv: kv[1][0]):
+        rango = f"{t0:6.1f}s" if t1 - t0 < PASO / 2 else f"{t0:6.1f}-{t1:.1f}s"
+        print(f"{rango}  {clave}")
+    print(f"{len(avisos)} avisos")
+    return len(avisos)
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("escenas")
+    revisar(ap.parse_args().escenas)

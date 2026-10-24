@@ -12,12 +12,6 @@
    "color": "#FFFFFF",
    "stroke": 12
   },
-  "titulo_verde": {
-   "size": 100,
-   "color": "#FFFFFF",
-   "stroke": 14,
-   "stroke_color": "#1E5A2A"
-  },
   "num": {
    "size": 96,
    "color": "#24201F",
@@ -93,6 +87,27 @@
    "box": "#F0A060",
    "sombra": 6,
    "box_stroke": 5
+  },
+  "cartel_negro": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#2B2730",
+   "stroke": 0,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "censura": {
+   "size": 104,
+   "color": "#FFFFFF",
+   "box": "#14121A",
+   "stroke": 0,
+   "radius": 10
+  },
+  "titulo_verde": {
+   "size": 100,
+   "color": "#FFFFFF",
+   "stroke": 14,
+   "stroke_color": "#1E5A2A"
   }
  },
  "narracion": [
@@ -252,6 +267,7 @@
      "y": 330,
      "in": "b0:3",
      "fx_in": "pop",
+     "fx_out": "suave",
      "idle": "breathe"
     },
     {
@@ -433,9 +449,9 @@
      "texto": {
       "t": "NI HOJAS NI CLOROFILA",
       "estilo": "cartel",
-      "size": 54
+      "size": 50
      },
-     "x": 650,
+     "x": 610,
      "y": 1270,
      "in": "b2:clorofila",
      "fx_in": "suave",
@@ -974,7 +990,8 @@
      "y": 1300,
      "s": 1.12,
      "idle": "sway",
-     "fase": 0
+     "fase": 0,
+     "out": "esc>-0.06"
     },
     {
      "a": "jarra_malo",
