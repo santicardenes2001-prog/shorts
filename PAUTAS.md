@@ -51,6 +51,10 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   rayos X dentro de la misma composición, no un corte con otra cara.
 - Si la cámara terminó con zoom, la escena siguiente arranca con el mismo zoom y se aleja suave.
 - Los personajes que entran a mitad de escena lo hacen con animación (jump/slide), nunca de golpe.
+- Lo que no sigue en la escena siguiente **sale animado antes del corte** (fx_out), también los objetos
+  chicos (flechas, íconos). Si el lugar sigue igual, mejor que el objeto continúe y se mueva a su nueva
+  posición (las barcas bajan al agua) en vez de cortar a otro encuadre.
+- Un salto de tiempo en el mismo lugar ("Al terminar…") se marca con `flash`.
 
 ## Carteles
 - Usar `cartel()` de `comun.py`: entrada y salida `"suave"`, sombra y borde finos, sonido bajo.
@@ -80,3 +84,5 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - 2026-10-24 · plantas · La jarra cambiaba de cara de golpe al mostrar los litros → continuidad en cortes.
 - 2026-10-24 · plantas · "Los mensajes que popean no están finos" → carteles suaves, sombra fina.
 - 2026-10-24 · plantas · ¿Las plantas son correctas? → Hydnora, Nepenthes y huésped redibujadas fieles.
+- 2026-10-24 · torturas · Prueba de la memoria: carteles a `comun.py`, nada desaparece de golpe en los
+  cortes (`revisar.py` ahora también lo detecta), flash en el salto de tiempo.

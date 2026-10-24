@@ -8,6 +8,7 @@ Cada chequeo sale de una corrección real (ver PAUTAS.md). Avisa, no corrige:
   - cortes de escena donde un mismo personaje/objeto salta un poco (cara, posición o tamaño): un cambio
     grande se lee como re-encuadre y no se avisa; uno chico parece un error
   - carteles que desaparecen de golpe en un corte (sin fx_out)
+  - personajes/objetos que desaparecen de golpe en un corte cuando el lugar (fondo) sigue igual
 """
 import argparse
 import os
@@ -116,13 +117,19 @@ def revisar(path):
                         avisar(f"[{antes.get('nombre', i - 1)}] {nombre(el)} desaparece de golpe en el corte "
                                f"(poné fx_out o un out antes del final)", tc)
                 elif st["alpha"] > .5:
+                    st["_salida"] = el.fx_out
+                    st["_alto"] = _IMG_REG[img_key(st["asset"])].height / RS
                     a_vis.append(st)
         d_vis = [el.state(tc + 0.02) for el in despues["els"]
                  if not isinstance(el, Particles) and not es_texto(el) and el.active(tc + 0.02)]
         d_vis = [st for st in d_vis if st["alpha"] > .5]
+        mismo_lugar = antes["fondo"] == despues["fondo"] and not despues.get("flash")
         for s0 in a_vis:
             mismos = [st for st in d_vis if familia(st["asset"]) == familia(s0["asset"])]
             if not mismos:
+                if mismo_lugar and s0.get("_salida") == "none" and s0["s"] * s0.get("_alto", 0) > 70:
+                    avisar(f"[corte {antes.get('nombre', i - 1)} → {despues.get('nombre', i)}] {s0['asset']} "
+                           f"desaparece de golpe (el lugar sigue igual: que salga animado o siga en la escena)", tc)
                 continue
             dist = lambda st: abs(st["x"] - s0["x"]) + abs(st["y"] - s0["y"])
             if any(st["asset"] == s0["asset"] and dist(st) <= 12 and abs(st["s"] - s0["s"]) <= .03 * s0["s"] for st in mismos):

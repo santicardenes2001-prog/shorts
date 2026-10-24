@@ -12,11 +12,6 @@
    "color": "#FFFFFF",
    "stroke": 12
   },
-  "titulo_rojo": {
-   "size": 100,
-   "color": "#FF5D5D",
-   "stroke": 12
-  },
   "num": {
    "size": 96,
    "color": "#24201F",
@@ -28,42 +23,78 @@
    ]
   },
   "cartel": {
-   "size": 84,
+   "size": 80,
    "color": "#24201F",
-   "box": "#FFFFFF"
+   "box": "#FFFFFF",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_rojo": {
-   "size": 84,
+   "size": 80,
    "color": "#FFFFFF",
    "box": "#FF5D5D",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_amarillo": {
-   "size": 84,
+   "size": 80,
    "color": "#24201F",
-   "box": "#FFD23F"
+   "box": "#FFD23F",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_celeste": {
-   "size": 84,
+   "size": 80,
    "color": "#24201F",
-   "box": "#9ADCFF"
+   "box": "#9ADCFF",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_verde": {
-   "size": 84,
+   "size": 80,
    "color": "#24201F",
-   "box": "#8BD06A"
+   "box": "#8BD06A",
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_violeta": {
-   "size": 84,
+   "size": 80,
    "color": "#FFFFFF",
    "box": "#7A5CFF",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "cartel_marron": {
-   "size": 84,
+   "size": 80,
    "color": "#FFFFFF",
    "box": "#7A5236",
-   "stroke": 9
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rosa": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F7A08C",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_naranja": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F0A060",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_negro": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#2B2730",
+   "stroke": 0,
+   "sombra": 6,
+   "box_stroke": 5
   },
   "censura": {
    "size": 104,
@@ -71,6 +102,11 @@
    "box": "#14121A",
    "stroke": 0,
    "radius": 10
+  },
+  "titulo_rojo": {
+   "size": 100,
+   "color": "#FF5D5D",
+   "stroke": 12
   }
  },
  "narracion": [
@@ -140,9 +176,10 @@
   {
    "texto": {
     "t": "El Escafismo",
-    "estilo": "titulo"
+    "estilo": "titulo",
+    "size": 80
    },
-   "x": 590,
+   "x": 600,
    "y": 250,
    "in": "b1+0.15",
    "out": "e4",
@@ -165,9 +202,10 @@
   {
    "texto": {
     "t": "La Sierra",
-    "estilo": "titulo"
+    "estilo": "titulo",
+    "size": 80
    },
-   "x": 590,
+   "x": 600,
    "y": 250,
    "in": "b7+0.15",
    "out": "e7",
@@ -190,9 +228,10 @@
   {
    "texto": {
     "t": "El Desollamiento",
-    "estilo": "titulo"
+    "estilo": "titulo",
+    "size": 80
    },
-   "x": 590,
+   "x": 600,
    "y": 250,
    "in": "b12+0.15",
    "out": "fin",
@@ -323,6 +362,7 @@
      "y": 330,
      "in": "b0:3",
      "fx_in": "pop",
+     "fx_out": "suave",
      "idle": "breathe",
      "sfx": "none"
     },
@@ -415,6 +455,7 @@
      "fx_in": "jump",
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b2:desnudo",
@@ -432,10 +473,11 @@
      "x": 560,
      "y": 520,
      "in": "b1:tortura",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b2:barcas",
-     "fx_out": "pop"
+     "out": "b2:barcas"
     },
     {
      "a": "prisionero_miedo",
@@ -480,7 +522,8 @@
      "s": 0.85,
      "in": "b2:barcas",
      "fx_in": "drop",
-     "idle": "sway"
+     "idle": "sway",
+     "fase": 0
     },
     {
      "a": "flecha_roja",
@@ -489,7 +532,8 @@
      "s": 0.35,
      "in": "b2:cabeza",
      "fx_in": "pop",
-     "idle": "work"
+     "idle": "work",
+     "fx_out": "pop"
     },
     {
      "a": "flecha_roja",
@@ -499,7 +543,8 @@
      "in": "b2:extremidades",
      "fx_in": "pop",
      "idle": "work",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     },
     {
      "a": "flecha_roja",
@@ -509,7 +554,8 @@
      "in": "b2:extremidades+0.1",
      "fx_in": "pop",
      "idle": "work",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     },
     {
      "a": "flecha_roja",
@@ -519,7 +565,8 @@
      "in": "b2:extremidades+0.2",
      "fx_in": "pop",
      "idle": "work",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     }
    ]
   },
@@ -542,12 +589,13 @@
    ],
    "elementos": [
     {
-     "a": "vos_neutral",
+     "a": "vos_sorpresa",
      "x": 180,
      "y": 1330,
      "s": 0.45,
      "idle": "breathe",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b3:diarrea",
@@ -557,12 +605,17 @@
      ]
     },
     {
-     "a": "barcas_nervio",
+     "a": "barcas_miedo",
      "x": 580,
      "y": 820,
      "s": 0.85,
      "idle": "sway",
+     "fase": 0,
      "swaps": [
+      {
+       "at": "b3:obligaba",
+       "a": "barcas_nervio"
+      },
       {
        "at": "b3:diarrea",
        "a": "barcas_asco",
@@ -622,12 +675,13 @@
      "x": 620,
      "y": 1170,
      "in": "b3:diarrea",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "r": -4,
      "idle": "shake",
-     "out": "b4:untaba",
-     "fx_out": "pop"
+     "out": "b4:untaba"
     },
     {
      "a": "olor",
@@ -636,7 +690,8 @@
      "s": 0.6,
      "in": "b3:diarrea",
      "fx_in": "fade",
-     "idle": "sway"
+     "idle": "sway",
+     "fx_out": "fade"
     },
     {
      "a": "olor",
@@ -646,7 +701,8 @@
      "in": "b3:masiva",
      "fx_in": "fade",
      "idle": "sway",
-     "flip": true
+     "flip": true,
+     "fx_out": "fade"
     },
     {
      "a": "tarro_miel",
@@ -656,7 +712,8 @@
      "r": -15,
      "in": "b4:untaba",
      "fx_in": "pop",
-     "idle": "wiggle"
+     "idle": "wiggle",
+     "fx_out": "pop"
     },
     {
      "texto": {
@@ -667,7 +724,9 @@
      "x": 560,
      "y": 520,
      "in": "b4:piel",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     }
    ]
@@ -720,15 +779,36 @@
    },
    "elementos": [
     {
+     "a": "vos_asco",
+     "x": 180,
+     "y": 1330,
+     "s": 0.45,
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0,
+     "out": "b5:pantano",
+     "fx_out": "slide_left"
+    },
+    {
      "a": "barcas_miel",
-     "x": 560,
-     "y": 1170,
-     "s": 0.8,
-     "in": "b5",
-     "fx_in": "slide_up",
+     "x": 580,
+     "y": 820,
+     "s": 0.85,
      "idle": [
       "float",
       "sway"
+     ],
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b5:flotando",
+       "dur": 1.0,
+       "x": 560,
+       "y": 1170,
+       "s": 0.8,
+       "ease": "inout",
+       "sfx": "whoosh_suave"
+      }
      ],
      "swaps": [
       {
@@ -887,10 +967,11 @@
      "x": 540,
      "y": 480,
      "in": "b5:miles",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b6",
-     "fx_out": "pop"
+     "out": "b6"
     },
     {
      "texto": {
@@ -901,7 +982,9 @@
      "x": 540,
      "y": 650,
      "in": "b6:días",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -1014,6 +1097,7 @@
      "in": "b7:sierra",
      "fx_in": "pop",
      "idle": "sway",
+     "fx_out": "pop",
      "keys": [
       {
        "at": "b8:método",
@@ -1032,6 +1116,8 @@
      "in": "b8:método",
      "fx_in": "jump",
      "idle": "breathe",
+     "fx_out": "slide_right",
+     "dur_out": 0.4,
      "swaps": [
       {
        "at": "b8:psicológico",
@@ -1049,7 +1135,9 @@
      "x": 270,
      "y": 700,
      "in": "b8:traición",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -1061,7 +1149,8 @@
      "in": "b8:traición",
      "fx_in": "pop",
      "idle": "float",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     },
     {
      "texto": {
@@ -1072,7 +1161,9 @@
      "x": 810,
      "y": 700,
      "in": "b8:brujería",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -1084,7 +1175,8 @@
      "in": "b8:brujería",
      "fx_in": "pop",
      "idle": "float",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     }
    ]
   },
@@ -1210,6 +1302,7 @@
      "s": 0.6,
      "in": "b9:colgar",
      "fx_in": "drop",
+     "fase": 0,
      "idle": {
       "fx": "sway",
       "fuerza": 0.6
@@ -1222,7 +1315,8 @@
      "s": 0.42,
      "in": "b9:cerebro",
      "fx_in": "pop",
-     "idle": "pulse"
+     "idle": "pulse",
+     "fx_out": "pop"
     },
     {
      "a": "gota",
@@ -1231,7 +1325,8 @@
      "s": 0.55,
      "in": "b9:sangre",
      "fx_in": "drop",
-     "idle": "bob"
+     "idle": "bob",
+     "fx_out": "pop"
     },
     {
      "a": "flecha_roja",
@@ -1241,7 +1336,8 @@
      "in": "b9:sangre+0.2",
      "fx_in": "pop",
      "idle": "work",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     },
     {
      "texto": {
@@ -1252,10 +1348,11 @@
      "x": 540,
      "y": 600,
      "in": "b9:sangre",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
-     "out": "b9:consciente",
-     "fx_out": "pop"
+     "out": "b9:consciente"
     },
     {
      "texto": {
@@ -1266,7 +1363,9 @@
      "x": 540,
      "y": 600,
      "in": "b9:consciente",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -1391,8 +1490,9 @@
      "s": 0.6,
      "idle": {
       "fx": "sway",
-      "fuerza": 0.3
+      "fuerza": 0.6
      },
+     "fase": 0,
      "swaps": [
       {
        "at": "b10:serrar",
@@ -1516,7 +1616,9 @@
      "x": 540,
      "y": 640,
      "in": "b11:ombligo",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "idle": "pulse"
     }
@@ -1666,6 +1768,7 @@
      "fx_in": "jump",
      "idle": "shake",
      "blink": true,
+     "fase": 0,
      "swaps": [
       {
        "at": "b13:piel",
@@ -1690,7 +1793,14 @@
      "s": 0.45,
      "in": "b13:mesa",
      "fx_in": "jump",
-     "idle": "breathe",
+     "fase": 0,
+     "idle": [
+      "breathe",
+      {
+       "fx": "shake",
+       "from": "b13:piel"
+      }
+     ],
      "blink": true,
      "swaps": [
       {
@@ -1708,7 +1818,8 @@
      "flip": true,
      "in": "b13:retirar",
      "fx_in": "slide_left",
-     "idle": "breathe"
+     "idle": "breathe",
+     "fase": 0
     },
     {
      "a": "cuchillo",
@@ -1720,7 +1831,8 @@
      "fx_in": "pop",
      "idle": "wiggle",
      "sfx": "none",
-     "z": 3
+     "z": 3,
+     "fase": 0
     },
     {
      "texto": {
@@ -1731,7 +1843,9 @@
      "x": 540,
      "y": 520,
      "in": "b13:cuchillos",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     }
    ]
@@ -1813,6 +1927,7 @@
      "y": 1330,
      "s": 0.6,
      "idle": "shake",
+     "fase": 0,
      "swaps": [
       {
        "at": "b14:rostro",
@@ -1833,8 +1948,12 @@
      "x": 170,
      "y": 1330,
      "s": 0.45,
-     "idle": "shake",
-     "blink": true
+     "idle": [
+      "breathe",
+      "shake"
+     ],
+     "blink": true,
+     "fase": 0
     },
     {
      "a": "verdugo",
@@ -1843,13 +1962,17 @@
      "s": 0.52,
      "flip": true,
      "idle": "breathe",
+     "fase": 0,
      "keys": [
       {
        "at": "b14:comenzar",
        "dur": 0.6,
        "x": 760
       }
-     ]
+     ],
+     "out": "b14:proceso",
+     "fx_out": "slide_right",
+     "dur_out": 0.5
     },
     {
      "a": "cuchillo",
@@ -1859,6 +1982,7 @@
      "r": -35,
      "z": 3,
      "idle": "wiggle",
+     "fase": 0,
      "keys": [
       {
        "at": "b14:comenzar",
@@ -1867,7 +1991,10 @@
        "y": 1000,
        "r": -50
       }
-     ]
+     ],
+     "out": "b14:proceso",
+     "fx_out": "slide_right",
+     "dur_out": 0.5
     },
     {
      "texto": {
@@ -1881,7 +2008,8 @@
      "in": "b14:rostro",
      "fx_in": "pop",
      "z": 30,
-     "sfx": "golpe"
+     "sfx": "golpe",
+     "fx_out": "suave"
     },
     {
      "a": "reloj",
@@ -1890,7 +2018,8 @@
      "s": 0.55,
      "in": "b14:tiempo",
      "fx_in": "pop",
-     "sfx": "none"
+     "sfx": "none",
+     "fx_out": "pop"
     },
     {
      "a": "reloj_aguja",
@@ -1904,18 +2033,21 @@
      "idle": {
       "fx": "spin",
       "vel": 360
-     }
+     },
+     "fx_out": "pop"
     },
     {
      "texto": {
       "t": "¡CON VIDA!",
       "estilo": "cartel_rojo",
-      "size": 80
+      "size": 70
      },
-     "x": 260,
+     "x": 290,
      "y": 560,
      "in": "b14:vida",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20,
      "r": -5,
      "idle": "pulse"
@@ -1928,6 +2060,7 @@
     15
    ],
    "fondo": "fondo_mazmorra",
+   "flash": true,
    "sonidos": [
     {
      "at": "b15",
@@ -2055,6 +2188,18 @@
      "z": 1
     },
     {
+     "a": "vos_miedo",
+     "x": 170,
+     "y": 1330,
+     "s": 0.45,
+     "idle": [
+      "breathe",
+      "shake"
+     ],
+     "blink": true,
+     "fase": 0
+    },
+    {
      "texto": {
       "t": "SHOCK TÉRMICO",
       "estilo": "cartel_celeste",
@@ -2063,12 +2208,14 @@
      "x": 250,
      "y": 520,
      "in": "b15:shock",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
      "a": "termometro_00",
-     "x": 150,
+     "x": 330,
      "y": 1250,
      "s": 0.5,
      "in": "b15:shock",
@@ -2084,7 +2231,9 @@
      "x": 250,
      "y": 650,
      "in": "b15:sangre",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {
@@ -2105,7 +2254,9 @@
      "x": 830,
      "y": 520,
      "in": "b15:infecciones",
-     "fx_in": "pop",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
      "z": 20
     },
     {

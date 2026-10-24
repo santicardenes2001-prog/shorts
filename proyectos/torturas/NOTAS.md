@@ -11,4 +11,8 @@
      las piernas, sostenida por los verdugos; censura del desollamiento solo sobre la cara; Vos con miedo.
   4. En "Al terminar" ya se ve desollado, sin censura (la censura es solo mientras cortan).
 - Versión censurada anterior: `salidas/short_3_torturas_censurado.mp4`.
-- Pendiente opcional: `revisar.py` marca carteles que se cortan de golpe (hecho antes de `comun.py`).
+- Ronda de corrección con las pautas (2026-10-24): `armar_escenas.py` usa `comun.py` (carteles suaves);
+  Vos y las barcas mantienen cara entre cortes; las barcas bajan al agua desde donde estaban y Vos se va
+  caminando; verdugo, sierra, corona, sombrero, cerebro, flechas, reloj y verdugo con cuchillo salen
+  animados antes del corte; flash en "Al terminar" y Vos sigue en la última escena; "¡CON VIDA!" ya no
+  se sale del cuadro. `revisar.py`: sin avisos.
