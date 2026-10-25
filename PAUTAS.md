@@ -7,14 +7,23 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 
 ## Guion y formato de la serie
 - Estructura fija de la serie: gancho que arranca con "Te muestro / Te cuento 3 …", y después
-  "1. Nombre: explicación" (3-4 oraciones por ítem). No inventar formatos nuevos.
+  "1. Nombre: explicación" (3-4 oraciones por ítem). No inventar formatos nuevos. Si el ítem tiene
+  apodo, va entre paréntesis: "2. El urutaú (el pájaro fantasma):". Los tres ítems con el mismo formato.
+- Cuando el usuario pide corregir un borrador: ajustar al formato de la serie, corregir datos dudosos
+  (explicando cada cambio) y, si pide "agregar algo", proponer el dato más visual/animable. Ofrecer
+  una sola idea por agregado; el usuario elige.
+- Las aclaraciones entre paréntesis del usuario ("animar al animal haciendo el ruido") son notas de
+  producción: no van en la narración; se anotan en `NOTAS.md` y se cumplen al animar.
+- Si se pide un efecto de sonido protagonista (p. ej. el ruido del pico), darle un hueco propio en
+  la edición para que se escuche solo.
 - El gancho tiene que crear curiosidad ("…y la primera es la peor"); la primera tiene que ser la más fuerte.
 - Si el usuario escribe el guion, es palabra por palabra. No cambiar palabras sin preguntar.
 - Si el audio no dice lo mismo que el texto (p. ej. falta un "más"), **los subtítulos siguen al audio**
   y se avisa al usuario.
 - Revisar los datos y **avisar antes de cambiar**: época equivocada (el escafismo es de la Persia
   antigua, no de la Edad Media), afirmaciones sin fuente, repeticiones ("extremas … extrema").
-- Duración: 50-60 s es lo ideal; hasta ~90 s funciona en Shorts/TikTok pero avisar si se pasa.
+- Duración: el usuario prefiere contenido completo antes que cortar; 50-90 s está bien (no recortar
+  datos para llegar a 60 s).
 
 ## Audio
 - ElevenLabs: `procesar_voz.py --sin-eq --pausa 0.3`, después transcribir. Objetivo -14 LUFS.
@@ -86,3 +95,5 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - 2026-10-24 · plantas · ¿Las plantas son correctas? → Hydnora, Nepenthes y huésped redibujadas fieles.
 - 2026-10-24 · torturas · Prueba de la memoria: carteles a `comun.py`, nada desaparece de golpe en los
   cortes (`revisar.py` ahora también lo detecta), flash en el salto de tiempo.
+- 2026-10-25 · aves · Corrección de borrador: formato de serie, datos, apodos entre paréntesis; notas
+  de producción aparte; "no pasa nada si dura un poco más"; del agregado al nº 2 solo la boca enorme.
