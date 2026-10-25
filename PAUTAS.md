@@ -93,6 +93,9 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - No se pisan entre sí ni con el título; fuera de la zona de botones (x>960, y 1000-1650), fuera de los
   subtítulos (y≈1470) y nada importante debajo de y=1600.
 - Los datos van en carteles grandes ("900 °C", "1%", "+1500 AÑOS").
+- La banda de carteles (y≈400-540) queda libre: Vos u otro personaje fijo va más abajo (p. ej. y=700).
+- Con zoom de cámara, los carteles van en coordenadas de escena (x,y = centro + (pantalla − 540/960)/zoom,
+  size/zoom) y lo que el zoom agrandaría sobre el encabezado se desvanece antes de acercar.
 
 ## Proceso
 1. Leer `PAUTAS.md` y las `NOTAS.md` de los proyectos anteriores.

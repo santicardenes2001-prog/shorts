@@ -2068,6 +2068,254 @@ def tronco_roto():
     return "".join(s)
 
 
+# ---------------------------------------------------------------- océano profundo (short "3 animales del océano")
+KIWA, KIWA_PELO, KIWA2 = "#EDE3CC", "#D9C38A", "#CFC2A4"
+
+
+def cangrejo_yeti(pose="quieto", bacterias=False):
+    """Cangrejo yeti (Kiwa): cuerpo pálido, pinzas larguísimas cubiertas de pelos, ojitos atrofiados.
+    pose: quieto | baila_a | baila_b | come. 700x420, ancla abajo."""
+    puntas = {"quieto": ((90, 260), (610, 260)), "baila_a": ((70, 110), (640, 230)),
+              "baila_b": ((60, 230), (630, 100)), "come": ((140, 250), (378, 292))}[pose]
+    s = [f'<ellipse cx="350" cy="410" rx="230" ry="12" fill="#000" opacity=".25"/>']
+    # patitas
+    for i, x in enumerate((280, 320, 380, 420)):
+        d = -1 if x < 350 else 1
+        s.append(stroke_path(f"M {x} 330 Q {x + d * 60} 360 {x + d * 80} 404", KIWA2, 12))
+    # pinzas peludas: brazo + pelos + pinza (al comer, la derecha va por delante de la boca)
+    adelante = []
+    for lado, ((hx, hy), (tx, ty)) in enumerate(zip(((270, 285), (430, 285)), puntas)):
+        dest = adelante if (pose == "come" and lado == 1) else s
+        mx, my = (hx + tx) / 2, min(hy, ty) - 40
+        if pose == "come" and lado == 1:   # el brazo hace un arco hacia afuera y vuelve a la boca
+            mx, my = 560, 170
+        d = f"M {hx} {hy} Q {mx} {my} {tx} {ty}"
+        dest.append(stroke_path(d, KIWA, 30))
+        for k in range(1, 12):   # pelos a lo largo del brazo
+            t = k / 12
+            px = (1 - t) ** 2 * hx + 2 * (1 - t) * t * mx + t ** 2 * tx
+            py = (1 - t) ** 2 * hy + 2 * (1 - t) * t * my + t ** 2 * ty
+            for sgn in (-1, 1):
+                dest.append(ln(f"M {px:.0f} {py:.0f} l {sgn * 10:.0f} {22 + 6 * (k % 3)}", 5, KIWA_PELO))
+                if bacterias and k % 2:
+                    dest.append(f'<circle cx="{px + sgn * 12:.0f}" cy="{py + 26:.0f}" r="5" fill="#9BE07A" stroke="{INK}" stroke-width="2"/>')
+        ang = math.atan2(ty - my, tx - mx)
+        for da in (-.45, .45):   # dedos de la pinza
+            ex, ey = tx + 34 * math.cos(ang + da), ty + 34 * math.sin(ang + da)
+            dest.append(stroke_path(f"M {tx} {ty} L {ex:.0f} {ey:.0f}", KIWA, 14))
+    # cuerpo y cola recogida
+    s.append(f'<ellipse cx="350" cy="300" rx="120" ry="78" fill="{KIWA}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 270 300 Q 350 270 430 300", 5, KIWA2) + ln("M 290 330 Q 350 310 410 330", 5, KIWA2))
+    for x in (300, 400):
+        s.append(ln(f"M {x} 240 Q {x + (10 if x > 350 else -10)} 210 {x + (30 if x > 350 else -30)} 200", 4))
+    # ojitos atrofiados (casi ciego) y boca
+    s.append(f'<circle cx="326" cy="270" r="9" fill="#F4EED8" stroke="{INK}" stroke-width="3"/>'
+             f'<circle cx="374" cy="270" r="9" fill="#F4EED8" stroke="{INK}" stroke-width="3"/>')
+    if pose == "come":
+        s.append(f'<ellipse cx="350" cy="306" rx="16" ry="12" fill="{P["boca"]}" stroke="{INK}" stroke-width="4"/>')
+    else:
+        s.append(ln("M 334 302 Q 350 314 366 302", 5))
+    return "".join(s + adelante)
+
+
+VAMP, VAMP2, VAMP_IN = "#7A1E3A", "#9A2E50", "#4A0E22"
+
+
+def calamar_vampiro(modo="nada", brilla=False):
+    """Calamar vampiro (Vampyroteuthis infernalis), 520x640. modo: nada (capa de brazos abierta) |
+    pina (se da vuelta los brazos: queda una bola con 'púas' blandas). brilla: fotóforos azules."""
+    s = []
+    if modo == "pina":
+        s.append(f'<circle cx="260" cy="330" r="190" fill="{VAMP_IN}" stroke="{INK}" stroke-width="{SW}"/>')
+        for i in range(26):   # cirros (púas blandas) por toda la bola
+            a = i * 2 * math.pi / 26
+            x0, y0 = 260 + 186 * math.cos(a), 330 + 186 * math.sin(a)
+            s.append(stroke_path(f"M {x0:.0f} {y0:.0f} L {260 + 232 * math.cos(a):.0f} {330 + 232 * math.sin(a):.0f}", "#C9506E", 10))
+        for i in range(8):   # brazos plegados (líneas) con puntas negras
+            a = i * 2 * math.pi / 8 + .2
+            s.append(ln(f"M 260 330 Q {260 + 90 * math.cos(a + .4):.0f} {330 + 90 * math.sin(a + .4):.0f} "
+                        f"{260 + 170 * math.cos(a):.0f} {330 + 170 * math.sin(a):.0f}", 6, "#2A0612"))
+            s.append(f'<circle cx="{260 + 172 * math.cos(a):.0f}" cy="{330 + 172 * math.sin(a):.0f}" r="10" fill="{INK}"/>')
+        for x in (210, 310):   # ojos espiando
+            s.append(f'<circle cx="{x}" cy="300" r="26" fill="#6FC8FF" stroke="{INK}" stroke-width="5"/><circle cx="{x}" cy="304" r="11" fill="{INK}"/>')
+        return "".join(s)
+    # capa de brazos (membrana) con borde ondulado
+    cape = "M 110 300 Q 60 470 40 560 Q 90 600 140 560 Q 190 610 230 566 Q 260 620 290 566 Q 330 610 380 560 Q 430 600 480 560 Q 460 470 410 300 Z"
+    s.append(ln(cape, SW, INK, VAMP2))
+    for x0, x1 in [(150, 70), (200, 170), (260, 260), (320, 350), (370, 450)]:
+        s.append(ln(f"M {x0} 320 Q {(x0 + x1) / 2:.0f} 450 {x1} 566", 5, VAMP_IN))
+        for k in range(3):   # cirros a lo largo de cada brazo
+            yy = 380 + k * 55
+            xx = x0 + (x1 - x0) * (yy - 320) / 246
+            s.append(ln(f"M {xx:.0f} {yy} l 10 8", 4, "#C9506E"))
+    for x in (40, 140, 230, 290, 380, 480):
+        s.append(f'<circle cx="{x}" cy="{566 if x not in (40, 480) else 560}" r="9" fill="{INK}"/>')
+    # manto (cuerpo) y aletas como orejas
+    s.append(ln("M 150 120 Q 70 90 64 30 Q 140 50 186 100 Z", SW, INK, VAMP2))
+    s.append(ln("M 370 120 Q 450 90 456 30 Q 380 50 334 100 Z", SW, INK, VAMP2))
+    s.append(ln("M 120 320 Q 100 120 260 70 Q 420 120 400 320 Z", SW, INK, VAMP))
+    s.append(ln("M 170 140 Q 190 100 230 90", 10, "#fff", extra='opacity=".25"'))
+    for x in (200, 320):   # ojos enormes
+        s.append(f'<circle cx="{x}" cy="250" r="44" fill="#6FC8FF" stroke="{INK}" stroke-width="6"/>'
+                 f'<circle cx="{x}" cy="256" r="18" fill="{INK}"/><circle cx="{x - 12}" cy="240" r="9" fill="#fff"/>')
+    if brilla:
+        for x, y in [(110, 70), (410, 70), (40, 560), (480, 560), (140, 560), (380, 560), (230, 566), (290, 566)]:
+            s.append(f'<circle cx="{x}" cy="{y}" r="22" fill="#9FE8FF" opacity=".45"/><circle cx="{x}" cy="{y}" r="9" fill="#E8FBFF"/>')
+    return "".join(s)
+
+
+def pez_vibora(cara_kind="malo"):
+    """Pez víbora (depredador abisal) mirando a la izquierda: colmillos enormes y fotóforos (560x260)."""
+    s = [ln("M 520 130 L 556 80 L 552 180 Z", SW, INK, "#2A2E40")]
+    s.append(ln("M 40 130 Q 90 60 260 70 Q 440 80 520 130 Q 440 180 260 190 Q 90 200 40 130 Z", SW, INK, "#2E3448"))
+    for x in range(120, 480, 40):
+        s.append(f'<circle cx="{x}" cy="{176 - abs(x - 300) // 20}" r="7" fill="#7FD8FF"/>')
+    # boca y colmillos
+    s.append(ln("M 40 130 L 130 128 L 60 160 Z", 5, INK, "#5A1E2E"))
+    for x, y, h in [(60, 118, 60), (88, 120, 70), (112, 124, 50)]:
+        s.append(ln(f"M {x - 6} {y} L {x} {y + h} L {x + 6} {y} Z", 4, INK, "#F4EED8"))
+    if cara_kind == "mareado":
+        s.append(f'<circle cx="150" cy="100" r="22" fill="#fff" stroke="{INK}" stroke-width="5"/>'
+                 + ln("M 150 100 m -12 0 a 12 12 0 1 1 12 12 a 8 8 0 1 1 -6 -8", 4))
+        s.append(estrella4(200, 40, 16, P["amarillo"], 4) + estrella4(120, 30, 12, P["amarillo"], 4))
+    else:
+        s.append(f'<circle cx="150" cy="100" r="22" fill="#F5C518" stroke="{INK}" stroke-width="5"/><circle cx="146" cy="100" r="9" fill="{INK}"/>')
+        s.append(ln("M 124 74 L 176 88", 8))
+    return "".join(s)
+
+
+RAPE, RAPE2 = "#3A2E2A", "#2A2220"
+
+
+def rape_hembra(cara_kind="malo"):
+    """Hembra de rape abisal mirando a la derecha (700x600): bocaza con dientes de aguja y señuelo
+    luminoso (la punta brillante está en (640, 70)). cara_kind: malo | feliz."""
+    s = [ln("M 120 330 Q 40 260 30 200 Q 90 230 120 280 Z", SW, INK, RAPE2)]            # aleta de la cola
+    s.append(ln("M 120 330 Q 40 400 30 470 Q 90 430 130 380 Z", SW, INK, RAPE2))
+    s.append(f'<ellipse cx="340" cy="340" rx="230" ry="200" fill="{RAPE}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="320" cy="430" rx="150" ry="70" fill="#4A3C36"/>')
+    # boca enorme con dientes
+    s.append(ln("M 420 280 Q 600 270 610 360 Q 600 470 430 470 Q 520 380 420 280 Z", SW, INK, "#1A0E10"))
+    for i in range(7):
+        x = 470 + i * 20
+        s.append(ln(f"M {x - 5} {286 + i * 2} L {x} {330 + (i % 2) * 14} L {x + 5} {286 + i * 2} Z", 3, INK, "#F4EED8"))
+        s.append(ln(f"M {x - 5} {466 - i * 2} L {x} {426 - (i % 2) * 14} L {x + 5} {466 - i * 2} Z", 3, INK, "#F4EED8"))
+    # señuelo: caña que sale de la cabeza con una bolita que brilla
+    s.append(stroke_path("M 420 160 Q 520 20 640 70", "#4A3C36", 10))
+    s.append(f'<circle cx="640" cy="70" r="22" fill="#E8FBFF" stroke="{INK}" stroke-width="5"/>')
+    # ojo chiquito
+    if cara_kind == "feliz":
+        s.append(ln("M 380 230 Q 396 214 412 230", 7, "#E8E2D0"))
+    else:
+        s.append(f'<circle cx="396" cy="226" r="16" fill="#EDE8C0" stroke="{INK}" stroke-width="4"/><circle cx="400" cy="226" r="6" fill="{INK}"/>')
+        s.append(ln("M 370 202 L 420 214", 8, "#E8E2D0"))
+    s.append(ln("M 300 180 Q 330 160 370 160", 8, "#fff", extra='opacity=".15"'))
+    return "".join(s)
+
+
+def rape_macho(etapa=0):
+    """Macho diminuto (180x100) mirando a la izquierda; con la boca muerde lo que está a su izquierda.
+    etapa: 0 libre | 1 prendido | 2 fundido (pálido, con vasos) | 3 sin ojos | 4 bulto."""
+    s = []
+    if etapa == 4:
+        s.append(ln("M 10 50 Q 40 10 110 26 Q 170 46 120 80 Q 50 96 10 50 Z", 5, INK, "#5A4A44"))
+        s.append(ln("M 30 50 Q 70 40 110 52", 4, "#B5474F"))
+        return "".join(s)
+    cuerpo = "#5A4A44" if etapa < 2 else "#7A6460"
+    s.append(ln("M 150 50 L 176 26 L 176 74 Z", 4, INK, cuerpo))
+    s.append(ln("M 20 50 Q 50 16 110 22 Q 156 30 152 50 Q 156 70 110 78 Q 50 84 20 50 Z", 5, INK, cuerpo))
+    s.append(ln("M 20 44 L 6 50 L 20 56 Z", 3, INK, "#1A0E10"))
+    if etapa >= 2:
+        s.append(ln("M 10 50 Q 60 40 120 56 M 30 60 Q 80 70 130 64", 4, "#B5474F"))
+    if etapa <= 2:
+        s.append(f'<circle cx="52" cy="40" r="14" fill="#fff" stroke="{INK}" stroke-width="3"/><circle cx="48" cy="41" r="6" fill="{INK}"/>')
+    return "".join(s)
+
+
+def batiscafo(cara_kw):
+    """Batiscafo amarillo con Vos mirando por el ojo de buey (440x400). La lámpara apunta a la derecha
+    desde (420, 250)."""
+    s = [f'<rect x="60" y="300" width="60" height="40" rx="10" fill="#8E97A8" stroke="{INK}" stroke-width="{SW}"/>',
+         ln("M 40 300 L 20 270 M 40 340 L 20 370", 10, "#5B5566")]
+    s.append(f'<rect x="180" y="30" width="80" height="50" rx="14" fill="#E8B400" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="220" cy="230" r="180" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for a in range(0, 360, 30):
+        t = math.radians(a)
+        s.append(f'<circle cx="{220 + 166 * math.cos(t):.0f}" cy="{230 + 166 * math.sin(t):.0f}" r="6" fill="#E8B400" stroke="{INK}" stroke-width="2"/>')
+    s.append(f'<rect x="380" y="226" width="56" height="48" rx="10" fill="#8E97A8" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<rect x="420" y="232" width="16" height="36" rx="5" fill="#FFF4C2" stroke="{INK}" stroke-width="4"/>')
+    # ojo de buey con la cara de Vos (con el casco de explorador)
+    s.append(f'<clipPath id="ojb"><circle cx="220" cy="230" r="112"/></clipPath>')
+    s.append(f'<circle cx="220" cy="230" r="112" fill="#1E3A5A"/>')
+    s.append('<g clip-path="url(#ojb)"><g transform="translate(220 250) scale(0.56) translate(-260 -280)">'
+             + head(**cara_kw) + casco_safari() + '</g></g>')
+    s.append(f'<circle cx="220" cy="230" r="112" fill="#BDEBFF" opacity=".15"/>')
+    s.append(f'<circle cx="220" cy="230" r="112" fill="none" stroke="#8E97A8" stroke-width="20"/>'
+             f'<circle cx="220" cy="230" r="112" fill="none" stroke="{INK}" stroke-width="5"/>')
+    s.append(ln("M 150 170 Q 170 140 210 132", 9, "#fff", extra='opacity=".6"'))
+    return "".join(s)
+
+
+def tinta():
+    s = [ln("M 60 140 Q 40 60 130 50 Q 180 10 240 60 Q 300 70 280 140 Q 300 220 210 220 Q 150 250 100 210 Q 30 210 60 140 Z",
+            5, "#000", "#06070C")]
+    for x, y, r in [(40, 60, 18), (270, 40, 14), (300, 200, 16), (30, 220, 12)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="#06070C"/>')
+    return "".join(s)
+
+
+def destello():
+    defs = ('<radialGradient id="ds" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#F0FDFF"/>'
+            '<stop offset=".3" stop-color="#9FE8FF" stop-opacity=".8"/><stop offset="1" stop-color="#5CC8F0" stop-opacity="0"/></radialGradient>')
+    return '<circle cx="40" cy="40" r="40" fill="url(#ds)"/>', defs
+
+
+def nieve_marina():
+    defs = ('<radialGradient id="nm" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff" stop-opacity=".9"/>'
+            '<stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>')
+    return '<circle cx="10" cy="10" r="10" fill="url(#nm)"/>', defs
+
+
+def humo_toxico():
+    return (f'<circle cx="40" cy="40" r="30" fill="#B8D84A" opacity=".55" stroke="#7A9A2A" stroke-width="4"/>'
+            f'<circle cx="30" cy="30" r="8" fill="#fff" opacity=".5"/>')
+
+
+def platillo():
+    return (f'<ellipse cx="130" cy="60" rx="60" ry="44" fill="#BDEBFF" opacity=".8" stroke="{INK}" stroke-width="{SW}"/>'
+            + ln("M 10 84 Q 130 40 250 84 Q 130 128 10 84 Z", SW, INK, "#9AA4B8")
+            + "".join(f'<circle cx="{x}" cy="88" r="8" fill="{P["verde"]}" stroke="{INK}" stroke-width="3"/>' for x in (60, 100, 160, 200)))
+
+
+def globo_comentario(puntos=3):
+    s = [ln("M 30 20 L 330 20 Q 360 20 360 50 L 360 150 Q 360 180 330 180 L 120 180 L 70 226 L 80 180 L 30 180 "
+            "Q 0 180 0 150 L 0 50 Q 0 20 30 20 Z", SW, INK, "#fff")]
+    for i in range(3):
+        op = 1 if i < puntos else .25
+        s.append(f'<circle cx="{120 + i * 60}" cy="100" r="18" fill="#8A8F9E" opacity="{op}"/>')
+    return "".join(s)
+
+
+def gusano_tubo():
+    """Gusanos de tubo de las fumarolas (Riftia): tubos blancos con penacho rojo (160x300, ancla abajo)."""
+    s = []
+    for x, h in [(40, 220), (80, 270), (120, 200)]:
+        s.append(f'<rect x="{x - 14}" y="{300 - h}" width="28" height="{h}" rx="12" fill="#EDE8DA" stroke="{INK}" stroke-width="5"/>')
+        s.append(f'<ellipse cx="{x}" cy="{300 - h - 10}" rx="22" ry="26" fill="#E0404A" stroke="{INK}" stroke-width="5"/>')
+    return "".join(s)
+
+
+def cortina_burbujas():
+    rnd = random.Random(88)
+    s = [f'<rect x="150" y="0" width="1200" height="2100" rx="200" fill="#123A5E"/>']
+    for _ in range(90):
+        x, y, r = rnd.uniform(0, 1500), rnd.uniform(-60, 2160), rnd.uniform(20, 110)
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{rnd.choice(["#1E5A8A", "#2E7AAE", "#174A72"])}" '
+                 f'stroke="#9FD8F0" stroke-width="5" opacity=".95"/>'
+                 f'<circle cx="{x - r * .35:.0f}" cy="{y - r * .35:.0f}" r="{r * .18:.0f}" fill="#fff" opacity=".5"/>')
+    return "".join(s)
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
 
@@ -2175,6 +2423,43 @@ def fondo_pantano():
             '<stop offset="0.55" stop-color="#2F4A3E"/></linearGradient>'
             '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5A3A" stop-opacity="0"/>'
             '<stop offset="1" stop-color="#1A2A1C" stop-opacity=".8"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_abismo():
+    """Aguas profundas: azul noche que se va a negro, un resplandor lejano arriba y nieve marina quieta."""
+    rnd = random.Random(61)
+    s = [f'<rect width="{W}" height="{H}" fill="url(#ab)"/>',
+         f'<ellipse cx="540" cy="-200" rx="900" ry="700" fill="url(#luz)"/>']
+    for _ in range(90):
+        s.append(f'<circle cx="{rnd.uniform(0, W):.0f}" cy="{rnd.uniform(0, H):.0f}" r="{rnd.choice([1.5, 2, 2.5])}" '
+                 f'fill="#CFE8F0" opacity="{rnd.uniform(.15, .45):.2f}"/>')
+    defs = ('<linearGradient id="ab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E2A4A"/>'
+            '<stop offset=".6" stop-color="#06121F"/><stop offset="1" stop-color="#020509"/></linearGradient>'
+            '<radialGradient id="luz" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#3A7AA8" stop-opacity=".35"/>'
+            '<stop offset="1" stop-color="#3A7AA8" stop-opacity="0"/></radialGradient>')
+    return "".join(s), defs
+
+
+def fondo_lecho():
+    """Fondo marino con fumarolas (chimeneas que largan gases), tapetes de bacterias y gusanos de tubo."""
+    body, defs = fondo_abismo()
+    s = [body]
+    for x, h, w in [(200, 520, 110), (880, 640, 130), (560, 300, 80)]:   # chimeneas
+        s.append(ln(f"M {x - w} 1300 L {x - w * .6:.0f} {1300 - h} Q {x} {1280 - h} {x + w * .6:.0f} {1300 - h} L {x + w} 1300 Z",
+                    SW, INK, "#2A2624"))
+        for k in range(4):
+            yy = 1300 - h * (k + 1) / 5
+            s.append(ln(f"M {x - w * .7:.0f} {yy:.0f} Q {x} {yy + 14:.0f} {x + w * .7:.0f} {yy:.0f}", 5, "#3E3834"))
+        s.append(f'<ellipse cx="{x}" cy="{1300 - h}" rx="{w * .5:.0f}" ry="14" fill="#FF8A3A" opacity=".35"/>')
+    s.append(ln("M -10 1290 Q 200 1240 420 1280 Q 640 1320 860 1270 Q 980 1250 1090 1280 L 1090 1930 L -10 1930 Z",
+                SW, INK, "#1E2430"))
+    rnd = random.Random(62)
+    for _ in range(9):   # tapetes blancos de bacterias
+        x, y = rnd.uniform(40, 1040), rnd.uniform(1290, 1500)
+        s.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{rnd.uniform(40, 90):.0f}" ry="12" fill="#E8E2D0" opacity=".55"/>')
+    s.append(f'<g transform="translate(330 1006)">{gusano_tubo()}</g>')
+    s.append(f'<g transform="translate(980 1010) scale(.8)">{gusano_tubo()}</g>')
     return "".join(s), defs
 
 
@@ -2706,7 +2991,39 @@ def build():
     add("cortina_hojas", 1500, 2100, cortina_hojas())
     add("pajarito", 60, 34, pajarito())
     add("rayitas", 300, 300, rayitas())
+    # ---- short "3 animales del océano profundo"
+    for pose in ("quieto", "baila_a", "baila_b", "come"):
+        add(f"cangrejo_yeti_{pose}", 700, 420, cangrejo_yeti(pose), anchor=(0.5, 1.0))
+    add("cangrejo_yeti_bacterias", 700, 420, cangrejo_yeti("quieto", bacterias=True), anchor=(0.5, 1.0))
+    add("cangrejo_yeti_come_bacterias", 700, 420, cangrejo_yeti("come", bacterias=True), anchor=(0.5, 1.0))
+    add("calamar_vampiro", 520, 640, calamar_vampiro())
+    add("calamar_vampiro_brilla", 520, 640, calamar_vampiro(brilla=True))
+    add("calamar_vampiro_pina", 520, 640, calamar_vampiro("pina"))
+    add("pez_vibora", 560, 260, pez_vibora())
+    add("pez_vibora_mareado", 560, 260, pez_vibora("mareado"))
+    add("rape_hembra", 700, 600, rape_hembra())
+    add("rape_hembra_feliz", 700, 600, rape_hembra("feliz"))
+    for e in range(5):
+        add(f"rape_macho_{e}", 180, 100, rape_macho(e))
+    caras = {"neutral": dict(), "sorpresa": dict(eyes="wide", brows="up", mouth_kind="o"),
+             "miedo": dict(eyes="wide", brows="sad", mouth_kind="nervio"), "pensando": dict(look=(1, -1), brows="up", mouth_kind="flat"),
+             "contento": dict(eyes="happy", brows="happy", mouth_kind="open_smile"),
+             "asco": dict(eyes="squint", brows="asco", mouth_kind="bleh")}
+    for nombre_cara, kw in caras.items():
+        add(f"batiscafo_{nombre_cara}", 440, 420, batiscafo(kw))
+    add("batiscafo_neutral__blink", 440, 420, batiscafo(dict(eyes="closed")))
+    add("tinta", 320, 260, tinta())
+    for name, fn in [("destello", destello), ("nieve_marina", nieve_marina)]:
+        body, defs = fn()
+        add(name, 80 if name == "destello" else 20, 80 if name == "destello" else 20, body, defs)
+    add("humo_toxico", 80, 80, humo_toxico())
+    add("platillo", 260, 140, platillo())
+    for k in (1, 2, 3):
+        add(f"globo_comentario_{k}", 370, 240, globo_comentario(k))
+    add("gusano_tubo", 160, 300, gusano_tubo(), anchor=(0.5, 1.0))
+    add("cortina_burbujas", 1500, 2100, cortina_burbujas())
     for name, fn in [("fondo_liso", fondo_liso), ("fondo_burst", fondo_burst), ("fondo_piel", fondo_piel),
+                     ("fondo_abismo", fondo_abismo), ("fondo_lecho", fondo_lecho),
                      ("fondo_burst_verde", fondo_burst_verde), ("fondo_subsuelo", fondo_subsuelo),
                      ("fondo_humedal", fondo_humedal), ("fondo_bosque_dia", lambda: fondo_bosque(False)),
                      ("fondo_bosque_noche", lambda: fondo_bosque(True)), ("fondo_rio", fondo_rio),

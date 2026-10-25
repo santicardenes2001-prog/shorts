@@ -12,3 +12,13 @@
 - Ideas de producción: fondo abisal oscuro con nieve marina (partículas), luz solo de los animales
   (bioluminiscencia con halos), chimeneas hidrotermales con burbujas de gas para el cangrejo; Vos con
   traje de buzo / batiscafo; el macho del rape pegándose y "fundiéndose" de a poco.
+
+- Producción (2026-10-25):
+  - Ambiente "abismo" en `motor.py` (sonar lejano, burbujas, llamado grave; eventos sueltos con ducking).
+  - Vos en batiscafo con haz de luz (`rayo_luz` orientado al objetivo) a la izquierda, debajo de la banda
+    de carteles; se apaga con "oscuridad total" y se desvanece durante el zoom al brazo del cangrejo.
+  - Transición `cortina_burbujas` entre animales; zooms al brazo con bacterias (1,8) y a la fusión del
+    macho (2,0) con carteles en coordenadas de escena.
+  - Primera vista de hojas: batiscafo arriba a la izquierda pisaba los carteles, animales del gancho y del
+    cierre chicos, platillo casi invisible → corregido antes de entregar.
+  - "pelos" no lo reconoció el ASR (tiempo interpolado); revisado a ojo, el cartel cae bien.

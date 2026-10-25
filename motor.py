@@ -1197,6 +1197,28 @@ def ambiente(tipo, n, seed=0):
         while at < dur:
             pegar(pio(rnd.uniform(1200, 1800), .25) * .1, at)
             at += rnd.uniform(4, 7)
+    elif tipo == "abismo":   # sonar lejano, grupos de burbujas y algún llamado grave
+        at = rnd.uniform(1, 3)
+        while at < dur:
+            tt = np.arange(int(1.4 * SR)) / SR
+            ping = np.sin(2 * np.pi * 1250 * tt) * np.exp(-tt * 3.5) * (tt < 1.4)
+            pegar((ping * .08).astype(np.float32), at)
+            at += rnd.uniform(6, 9)
+        at = rnd.uniform(.5, 1.5)
+        while at < dur:
+            for j in range(rnd.integers(2, 6)):
+                tt = np.arange(int(.06 * SR)) / SR
+                f = rnd.uniform(400, 900) * (1 + 2.5 * tt / .06)
+                burb = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / .06) ** 2
+                pegar((burb * .1).astype(np.float32), at + j * rnd.uniform(.05, .12))
+            at += rnd.uniform(1.8, 3.5)
+        at = rnd.uniform(4, 7)
+        while at < dur:
+            tt = np.arange(int(2.2 * SR)) / SR
+            f = 170 - 60 * tt / 2.2
+            moan = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 2.2) ** 2
+            pegar((moan * .07).astype(np.float32), at)
+            at += rnd.uniform(9, 14)
     elif tipo == "noche":   # grillos: ráfagas cortas con silencios, no un pitido continuo
         at = rnd.uniform(.2, .8)
         while at < dur:

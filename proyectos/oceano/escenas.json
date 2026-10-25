@@ -1,0 +1,2294 @@
+{
+ "cola": 3.4,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 76
+ },
+ "estilos": {
+  "titulo": {
+   "size": 84,
+   "color": "#FFFFFF",
+   "stroke": 12
+  },
+  "num": {
+   "size": 96,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "circle": true,
+   "pad": [
+    22,
+    14
+   ]
+  },
+  "cartel": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFFFFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rojo": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#FF5D5D",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_amarillo": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_celeste": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#9ADCFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_verde": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#8BD06A",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_violeta": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5CFF",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_marron": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5236",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rosa": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F7A08C",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_naranja": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F0A060",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_negro": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#2B2730",
+   "stroke": 0,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "censura": {
+   "size": 104,
+   "color": "#FFFFFF",
+   "box": "#14121A",
+   "stroke": 0,
+   "radius": 10
+  },
+  "pregunta": {
+   "size": 150,
+   "color": "#FFD23F",
+   "stroke": 12
+  },
+  "boton": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#E53935",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "boton_hecho": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#8A8F9E",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "titulo_azul": {
+   "size": 100,
+   "color": "#FFFFFF",
+   "stroke": 14,
+   "stroke_color": "#0E2A4A"
+  }
+ },
+ "narracion": [
+  {
+   "texto": "¡Te muestro 3 animales del océano profundo tan extraños que parecen extraterrestres!"
+  },
+  {
+   "texto": "1. El cangrejo yeti (el que cultiva su comida en los brazos):"
+  },
+  {
+   "texto": "Vive en la oscuridad total, a más de 1000 metros bajo el agua, y es casi ciego."
+  },
+  {
+   "texto": "Para no morir de hambre, mueve sus largas pinzas peludas como si estuviera bailando sobre los gases tóxicos del suelo marino;"
+  },
+  {
+   "texto": "así alimenta a las bacterias que crecen en sus propios pelos, para después comérselas."
+  },
+  {
+   "texto": "2. El calamar vampiro (el que dispara luz en vez de tinta):"
+  },
+  {
+   "texto": "Vive a casi 1000 metros de profundidad, donde la oscuridad es total y la tinta negra no serviría de nada."
+  },
+  {
+   "texto": "Cuando un depredador lo ataca, se envuelve con sus tentáculos, que parecen llenos de púas,"
+  },
+  {
+   "texto": "y lanza una nube de moco que brilla en la oscuridad para confundir a su enemigo y escapar."
+  },
+  {
+   "texto": "3. El rape abisal (el macho que se fusiona con la hembra):"
+  },
+  {
+   "texto": "En el fondo del mar es tan difícil encontrar pareja que, cuando un macho diminuto encuentra a una hembra gigante, la muerde y nunca más la suelta."
+  },
+  {
+   "texto": "Con el tiempo, su piel y sus vasos sanguíneos se funden con los de ella, pierde los ojos y casi todos sus órganos, y pasa el resto de su vida pegado a ella como una parte más de su cuerpo."
+  },
+  {
+   "texto": "¿Cuál de los tres te parece más extraterrestre? Cuéntanos en los comentarios."
+  }
+ ],
+ "persistentes": [
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b1",
+   "out": "e3",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "El cangrejo yeti",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b1+0.15",
+   "out": "e3",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b5",
+   "out": "e5",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "El calamar vampiro",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b5+0.15",
+   "out": "e5",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b9",
+   "out": "e7",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "El rape abisal",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b9+0.15",
+   "out": "e7",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "a": "cortina_burbujas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e1-0.40",
+   "out": "e1+0.40",
+   "sfx": "glup",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e1-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_burbujas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e3-0.40",
+   "out": "e3+0.40",
+   "sfx": "glup",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e3-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_burbujas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e5-0.40",
+   "out": "e5+0.40",
+   "sfx": "glup",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e5-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_burbujas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e7-0.40",
+   "out": "e7+0.40",
+   "sfx": "glup",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e7-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.05,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b0:extraterrestres",
+     "s": "zoom"
+    },
+    {
+     "at": "b0",
+     "s": "whoosh_suave"
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 1,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.7,
+     "z": 14
+    },
+    {
+     "texto": {
+      "t": "3 ANIMALES DEL\nOCÉANO PROFUNDO",
+      "estilo": "titulo_azul",
+      "size": 108
+     },
+     "x": 540,
+     "y": 330,
+     "in": "b0:3",
+     "fx_in": "pop",
+     "fx_out": "suave",
+     "idle": "breathe",
+     "z": 45
+    },
+    {
+     "a": "batiscafo_neutral",
+     "x": 300,
+     "y": -260,
+     "s": 0.7,
+     "idle": "float",
+     "fase": 0,
+     "blink": true,
+     "keys": [
+      {
+       "at": "b0",
+       "hasta": "b0:animales",
+       "y": 760,
+       "ease": "out"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b0:extraños",
+       "a": "batiscafo_sorpresa",
+       "fx": "punch"
+      }
+     ],
+     "fx_out": "fade"
+    },
+    {
+     "a": "halo_celeste",
+     "x": 800,
+     "y": 800,
+     "s": 0.7,
+     "alpha": 0.5,
+     "in": "b0:animales",
+     "fx_in": "fade",
+     "idle": "latido",
+     "fx_out": "fade"
+    },
+    {
+     "a": "calamar_vampiro_brilla",
+     "x": 800,
+     "y": 800,
+     "s": 0.6,
+     "in": "b0:animales",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "idle": "float",
+     "fx_out": "fade"
+    },
+    {
+     "a": "cangrejo_yeti_quieto",
+     "x": 270,
+     "y": 1330,
+     "s": 0.65,
+     "in": "b0:océano",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "idle": "sway",
+     "fx_out": "fade"
+    },
+    {
+     "a": "rape_hembra",
+     "x": 760,
+     "y": 1210,
+     "s": 0.55,
+     "in": "b0:profundo",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "idle": "float",
+     "fx_out": "fade"
+    },
+    {
+     "a": "platillo",
+     "x": -250,
+     "y": 640,
+     "s": 1.3,
+     "r": -8,
+     "in": "b0:extraterrestres",
+     "sfx": "none",
+     "z": 6,
+     "keys": [
+      {
+       "at": "b0:extraterrestres",
+       "dur": 1.1,
+       "x": 1350,
+       "y": 540,
+       "ease": "inout"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nombre": "yeti_intro",
+   "beats": [
+    1,
+    2
+   ],
+   "fondo": "fondo_lecho",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b2:oscuridad",
+     "s": "click"
+    },
+    {
+     "at": "b2:más",
+     "s": "click"
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 2,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.8,
+     "z": 14,
+     "keys": [
+      {
+       "at": "b2:oscuridad",
+       "dur": 0.3,
+       "alpha": 1.0
+      },
+      {
+       "at": "b2:más",
+       "dur": 0.3,
+       "alpha": 0.8
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 6,
+      "semilla": 2,
+      "zona": [
+       120,
+       300,
+       980,
+       1100
+      ],
+      "vx": [
+       -10,
+       10
+      ],
+      "vy": [
+       -90,
+       -50
+      ],
+      "s": [
+       0.5,
+       1.2
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       20,
+       0.4
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": 2
+    },
+    {
+     "a": "batiscafo_neutral",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5,
+     "in": "b1",
+     "fx_in": "slide_down",
+     "sfx": "whoosh_suave",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b2:ciego",
+       "a": "batiscafo_pensando",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rayo_luz",
+     "x": 247.2,
+     "y": 718.0,
+     "r": 55.9,
+     "s": 0.75,
+     "alpha": 0.55,
+     "z": -1,
+     "idle": {
+      "fx": "latido",
+      "fuerza": 0.25
+     },
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b2:oscuridad",
+       "dur": 0.1,
+       "alpha": 0
+      },
+      {
+       "at": "b2:más",
+       "dur": 0.1,
+       "alpha": 0.55
+      }
+     ]
+    },
+    {
+     "a": "cangrejo_yeti_quieto",
+     "x": 540,
+     "y": 1335,
+     "s": 0.9,
+     "in": "b1:cangrejo",
+     "fx_in": "fade",
+     "dur_in": 0.8,
+     "idle": "sway",
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b2:oscuridad",
+       "dur": 0.3,
+       "alpha": 0.15
+      },
+      {
+       "at": "b2:más",
+       "dur": 0.3,
+       "alpha": 1
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "(CULTIVA SU COMIDA\nEN LOS BRAZOS)",
+      "estilo": "cartel",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b1:cultiva",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b2"
+    },
+    {
+     "texto": {
+      "t": "OSCURIDAD TOTAL",
+      "estilo": "cartel_negro",
+      "size": 72
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b2:oscuridad",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b2:más"
+    },
+    {
+     "texto": {
+      "t": "-1000 m",
+      "estilo": "cartel_celeste",
+      "size": 96
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b2:1000",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b2:casi"
+    },
+    {
+     "texto": {
+      "t": "CASI CIEGO",
+      "estilo": "cartel_amarillo",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b2:ciego",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "yeti_baile",
+   "beats": [
+    3,
+    4
+   ],
+   "fondo": "fondo_lecho",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04,
+      "x": 540,
+      "y": 960
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.06,
+      "ease": "linear"
+     },
+     {
+      "at": "b4:bacterias",
+      "dur": 0.9,
+      "zoom": 1.8,
+      "x": 430,
+      "y": 1180,
+      "ease": "inout"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b3:gases",
+     "s": "glup",
+     "vol": 0.7
+    },
+    {
+     "at": "b4:comérselas",
+     "s": "pop"
+    },
+    {
+     "at": "b4:comérselas+0.3",
+     "s": "pop",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 2,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.8,
+     "z": 14
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 6,
+      "semilla": 2,
+      "zona": [
+       120,
+       300,
+       980,
+       1100
+      ],
+      "vx": [
+       -10,
+       10
+      ],
+      "vy": [
+       -90,
+       -50
+      ],
+      "s": [
+       0.5,
+       1.2
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       20,
+       0.4
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": 2
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 14,
+      "semilla": 3,
+      "zona": [
+       120,
+       300,
+       980,
+       1100
+      ],
+      "vx": [
+       -10,
+       10
+      ],
+      "vy": [
+       -90,
+       -50
+      ],
+      "s": [
+       0.5,
+       1.2
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       20,
+       0.4
+      ]
+     },
+     "in": "b3:gases",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": 2
+    },
+    {
+     "a": "batiscafo_pensando",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5,
+     "keys": [
+      {
+       "at": "b4:bacterias",
+       "dur": 0.4,
+       "alpha": 0
+      }
+     ]
+    },
+    {
+     "a": "rayo_luz",
+     "x": 247.2,
+     "y": 718.0,
+     "r": 55.9,
+     "s": 0.75,
+     "alpha": 0.55,
+     "z": -1,
+     "idle": {
+      "fx": "latido",
+      "fuerza": 0.25
+     },
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b4:bacterias",
+       "dur": 0.4,
+       "alpha": 0
+      }
+     ]
+    },
+    {
+     "a": "cangrejo_yeti_quieto",
+     "x": 540,
+     "y": 1335,
+     "s": 0.9,
+     "idle": "sway",
+     "fase": 0,
+     "loops": [
+      {
+       "frames": [
+        "cangrejo_yeti_baila_a",
+        "cangrejo_yeti_baila_b"
+       ],
+       "fps": 3,
+       "from": "b3:mueve",
+       "to": "b4:alimenta"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b4:bacterias",
+       "a": "cangrejo_yeti_bacterias",
+       "fx": "punch"
+      },
+      {
+       "at": "b4:comérselas",
+       "a": "cangrejo_yeti_come_bacterias",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "nota_musical",
+      "n": 5,
+      "semilla": 2,
+      "zona": [
+       300,
+       700,
+       800,
+       1000
+      ],
+      "vy": [
+       -80,
+       -50
+      ],
+      "s": [
+       0.4,
+       0.6
+      ],
+      "ondula": [
+       20,
+       0.5
+      ]
+     },
+     "in": "b3:bailando",
+     "out": "b4",
+     "fx_in": "fade",
+     "fx_out": "fade",
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "¡BAILA!",
+      "estilo": "cartel_amarillo",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:bailando",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "r": -4,
+     "out": "b3:gases"
+    },
+    {
+     "texto": {
+      "t": "GASES TÓXICOS",
+      "estilo": "cartel_verde",
+      "size": 74
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:gases",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b4:bacterias"
+    },
+    {
+     "texto": {
+      "t": "BACTERIAS EN SUS PELOS",
+      "estilo": "cartel",
+      "size": 40
+     },
+     "x": 430,
+     "y": 908,
+     "in": "b4:pelos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b4:comérselas"
+    },
+    {
+     "texto": {
+      "t": "¡SE LAS COME!",
+      "estilo": "cartel_amarillo",
+      "size": 46
+     },
+     "x": 430,
+     "y": 908,
+     "in": "b4:comérselas",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "vampiro_intro",
+   "beats": [
+    5,
+    6
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 3,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.8,
+     "z": 14
+    },
+    {
+     "a": "batiscafo_sorpresa",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5
+    },
+    {
+     "a": "rayo_luz",
+     "x": 247.2,
+     "y": 718.0,
+     "r": 40.0,
+     "s": 0.47,
+     "alpha": 0.55,
+     "z": -1,
+     "idle": {
+      "fx": "latido",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "a": "calamar_vampiro",
+     "x": 500,
+     "y": 930,
+     "s": 1.0,
+     "in": "b5:calamar",
+     "fx_in": "fade",
+     "dur_in": 0.8,
+     "idle": "float",
+     "fase": 0
+    },
+    {
+     "texto": {
+      "t": "(DISPARA LUZ\nEN VEZ DE TINTA)",
+      "estilo": "cartel",
+      "size": 64
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:dispara",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b6"
+    },
+    {
+     "texto": {
+      "t": "-1000 m",
+      "estilo": "cartel_celeste",
+      "size": 96
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:1000",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b6:oscuridad"
+    },
+    {
+     "a": "tinta",
+     "x": 790,
+     "y": 1180,
+     "s": 0.9,
+     "in": "b6:tinta",
+     "fx_in": "grow",
+     "sfx": "glup",
+     "keys": [
+      {
+       "at": "b6:serviría",
+       "dur": 0.8,
+       "alpha": 0.15
+      }
+     ],
+     "fx_out": "fade"
+    },
+    {
+     "texto": {
+      "t": "¡NO SE VE!",
+      "estilo": "cartel_negro",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:tinta",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "vampiro_ataque",
+   "beats": [
+    7,
+    8
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04
+     },
+     {
+      "at": "esc+0.01",
+      "dur": 1.0,
+      "zoom": 1.0
+     }
+    ],
+    "temblor": [
+     {
+      "from": "b8:brilla",
+      "to": "b8:brilla+0.6",
+      "fuerza": 0.8
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b7:depredador",
+     "s": "zumbido",
+     "vol": 0.7
+    },
+    {
+     "at": "b8:brilla",
+     "s": "brillo"
+    },
+    {
+     "at": "b8:escapar",
+     "s": "whoosh"
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 3,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.8,
+     "z": 14
+    },
+    {
+     "a": "batiscafo_sorpresa",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5,
+     "swaps": [
+      {
+       "at": "b7:depredador",
+       "a": "batiscafo_miedo",
+       "fx": "punch"
+      },
+      {
+       "at": "b8:escapar",
+       "a": "batiscafo_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rayo_luz",
+     "x": 247.2,
+     "y": 718.0,
+     "r": 40.0,
+     "s": 0.47,
+     "alpha": 0.55,
+     "z": -1,
+     "idle": {
+      "fx": "latido",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "a": "calamar_vampiro",
+     "x": 500,
+     "y": 930,
+     "s": 1.0,
+     "idle": "float",
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b7:envuelve",
+       "a": "calamar_vampiro_pina",
+       "fx": "punch"
+      },
+      {
+       "at": "b8:confundir",
+       "a": "calamar_vampiro_brilla",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b8:escapar",
+       "dur": 0.7,
+       "x": 560,
+       "y": -450,
+       "s": 0.7,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "pez_vibora",
+     "x": 1500,
+     "y": 1190,
+     "s": 1.3,
+     "in": "b7:depredador",
+     "sfx": "none",
+     "idle": "sway",
+     "z": 2,
+     "keys": [
+      {
+       "at": "b7:depredador",
+       "dur": 1.0,
+       "x": 900,
+       "ease": "out"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b8:confundir",
+       "a": "pez_vibora_mareado",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¡PARECE LLENO DE PÚAS!",
+      "estilo": "cartel_rojo",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:púas",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8:moco"
+    },
+    {
+     "a": "halo_celeste",
+     "x": 560,
+     "y": 980,
+     "s": 0.3,
+     "alpha": 0,
+     "in": "b8:nube",
+     "z": 3,
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b8:nube",
+       "dur": 0.8,
+       "s": 1.9,
+       "alpha": 1,
+       "ease": "out"
+      }
+     ],
+     "idle": "latido",
+     "fx_out": "fade"
+    },
+    {
+     "particulas": {
+      "a": "destello",
+      "n": 34,
+      "semilla": 6,
+      "zona": [
+       220,
+       620,
+       900,
+       1380
+      ],
+      "vx": [
+       -25,
+       25
+      ],
+      "vy": [
+       -25,
+       25
+      ],
+      "s": [
+       0.4,
+       1.1
+      ],
+      "titila": 0.7,
+      "ondula": [
+       30,
+       0.4
+      ]
+     },
+     "in": "b8:nube",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "fx_out": "fade",
+     "z": 4
+    },
+    {
+     "a": "blanco",
+     "alpha": 0,
+     "z": 30,
+     "in": "b8:brilla",
+     "out": "b8:brilla+0.6",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b8:brilla",
+       "dur": 0.08,
+       "alpha": 0.45
+      },
+      {
+       "at": "b8:brilla+0.1",
+       "dur": 0.45,
+       "alpha": 0
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "MOCO QUE BRILLA",
+      "estilo": "cartel_celeste",
+      "size": 72
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:moco",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8:confundir"
+    },
+    {
+     "texto": {
+      "t": "¡CONFUNDIDO!",
+      "estilo": "cartel_amarillo",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:confundir",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "rape_encuentro",
+   "beats": [
+    9,
+    10
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b9:rape",
+     "s": "brillo",
+     "vol": 0.6
+    },
+    {
+     "at": "b10:muerde",
+     "s": "golpe",
+     "vol": 0.8
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 4,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 1.0,
+     "z": 14
+    },
+    {
+     "a": "batiscafo_sorpresa",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5
+    },
+    {
+     "a": "halo_celeste",
+     "x": 819.0,
+     "y": 747.0,
+     "s": 0.35,
+     "alpha": 0.9,
+     "in": "b9:rape",
+     "fx_in": "fade",
+     "z": 4,
+     "idle": "latido",
+     "fase": 0
+    },
+    {
+     "a": "rape_hembra",
+     "x": 500,
+     "y": 1000,
+     "s": 1.1,
+     "alpha": 0,
+     "idle": "float",
+     "fase": 0,
+     "z": 2,
+     "keys": [
+      {
+       "at": "b9:abisal",
+       "dur": 1.2,
+       "alpha": 1,
+       "ease": "inout"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "(EL MACHO SE FUSIONA\nCON LA HEMBRA)",
+      "estilo": "cartel",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b9:macho",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b10:difícil"
+    },
+    {
+     "a": "rape_macho_0",
+     "x": 960,
+     "y": 560,
+     "s": 0.8,
+     "in": "b10:difícil",
+     "fx_in": "fade",
+     "z": 6,
+     "idle": "bob",
+     "keys": [
+      {
+       "at": "b10:difícil",
+       "dur": 1.6,
+       "x": 760,
+       "y": 640,
+       "ease": "inout"
+      },
+      {
+       "at": "b10:muerde-0.35",
+       "dur": 0.35,
+       "x": 542.0,
+       "y": 1242.0,
+       "ease": "in"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b10:muerde",
+       "a": "rape_macho_1",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 90
+     },
+     "x": 820,
+     "y": 560,
+     "in": "b10:difícil+0.4",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "out": "b10:diminuto",
+     "fx_out": "pop",
+     "z": 7
+    },
+    {
+     "texto": {
+      "t": "MACHO DIMINUTO",
+      "estilo": "cartel_celeste",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b10:diminuto",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b10:hembra"
+    },
+    {
+     "texto": {
+      "t": "HEMBRA GIGANTE",
+      "estilo": "cartel_rojo",
+      "size": 74
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b10:hembra",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b10:muerde"
+    },
+    {
+     "texto": {
+      "t": "¡Y NUNCA MÁS LA SUELTA!",
+      "estilo": "cartel_amarillo",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b10:nunca",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    },
+    {
+     "a": "corazon",
+     "x": 582.0,
+     "y": 1122.0,
+     "s": 0.4,
+     "in": "b10:muerde",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "bob",
+     "z": 7,
+     "fx_out": "pop"
+    }
+   ]
+  },
+  {
+   "nombre": "rape_fusion",
+   "beats": [
+    11
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": "abismo",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04
+     },
+     {
+      "at": "b11:tiempo",
+      "dur": 1.0,
+      "zoom": 2.0,
+      "x": 522.0,
+      "y": 1222.0,
+      "ease": "inout"
+     },
+     {
+      "at": "b11:resto",
+      "dur": 1.0,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960,
+      "ease": "inout"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b11:funden",
+     "s": "zumbido",
+     "vol": 0.6
+    },
+    {
+     "at": "b11:ojos",
+     "s": "pop"
+    },
+    {
+     "at": "b11:órganos",
+     "s": "glup"
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 4,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 1.0,
+     "z": 14
+    },
+    {
+     "a": "batiscafo_sorpresa",
+     "x": 150,
+     "y": 700,
+     "s": 0.45,
+     "idle": "float",
+     "fase": 0,
+     "z": 5,
+     "swaps": [
+      {
+       "at": "b11:ojos",
+       "a": "batiscafo_asco",
+       "fx": "punch"
+      },
+      {
+       "at": "b11:pegado",
+       "a": "batiscafo_sorpresa"
+      }
+     ]
+    },
+    {
+     "a": "halo_celeste",
+     "x": 819.0,
+     "y": 747.0,
+     "s": 0.35,
+     "alpha": 0.9,
+     "z": 4,
+     "idle": "latido",
+     "fase": 0
+    },
+    {
+     "a": "rape_hembra",
+     "x": 500,
+     "y": 1000,
+     "s": 1.1,
+     "idle": "float",
+     "fase": 0,
+     "z": 2,
+     "swaps": [
+      {
+       "at": "b11:parte",
+       "a": "rape_hembra_feliz",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rape_macho_1",
+     "x": 542.0,
+     "y": 1242.0,
+     "s": 0.8,
+     "z": 6,
+     "swaps": [
+      {
+       "at": "b11:funden",
+       "a": "rape_macho_2",
+       "fx": "punch"
+      },
+      {
+       "at": "b11:ojos",
+       "a": "rape_macho_3",
+       "fx": "punch"
+      },
+      {
+       "at": "b11:órganos",
+       "a": "rape_macho_4",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "SE FUNDEN",
+      "estilo": "cartel_rojo",
+      "size": 36
+     },
+     "x": 522.0,
+     "y": 977.0,
+     "in": "b11:funden",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:ojos"
+    },
+    {
+     "texto": {
+      "t": "PIERDE LOS OJOS…",
+      "estilo": "cartel",
+      "size": 36
+     },
+     "x": 522.0,
+     "y": 977.0,
+     "in": "b11:ojos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:órganos"
+    },
+    {
+     "texto": {
+      "t": "…Y SUS ÓRGANOS",
+      "estilo": "cartel_amarillo",
+      "size": 36
+     },
+     "x": 522.0,
+     "y": 977.0,
+     "in": "b11:órganos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:resto"
+    },
+    {
+     "texto": {
+      "t": "PEGADO DE POR VIDA",
+      "estilo": "cartel_rojo",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b11:pegado",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "cierre",
+   "beats": [
+    12
+   ],
+   "fondo": "fondo_abismo",
+   "ambiente": {
+    "tipo": "abismo",
+    "vol": 0.7
+   },
+   "sonidos": [
+    {
+     "at": "b12:cuéntanos",
+     "s": "pop"
+    },
+    {
+     "at": "b12>+1.1",
+     "s": "click"
+    },
+    {
+     "at": "b12>+1.5",
+     "s": "ding"
+    }
+   ],
+   "elementos": [
+    {
+     "particulas": {
+      "a": "nieve_marina",
+      "n": 30,
+      "semilla": 5,
+      "zona": [
+       -20,
+       -40,
+       1100,
+       1960
+      ],
+      "vx": [
+       -8,
+       8
+      ],
+      "vy": [
+       18,
+       40
+      ],
+      "s": [
+       0.6,
+       1.6
+      ],
+      "alpha": [
+       0.4,
+       0.9
+      ],
+      "ondula": [
+       10,
+       0.2
+      ]
+     },
+     "z": 13
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.6,
+     "z": 14
+    },
+    {
+     "texto": {
+      "t": "¿CUÁL ES MÁS\nEXTRATERRESTRE?",
+      "estilo": "cartel_amarillo",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:cuál",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12>"
+    },
+    {
+     "a": "cangrejo_yeti_baila_a",
+     "x": 250,
+     "y": 1060,
+     "s": 0.6,
+     "in": "b12:cuál",
+     "fx_in": "pop",
+     "idle": "sway",
+     "loops": [
+      {
+       "frames": [
+        "cangrejo_yeti_baila_a",
+        "cangrejo_yeti_baila_b"
+       ],
+       "fps": 3,
+       "from": "b12",
+       "to": "fin"
+      }
+     ]
+    },
+    {
+     "a": "calamar_vampiro_brilla",
+     "x": 540,
+     "y": 780,
+     "s": 0.55,
+     "in": "b12:cuál+0.12",
+     "fx_in": "pop",
+     "idle": "float"
+    },
+    {
+     "a": "rape_hembra_feliz",
+     "x": 800,
+     "y": 1000,
+     "s": 0.5,
+     "in": "b12:cuál+0.24",
+     "fx_in": "pop",
+     "idle": "float"
+    },
+    {
+     "a": "batiscafo_pensando",
+     "x": 540,
+     "y": 1270,
+     "s": 0.7,
+     "in": "b12",
+     "fx_in": "slide_up",
+     "idle": "float",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b12>+1.2",
+       "a": "batiscafo_contento",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta"
+     },
+     "x": 740,
+     "y": 1230,
+     "r": 12,
+     "in": "b12:extraterrestre",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "out": "b12:cuéntanos",
+     "fx_out": "pop"
+    },
+    {
+     "a": "globo_comentario_1",
+     "x": 780,
+     "y": 1250,
+     "s": 0.55,
+     "in": "b12:cuéntanos",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 8,
+     "loops": [
+      {
+       "frames": [
+        "globo_comentario_1",
+        "globo_comentario_2",
+        "globo_comentario_3"
+       ],
+       "fps": 4,
+       "from": "b12:cuéntanos",
+       "to": "fin"
+      }
+     ],
+     "idle": "bob"
+    },
+    {
+     "texto": {
+      "t": "SUSCRIBIRSE",
+      "estilo": "boton"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b12>+0.1",
+     "fx_in": "pop",
+     "out": "b12>+1.15",
+     "z": 20,
+     "keys": [
+      {
+       "at": "b12>+1.05",
+       "dur": 0.1,
+       "s": 0.92
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "SUSCRIPTO",
+      "estilo": "boton_hecho"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b12>+1.15",
+     "z": 20,
+     "sfx": "none",
+     "fx_in": "none",
+     "swaps": [],
+     "keys": [
+      {
+       "at": "b12>+1.15",
+       "dur": 0.25,
+       "s": 1.0,
+       "ease": "back"
+      }
+     ],
+     "s": 0.9
+    },
+    {
+     "a": "anillo",
+     "x": 660,
+     "y": 410,
+     "s": 0.2,
+     "z": 22,
+     "in": "b12>+1.1",
+     "out": "b12>+1.6",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b12>+1.1",
+       "dur": 0.5,
+       "s": 0.9,
+       "alpha": 0,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "cursor_mano",
+     "x": 960,
+     "y": 900,
+     "s": 0.8,
+     "z": 23,
+     "in": "b12>+0.4",
+     "fx_in": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b12>+0.4",
+       "dur": 0.6,
+       "x": 660,
+       "y": 410,
+       "ease": "out"
+      },
+      {
+       "at": "b12>+1.05",
+       "dur": 0.08,
+       "s": 0.7
+      },
+      {
+       "at": "b12>+1.15",
+       "dur": 0.1,
+       "s": 0.8
+      },
+      {
+       "at": "b12>+1.6",
+       "dur": 0.5,
+       "x": 980,
+       "y": 980,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "campana",
+     "x": 860,
+     "y": 370,
+     "s": 0.5,
+     "z": 21,
+     "in": "b12>+1.5",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 2.2
+     }
+    }
+   ]
+  }
+ ],
+ "volumen_ambiente": 0.35,
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}
