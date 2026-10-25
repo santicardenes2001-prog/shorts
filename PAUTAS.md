@@ -49,6 +49,9 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - Cada lugar se ambienta en capas, no se llena de cosas: fondo propio del hábitat real + luz (rayos,
   sol, luna) + atmósfera (niebla, hojas que caen, luciérnagas) + primer plano desenfocado que se
   mece (profundidad de campo) + **sonido ambiente** (`"ambiente"`: selva, pantano, noche, bosque).
+- El ambiente son **eventos sueltos con silencio entre medio** (pájaros, ranas, ráfagas de grillos) y
+  se agacha solo cuando habla el narrador (ducking). **Nunca ruido ni tonos continuos**: debajo de la
+  voz se escuchan como un siseo molesto. `revisar.py` avisa si el piso de efectos+ambiente pasa -58 dB.
 - Las capas de primer plano van por delante de los personajes (z 12-16) pero detrás de los carteles (z 20+).
 - La cámara siempre "respira" (zoom lento) y se usa para contar: primer plano de un detalle (el ojo),
   acercarse a la acción (el pico), alejarse para revelar (de la cara al bosque de noche).
@@ -118,3 +121,6 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - 2026-10-25 · aves · "Le falta algo más a las animaciones, profundizar y ambientar más fino" → capas
   de luz/niebla/primer plano desenfocado, sonido ambiente, cámara narrativa, transición de hojas,
   animaciones cuadro a cuadro, efecto destacado con pausa. Cierre con pregunta + suscripción.
+
+- 2026-10-25 · aves · "Ruido de fondo perjudicial": el ambiente tenía ruido y tonos continuos (piso
+  -40 dB) → ambiente de eventos sueltos + ducking bajo la voz (piso -63 dB) y chequeo en `revisar.py`.

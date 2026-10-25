@@ -8,6 +8,7 @@ Cada chequeo sale de una corrección real (ver PAUTAS.md). Avisa, no corrige:
   - cortes de escena donde un mismo personaje/objeto salta un poco (cara, posición o tamaño): un cambio
     grande se lee como re-encuadre y no se avisa; uno chico parece un error
   - carteles que desaparecen de golpe en un corte (sin fx_out)
+  - ruido de fondo continuo en efectos + ambiente (se escucha como un siseo debajo de la voz)
   - personajes/objetos que desaparecen de golpe en un corte cuando el lugar (fondo) sigue igual
     (no se revisan los cortes tapados por una cortina ni las escenas con "transicion": "...")
 """
@@ -168,6 +169,16 @@ def revisar(path):
             if cambios:
                 avisar(f"[corte {antes.get('nombre', i - 1)} → {despues.get('nombre', i)}] {familia(st['asset'])} "
                        f"salta: " + ", ".join(cambios), tc)
+
+    # ruido de fondo: el piso de efectos + ambiente tiene que quedar muy por debajo de la voz
+    import numpy as np
+    pista = proj.sfx_track()
+    h = motor.SR * 30 // 1000
+    k = len(pista) // h
+    niveles = 20 * np.log10(np.sqrt((pista[:k * h].reshape(k, h) ** 2).mean(1)) + 1e-9)
+    piso = float(np.percentile(niveles, 10))
+    if piso > -58:
+        avisar(f"ruido de fondo continuo en efectos/ambiente: piso {piso:.0f} dB (tiene que quedar por debajo de -58 dB)", 0.0)
 
     if not avisos:
         print("sin avisos")

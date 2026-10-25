@@ -26,3 +26,6 @@
   la rama, olor, vaca (muu), burbujas de fermentación, jaguar que trepa, lo huele y huye, pichón que
   trepa con las garras, dinosaurio. Cierre: las 3 aves, "?" y suscripción con clic y campanita.
 - `revisar.py`: sin avisos.
+- Corrección (2026-10-25): "ruido de fondo perjudicial" → era la cama de ambiente (ruido + tono de
+  insectos continuos, piso -40 dB). Se rehízo el ambiente (solo eventos sueltos) y se agacha bajo la
+  voz: piso -62.8 dB. Re-renderizado.

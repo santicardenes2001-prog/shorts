@@ -831,7 +831,34 @@ class Project:
             seg[:f] *= ramp
             seg[-f:] *= ramp[::-1]
             out[i0:i1] += seg
-        return out * self.doc.get("volumen_ambiente", .22)
+        return out * self.ducking(n) * self.doc.get("volumen_ambiente", .22)
+
+    def ducking(self, n):
+        """Ganancia (0-1) que baja el ambiente ~10 dB mientras habla el narrador y lo deja volver en las
+        pausas, para que nunca compita con la voz."""
+        voz = self.doc.get("audio_voz")
+        if not voz:
+            return np.ones(n, dtype=np.float32)
+        path = os.path.join(self.dir, voz)
+        if self.pausas:
+            tmp = tempfile.mkdtemp()
+            path = self.voz_con_pausas(path, os.path.join(tmp, "v.wav"))
+        raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
+                             capture_output=True, check=True).stdout
+        v = np.frombuffer(raw, dtype=np.float32)
+        hop = SR // 50
+        k = len(v) // hop
+        env = np.sqrt((v[:k * hop].reshape(k, hop) ** 2).mean(1))
+        hablando = (20 * np.log10(env + 1e-9) > -40).astype(np.float32)
+        # ataque rápido, liberación lenta (~0,4 s)
+        g = np.zeros(k, dtype=np.float32)
+        for i in range(k):
+            prev = g[i - 1] if i else 0
+            g[i] = hablando[i] if hablando[i] > prev else prev * .95
+        gain = 1 - .68 * np.repeat(g, hop)
+        out = np.ones(n, dtype=np.float32)
+        out[:min(n, len(gain))] = gain[:n]
+        return out
 
     def all_elements(self):
         for sc in self.scenes:
@@ -1121,16 +1148,21 @@ def synth(kind, ph=0.0):
 
 
 def ambiente(tipo, n, seed=0):
-    """Cama de sonido ambiente procedural (semilla fija) de n muestras, nivel ~0.3."""
+    """Ambiente procedural (semilla fija) de n muestras: SOLO eventos sueltos y naturales con silencio entre
+    medio (pájaros, ranas, grillos en ráfagas) + un aire muy suave en graves. Nada de ruido ni tonos
+    continuos: debajo de la voz se escuchan como un siseo molesto (corrección del usuario, video de aves)."""
     rnd = np.random.default_rng(100 + seed)
     t = np.arange(n) / SR
+    out = np.zeros(n, dtype=np.float32)
+    # aire: ruido filtrado por debajo de ~300 Hz, muy bajo y que sube y baja despacio
     base = np.random.default_rng(200 + seed).standard_normal(n).astype(np.float32)
-    lp = np.convolve(base, np.ones(60, dtype=np.float32) / 60, mode="same")
-    out = lp / (np.abs(lp).max() + 1e-6) * .12          # rumor de fondo (hojas, aire)
+    lp = np.convolve(base, np.ones(160, dtype=np.float32) / 160, mode="same")
+    lp = np.convolve(lp, np.ones(160, dtype=np.float32) / 160, mode="same")
+    out += lp / (np.abs(lp).max() + 1e-6) * .03 * (.6 + .4 * np.sin(2 * np.pi * .07 * t + seed)).astype(np.float32)
 
     def pegar(snd, at):
         i = int(at * SR)
-        if i < n:
+        if 0 <= i < n:
             out[i:i + len(snd)] += snd[:n - i]
 
     def pio(f0, d=.12):
@@ -1140,36 +1172,40 @@ def ambiente(tipo, n, seed=0):
 
     dur = n / SR
     if tipo in ("selva", "bosque"):
-        k = 1.0 if tipo == "selva" else .5
-        at = rnd.uniform(0, .5)
-        while at < dur:
-            f0 = rnd.uniform(1800, 3600)
+        k = 1.0 if tipo == "selva" else .6
+        at = rnd.uniform(.3, 1.0)
+        while at < dur:   # pájaros: frases de 1-3 notas, bien separadas
+            f0 = rnd.uniform(1600, 3200)
             for j in range(rnd.integers(1, 4)):
-                pegar(pio(f0 * rnd.uniform(.9, 1.1)) * rnd.uniform(.15, .35) * k, at + j * .14)
-            at += rnd.uniform(.4, 1.6) / k
-        if tipo == "selva":   # insectos: zumbido agudo que va y viene
-            out += (np.sin(2 * np.pi * 5200 * t) * (.5 + .5 * np.sin(2 * np.pi * 7 * t))
-                    * (.5 + .5 * np.sin(2 * np.pi * .13 * t)) * .025).astype(np.float32)
+                pegar(pio(f0 * rnd.uniform(.9, 1.1)) * rnd.uniform(.12, .25) * k, at + j * .15)
+            at += rnd.uniform(1.0, 2.6) / k
+        if tipo == "selva":   # de vez en cuando un llamado más grave y lejano
+            at = rnd.uniform(2, 4)
+            while at < dur:
+                pegar(pio(rnd.uniform(700, 1000), .35) * .1, at)
+                at += rnd.uniform(4, 8)
     elif tipo == "pantano":
-        at = rnd.uniform(0, .5)
-        while at < dur:   # ranas: trenes de pulsos graves
-            f0 = rnd.uniform(140, 260)
-            for j in range(rnd.integers(2, 6)):
-                tt = np.arange(int(.07 * SR)) / SR
-                croak = np.sign(np.sin(2 * np.pi * f0 * tt)) * np.exp(-tt * 40)
-                pegar((np.convolve(croak, np.ones(8) / 8, mode="same") * .25).astype(np.float32), at + j * .1)
-            at += rnd.uniform(.8, 2.2)
-        at = rnd.uniform(1, 3)
+        at = rnd.uniform(.5, 1.5)
+        while at < dur:   # ranas: croar suave (pulsos redondeados), en grupos espaciados
+            f0 = rnd.uniform(140, 240)
+            for j in range(rnd.integers(2, 5)):
+                tt = np.arange(int(.08 * SR)) / SR
+                croak = np.sin(2 * np.pi * f0 * tt) * np.sin(np.pi * tt / .08) ** 2
+                pegar((croak * .16).astype(np.float32), at + j * .12)
+            at += rnd.uniform(1.6, 3.5)
+        at = rnd.uniform(2, 4)
         while at < dur:
-            pegar(pio(rnd.uniform(1200, 1800), .25) * .15, at)
-            at += rnd.uniform(3, 6)
-    elif tipo == "noche":   # grillos: chirridos agudos en grupos
-        for g in range(3):
-            f0 = 4300 + 300 * g
-            period = rnd.uniform(.6, .9)
-            ph = rnd.uniform(0, period)
-            env = ((t + ph) % period < .18) * (np.sin(2 * np.pi * 30 * t) > 0)
-            out += (np.sin(2 * np.pi * f0 * t) * env * .05).astype(np.float32)
+            pegar(pio(rnd.uniform(1200, 1800), .25) * .1, at)
+            at += rnd.uniform(4, 7)
+    elif tipo == "noche":   # grillos: ráfagas cortas con silencios, no un pitido continuo
+        at = rnd.uniform(.2, .8)
+        while at < dur:
+            f0 = rnd.uniform(3600, 4200)
+            for j in range(rnd.integers(3, 6)):
+                tt = np.arange(int(.05 * SR)) / SR
+                chirp = np.sin(2 * np.pi * f0 * tt) * np.sin(np.pi * tt / .05) ** 2
+                pegar((chirp * .07).astype(np.float32), at + j * .09)
+            at += rnd.uniform(.9, 2.0)
     return out.astype(np.float32)
 
 
