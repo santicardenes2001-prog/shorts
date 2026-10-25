@@ -1,0 +1,2698 @@
+{
+ "cola": 3.4,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 76
+ },
+ "estilos": {
+  "titulo": {
+   "size": 84,
+   "color": "#FFFFFF",
+   "stroke": 12
+  },
+  "num": {
+   "size": 96,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "circle": true,
+   "pad": [
+    22,
+    14
+   ]
+  },
+  "cartel": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFFFFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rojo": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#FF5D5D",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_amarillo": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_celeste": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#9ADCFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_verde": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#8BD06A",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_violeta": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5CFF",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_marron": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5236",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rosa": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F7A08C",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_naranja": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F0A060",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_negro": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#2B2730",
+   "stroke": 0,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "censura": {
+   "size": 104,
+   "color": "#FFFFFF",
+   "box": "#14121A",
+   "stroke": 0,
+   "radius": 10
+  },
+  "pregunta": {
+   "size": 150,
+   "color": "#FFD23F",
+   "stroke": 12
+  },
+  "boton": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#E53935",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "boton_hecho": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#8A8F9E",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "titulo_verde": {
+   "size": 100,
+   "color": "#FFFFFF",
+   "stroke": 14,
+   "stroke_color": "#1E5A2A"
+  }
+ },
+ "narracion": [
+  {
+   "texto": "¡Te muestro 3 aves tan raras que cuesta creer que sean reales!"
+  },
+  {
+   "texto": "1. El picozapato:"
+  },
+  {
+   "texto": "Mide hasta un metro y medio y tiene un pico enorme y filoso que parece un zapato de madera."
+  },
+  {
+   "texto": "Puede quedarse inmóvil como una estatua durante horas para emboscar a sus presas, ¡hasta cocodrilos bebés!"
+  },
+  {
+   "texto": "Y para comunicarse, choca el pico tan rápido que suena como una ráfaga de disparos."
+  },
+  {
+   "texto": "2. Urutaú (el pájaro fantasma):"
+  },
+  {
+   "texto": "De día se queda rígido en la punta de una rama, haciéndose pasar por un tronco roto."
+  },
+  {
+   "texto": "Tiene ranuras en los párpados para vigilar con los ojos cerrados, sin que lo delate el brillo de sus enormes ojos amarillos."
+  },
+  {
+   "texto": "Pero de noche se transforma: abre una boca tan enorme que parece partirle la cabeza en dos y caza insectos en pleno vuelo,"
+  },
+  {
+   "texto": "y su canto suena como el llanto de una persona."
+  },
+  {
+   "texto": "3. El hoacín (el pájaro apestoso):"
+  },
+  {
+   "texto": "Es la única ave que digiere como una vaca, fermentando las hojas."
+  },
+  {
+   "texto": "Es por eso que huele tanto a estiércol que casi nadie se anima a cazarlo."
+  },
+  {
+   "texto": "Sus polluelos nacen con dos garras en cada ala y trepan por las ramas como pequeños dinosaurios."
+  },
+  {
+   "texto": "¿Tendrías alguno de ellos?"
+  }
+ ],
+ "persistentes": [
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b1",
+   "out": "e4",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "El picozapato",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b1+0.15",
+   "out": "e4",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b5",
+   "out": "e7",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Urutaú",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b5+0.15",
+   "out": "e7",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b10",
+   "out": "e10",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "El hoacín",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b10+0.15",
+   "out": "e10",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "a": "cortina_hojas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e1-0.40",
+   "out": "e1+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e1-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_hojas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e4-0.40",
+   "out": "e4+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e4-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_hojas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e7-0.40",
+   "out": "e7+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e7-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_hojas",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e10-0.40",
+   "out": "e10+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e10-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0
+   ],
+   "fondo": "fondo_rio",
+   "ambiente": "selva",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.05,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "capa_rayos",
+     "alpha": 0.8,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_hojas_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 7,
+      "semilla": 1,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "texto": {
+      "t": "3 AVES\nRARAS",
+      "estilo": "titulo_verde",
+      "size": 116
+     },
+     "x": 540,
+     "y": 330,
+     "in": "b0:3",
+     "fx_in": "pop",
+     "fx_out": "suave",
+     "idle": "breathe",
+     "z": 45
+    },
+    {
+     "a": "picozapato_0",
+     "x": 215,
+     "y": 1010,
+     "s": 0.55,
+     "in": "b0:aves",
+     "fx_in": "pop",
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true,
+     "fx_out": "pop"
+    },
+    {
+     "a": "urutau_ojos",
+     "x": 540,
+     "y": 880,
+     "s": 0.5,
+     "in": "b0:aves+0.15",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "idle": "breathe",
+     "fx_out": "pop"
+    },
+    {
+     "a": "hoacin",
+     "x": 850,
+     "y": 990,
+     "s": 0.68,
+     "in": "b0:aves+0.3",
+     "fx_in": "pop",
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true,
+     "fx_out": "pop"
+    },
+    {
+     "a": "vos_explo_binoculares",
+     "x": 540,
+     "y": 1330,
+     "s": 0.55,
+     "in": "b0+0.1",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b0:reales",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ],
+     "fx_out": "slide_down"
+    }
+   ]
+  },
+  {
+   "nombre": "picozapato_intro",
+   "beats": [
+    1,
+    2
+   ],
+   "fondo": "fondo_humedal",
+   "ambiente": "pantano",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b2:filoso",
+     "s": "filo",
+     "vol": 0.8
+    }
+   ],
+   "elementos": [
+    {
+     "a": "niebla",
+     "x": -300,
+     "y": 1050,
+     "s": 1.0,
+     "alpha": 0.7,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 200,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "niebla",
+     "x": 900,
+     "y": 1180,
+     "s": 1.0,
+     "alpha": 0.5,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 600,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "capa_rayos",
+     "alpha": 0.6,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_papiros_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.2
+     },
+     "fase": 0
+    },
+    {
+     "a": "picozapato_0",
+     "x": 560,
+     "y": 1300,
+     "s": 1.0,
+     "in": "b1:picozapato",
+     "fx_in": "drop",
+     "dur_in": 0.9,
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0
+    },
+    {
+     "a": "regla",
+     "x": 170,
+     "y": 1300,
+     "s": 1.0,
+     "in": "b2:metro",
+     "fx_in": "grow",
+     "dur_in": 0.6,
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "1,5 m",
+      "estilo": "cartel_amarillo",
+      "size": 84
+     },
+     "x": 170,
+     "y": 500,
+     "in": "b2:metro",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    },
+    {
+     "a": "flecha_roja",
+     "x": 985,
+     "y": 650,
+     "s": 0.32,
+     "r": 90,
+     "in": "b2:pico",
+     "fx_in": "pop",
+     "idle": "work",
+     "fx_out": "pop"
+    },
+    {
+     "a": "brillo",
+     "x": 872,
+     "y": 676,
+     "s": 0.45,
+     "in": "b2:filoso",
+     "fx_in": "pop",
+     "idle": "pulse",
+     "sfx": "none",
+     "fx_out": "pop"
+    },
+    {
+     "a": "zueco",
+     "x": 760,
+     "y": 470,
+     "s": 0.8,
+     "r": -8,
+     "in": "b2:zapato",
+     "fx_in": "pop",
+     "idle": "float",
+     "fx_out": "pop"
+    }
+   ]
+  },
+  {
+   "nombre": "picozapato_caza",
+   "beats": [
+    3
+   ],
+   "fondo": "fondo_humedal",
+   "ambiente": "pantano",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.08,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b3:presas",
+     "s": "glup"
+    },
+    {
+     "at": "b3:horas",
+     "s": "tictac",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "niebla",
+     "x": 200,
+     "y": 1050,
+     "s": 1.0,
+     "alpha": 0.7,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 500,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "niebla",
+     "x": 600,
+     "y": 1180,
+     "s": 1.0,
+     "alpha": 0.5,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 300,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "capa_rayos",
+     "alpha": 0.6,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_papiros_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.2
+     },
+     "fase": 0
+    },
+    {
+     "a": "picozapato_0",
+     "x": 560,
+     "y": 1300,
+     "s": 1.0,
+     "idle": {
+      "fx": "breathe",
+      "to": "b3:inmóvil"
+     },
+     "blink": true,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b3:presas-0.15",
+       "dur": 0.18,
+       "y": 1350,
+       "r": 14,
+       "ease": "in"
+      },
+      {
+       "at": "b3:presas+0.2",
+       "dur": 0.35,
+       "y": 1300,
+       "r": 0,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "COMO UNA ESTATUA",
+      "estilo": "cartel",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:estatua",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b3:horas"
+    },
+    {
+     "a": "vos_explo",
+     "x": 150,
+     "y": 1330,
+     "s": 0.4,
+     "in": "b3:estatua",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b3:cocodrilos",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ],
+     "fx_out": "none"
+    },
+    {
+     "a": "zzz",
+     "x": 250,
+     "y": 930,
+     "s": 0.45,
+     "in": "b3:horas",
+     "fx_in": "pop",
+     "idle": "float",
+     "out": "b3:emboscar",
+     "fx_out": "pop"
+    },
+    {
+     "a": "reloj",
+     "x": 890,
+     "y": 600,
+     "s": 0.5,
+     "in": "b3:horas",
+     "fx_in": "pop",
+     "sfx": "none",
+     "out": "b3:presas",
+     "fx_out": "pop"
+    },
+    {
+     "a": "reloj_aguja",
+     "x": 890,
+     "y": 600,
+     "s": 0.5,
+     "z": 1,
+     "in": "b3:horas",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "spin",
+      "vel": 1440
+     },
+     "out": "b3:presas",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "HORAS…",
+      "estilo": "cartel_celeste",
+      "size": 70
+     },
+     "x": 640,
+     "y": 520,
+     "in": "b3:horas",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b3:emboscar"
+    },
+    {
+     "a": "pez_pulmonado",
+     "x": 1150,
+     "y": 1395,
+     "s": 0.75,
+     "flip": true,
+     "in": "b3:emboscar",
+     "z": 2,
+     "keys": [
+      {
+       "at": "b3:emboscar",
+       "dur": 1.0,
+       "x": 760,
+       "ease": "out"
+      },
+      {
+       "at": "b3:presas",
+       "dur": 0.15,
+       "alpha": 0,
+       "s": 0.3
+      }
+     ],
+     "idle": "sway",
+     "out": "b3:presas+0.3"
+    },
+    {
+     "a": "cocodrilo_bebe",
+     "x": 820,
+     "y": 1300,
+     "s": 1.05,
+     "flip": true,
+     "in": "b3:cocodrilos",
+     "fx_in": "jump",
+     "idle": "shake",
+     "z": 2,
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡HASTA COCODRILOS!",
+      "estilo": "cartel_verde",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:cocodrilos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "picozapato_matraca",
+   "beats": [
+    4
+   ],
+   "fondo": "fondo_humedal",
+   "ambiente": "pantano",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.08
+     },
+     {
+      "at": "b4:comunicarse",
+      "dur": 0.9,
+      "zoom": 1.65,
+      "x": 650,
+      "y": 720,
+      "ease": "inout"
+     }
+    ],
+    "temblor": [
+     {
+      "from": "b4:disparos>",
+      "to": "b4:disparos>+1.45",
+      "fuerza": 1.0
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b4:disparos>",
+     "s": "matraca",
+     "destacado": true,
+     "vol": 1.1
+    },
+    {
+     "at": "b4:disparos>+0.2",
+     "s": "aleteo",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "niebla",
+     "x": 500,
+     "y": 1050,
+     "s": 1.0,
+     "alpha": 0.7,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 700,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "niebla",
+     "x": 300,
+     "y": 1180,
+     "s": 1.0,
+     "alpha": 0.5,
+     "z": 5,
+     "fase": 0,
+     "keys": [
+      {
+       "at": "esc",
+       "hasta": "esc>",
+       "x": 150,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "capa_rayos",
+     "alpha": 0.6,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_papiros_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.2
+     },
+     "fase": 0
+    },
+    {
+     "a": "picozapato_0",
+     "x": 560,
+     "y": 1300,
+     "s": 1.0,
+     "blink": true,
+     "fase": 0,
+     "loops": [
+      {
+       "frames": [
+        "picozapato_0",
+        "picozapato_1"
+       ],
+       "fps": 5,
+       "from": "b4:choca",
+       "to": "b4:rápido"
+      },
+      {
+       "frames": [
+        "picozapato_0",
+        "picozapato_2",
+        "picozapato_1"
+       ],
+       "fps": 18,
+       "from": "b4:disparos>",
+       "to": "b4:disparos>+1.4"
+      }
+     ],
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.5,
+      "from": "b4:disparos>",
+      "to": "b4:disparos>+1.4"
+     }
+    },
+    {
+     "a": "vos_explo_sorpresa",
+     "x": 150,
+     "y": 1330,
+     "s": 0.4,
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b4:disparos>",
+       "a": "vos_explo_miedo",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rayitas",
+     "x": 880,
+     "y": 700,
+     "s": 0.9,
+     "in": "b4:disparos>",
+     "out": "b4:disparos>+1.4",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "pulse",
+      "fuerza": 2
+     }
+    },
+    {
+     "texto": {
+      "t": "¡RA-TA-TA-TA!",
+      "estilo": "cartel_amarillo",
+      "size": 52
+     },
+     "x": 662,
+     "y": 423,
+     "in": "b4:disparos>",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "r": -6,
+     "idle": "shake",
+     "out": "b4:disparos>+1.45",
+     "sfx": "none"
+    },
+    {
+     "particulas": {
+      "a": "pajarito",
+      "n": 9,
+      "semilla": 6,
+      "zona": [
+       -100,
+       300,
+       1180,
+       1000
+      ],
+      "vx": [
+       -420,
+       -250
+      ],
+      "vy": [
+       -260,
+       -140
+      ],
+      "s": [
+       0.6,
+       1.1
+      ],
+      "ondula": [
+       10,
+       2
+      ]
+     },
+     "in": "b4:disparos>+0.15",
+     "out": "b4:disparos>+1.45",
+     "fx_in": "fade",
+     "fx_out": "fade",
+     "z": 25
+    }
+   ]
+  },
+  {
+   "nombre": "urutau_dia",
+   "beats": [
+    5,
+    6
+   ],
+   "fondo": "fondo_bosque_dia",
+   "ambiente": "bosque",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "hasta": "b6:roto",
+      "zoom": 1.04,
+      "ease": "linear"
+     },
+     {
+      "at": "b6:roto",
+      "hasta": "esc>",
+      "zoom": 2.3,
+      "x": 540,
+      "y": 832,
+      "ease": "in"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "capa_rayos",
+     "alpha": 0.7,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0,
+     "fx_out": "fade"
+    },
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 5,
+      "semilla": 2,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "a": "urutau_rama",
+     "x": 540,
+     "y": 1380,
+     "s": 1.0,
+     "in": "b5:urutaú",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "idle": "breathe",
+     "fase": 0
+    },
+    {
+     "texto": {
+      "t": "(EL PÁJARO FANTASMA)",
+      "estilo": "cartel",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:fantasma",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b6:rama"
+    },
+    {
+     "a": "tronco_roto",
+     "x": 230,
+     "y": 1385,
+     "s": 1.25,
+     "in": "b6:tronco",
+     "fx_in": "grow",
+     "z": -1,
+     "fx_out": "pop"
+    },
+    {
+     "a": "vos_explo_binoculares",
+     "x": 860,
+     "y": 1330,
+     "s": 0.42,
+     "flip": true,
+     "in": "b6:rígido",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b6:tronco",
+       "a": "vos_explo_pensando",
+       "fx": "punch"
+      }
+     ],
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¿RAMA O PÁJARO?",
+      "estilo": "cartel_amarillo",
+      "size": 74
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:tronco",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b6:roto+0.3"
+    }
+   ]
+  },
+  {
+   "nombre": "urutau_ojo",
+   "beats": [
+    7
+   ],
+   "fondo": "fondo_bosque_dia",
+   "ambiente": "bosque",
+   "transicion": "primer plano (la cámara entra en la cara del urutaú y corta al ojo)",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.03,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b7:brillo",
+     "s": "brillo"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "fondo_bosque_dia",
+     "s": 1.7,
+     "x": 540,
+     "y": 700,
+     "z": -20
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 1.0,
+     "z": 14
+    },
+    {
+     "a": "urutau_ojo_1",
+     "x": 540,
+     "y": 900,
+     "s": 1.35,
+     "z": 36,
+     "idle": "breathe",
+     "fx_in": "grow",
+     "dur_in": 0.35,
+     "sfx": "none",
+     "loops": [
+      {
+       "frames": [
+        "urutau_ojo_0",
+        "urutau_ojo_1",
+        "urutau_ojo_2",
+        "urutau_ojo_1"
+       ],
+       "fps": 2.5,
+       "from": "b7:vigilar",
+       "to": "b7:brillo"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b7:brillo",
+       "a": "urutau_ojo_abierto",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "flecha_roja",
+     "x": 459,
+     "y": 790,
+     "s": 0.3,
+     "z": 37,
+     "in": "b7:ranuras",
+     "fx_in": "pop",
+     "idle": "work",
+     "out": "b7:brillo",
+     "fx_out": "pop"
+    },
+    {
+     "a": "flecha_roja",
+     "x": 621,
+     "y": 790,
+     "s": 0.3,
+     "z": 37,
+     "in": "b7:ranuras+0.1",
+     "fx_in": "pop",
+     "idle": "work",
+     "sfx": "none",
+     "out": "b7:brillo",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "RANURAS EN LOS PÁRPADOS",
+      "estilo": "cartel",
+      "size": 58
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:ranuras",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 38,
+     "out": "b7:cerrados"
+    },
+    {
+     "texto": {
+      "t": "VIGILA CON LOS OJOS CERRADOS",
+      "estilo": "cartel_celeste",
+      "size": 54
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:cerrados",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 38,
+     "out": "b7:brillo"
+    },
+    {
+     "a": "brillo",
+     "x": 430,
+     "y": 780,
+     "s": 0.6,
+     "z": 38,
+     "in": "b7:brillo",
+     "fx_in": "pop",
+     "idle": "pulse",
+     "sfx": "none",
+     "fx_out": "pop"
+    },
+    {
+     "a": "brillo",
+     "x": 680,
+     "y": 1010,
+     "s": 0.35,
+     "z": 38,
+     "in": "b7:brillo+0.15",
+     "fx_in": "pop",
+     "idle": "pulse",
+     "sfx": "none",
+     "fx_out": "pop"
+    }
+   ]
+  },
+  {
+   "nombre": "urutau_noche",
+   "beats": [
+    8,
+    9
+   ],
+   "fondo": "fondo_bosque_noche",
+   "ambiente": "noche",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.9,
+      "x": 540,
+      "y": 832
+     },
+     {
+      "at": "esc+0.05",
+      "hasta": "b8:abre",
+      "zoom": 1.0,
+      "x": 540,
+      "y": 960,
+      "ease": "inout"
+     },
+     {
+      "at": "b8:boca",
+      "dur": 0.5,
+      "zoom": 1.3,
+      "x": 540,
+      "y": 860,
+      "ease": "back"
+     },
+     {
+      "at": "b9",
+      "dur": 0.8,
+      "zoom": 1.1,
+      "x": 540,
+      "y": 960,
+      "ease": "inout"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b8:boca",
+     "s": "zumbido",
+     "vol": 0.7
+    },
+    {
+     "at": "b8:vuelo",
+     "s": "glup"
+    },
+    {
+     "at": "b9:canto",
+     "s": "llanto",
+     "vol": 1.2
+    }
+   ],
+   "elementos": [
+    {
+     "a": "fondo_bosque_dia",
+     "z": -20,
+     "keys": [
+      {
+       "at": "b8:noche",
+       "dur": 1.4,
+       "alpha": 0,
+       "ease": "inout"
+      }
+     ]
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0,
+     "z": 14,
+     "keys": [
+      {
+       "at": "b8:noche",
+       "dur": 1.4,
+       "alpha": 1
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "luciernaga",
+      "n": 18,
+      "semilla": 4,
+      "zona": [
+       0,
+       500,
+       1080,
+       1500
+      ],
+      "vx": [
+       -15,
+       15
+      ],
+      "vy": [
+       -15,
+       10
+      ],
+      "s": [
+       0.6,
+       1.2
+      ],
+      "titila": 0.9,
+      "ondula": [
+       30,
+       0.25
+      ]
+     },
+     "in": "b8:noche+0.6",
+     "fx_in": "fade",
+     "dur_in": 1.2,
+     "z": 13
+    },
+    {
+     "a": "urutau_rama",
+     "x": 540,
+     "y": 1380,
+     "s": 1.0,
+     "idle": "breathe",
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b8:transforma",
+       "a": "urutau_ojos",
+       "fx": "punch"
+      },
+      {
+       "at": "b8:boca",
+       "a": "urutau_boca",
+       "fx": "punch"
+      },
+      {
+       "at": "b8:vuelo+0.4",
+       "a": "urutau_ojos"
+      },
+      {
+       "at": "b9:canto",
+       "a": "urutau_canto",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "particulas": {
+      "a": "polilla",
+      "n": 6,
+      "semilla": 3,
+      "zona": [
+       300,
+       640,
+       780,
+       1000
+      ],
+      "vx": [
+       -30,
+       30
+      ],
+      "vy": [
+       -20,
+       20
+      ],
+      "s": [
+       0.5,
+       0.8
+      ],
+      "ondula": [
+       40,
+       0.8
+      ]
+     },
+     "in": "b8:insectos",
+     "out": "b9",
+     "fx_in": "fade",
+     "fx_out": "fade",
+     "z": 3
+    },
+    {
+     "a": "polilla",
+     "x": 800,
+     "y": 700,
+     "s": 0.7,
+     "z": 4,
+     "in": "b8:insectos",
+     "fx_in": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b8:vuelo-0.2",
+       "dur": 0.45,
+       "x": 545,
+       "y": 832,
+       "s": 0.2,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ],
+     "idle": {
+      "fx": "bob",
+      "fuerza": 2
+     },
+     "out": "b8:vuelo+0.4"
+    },
+    {
+     "texto": {
+      "t": "¡BOCA GIGANTE!",
+      "estilo": "cartel_rojo",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:enorme",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b9"
+    },
+    {
+     "particulas": {
+      "a": "nota_musical",
+      "n": 6,
+      "semilla": 5,
+      "zona": [
+       380,
+       300,
+       760,
+       820
+      ],
+      "vx": [
+       -10,
+       10
+      ],
+      "vy": [
+       -90,
+       -60
+      ],
+      "s": [
+       0.5,
+       0.8
+      ],
+      "ondula": [
+       25,
+       0.5
+      ],
+      "r": [
+       -15,
+       15
+      ]
+     },
+     "in": "b9:canto",
+     "fx_in": "fade",
+     "fx_out": "fade",
+     "z": 6
+    },
+    {
+     "a": "vos_explo_linterna",
+     "x": 170,
+     "y": 1330,
+     "s": 0.42,
+     "in": "b8:noche+0.4",
+     "fx_in": "jump",
+     "idle": [
+      "breathe",
+      {
+       "fx": "shake",
+       "fuerza": 0.5,
+       "from": "b9:llanto"
+      }
+     ],
+     "blink": true,
+     "fx_out": "slide_left"
+    },
+    {
+     "a": "rayo_luz",
+     "x": 273,
+     "y": 1177,
+     "r": -52,
+     "s": 0.95,
+     "alpha": 0.9,
+     "z": -1,
+     "in": "b8:noche+0.8",
+     "fx_in": "wipe",
+     "sfx": "click",
+     "idle": {
+      "fx": "latido",
+      "fuerza": 0.3
+     },
+     "fx_out": "fade"
+    }
+   ]
+  },
+  {
+   "nombre": "hoacin_vaca",
+   "beats": [
+    10,
+    11
+   ],
+   "fondo": "fondo_rio",
+   "ambiente": "selva",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b11:vaca",
+     "s": "muu"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_rayos",
+     "alpha": 0.8,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_hojas_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 7,
+      "semilla": 3,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "a": "rama",
+     "x": 540,
+     "y": 1020,
+     "s": 1.0,
+     "z": -1
+    },
+    {
+     "a": "hoacin",
+     "x": 520,
+     "y": 1015,
+     "s": 1.0,
+     "in": "b10:hoacín",
+     "fx_in": "slide_down",
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0
+    },
+    {
+     "a": "olor",
+     "x": 420,
+     "y": 600,
+     "s": 0.5,
+     "in": "b10:apestoso",
+     "fx_in": "fade",
+     "idle": "sway",
+     "fase": 0
+    },
+    {
+     "a": "olor",
+     "x": 640,
+     "y": 590,
+     "s": 0.45,
+     "in": "b10:apestoso+0.15",
+     "fx_in": "fade",
+     "idle": "sway",
+     "flip": true,
+     "fase": 1
+    },
+    {
+     "texto": {
+      "t": "(EL PÁJARO APESTOSO)",
+      "estilo": "cartel",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b10:apestoso",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:vaca"
+    },
+    {
+     "a": "vaca",
+     "x": 820,
+     "y": 1330,
+     "s": 0.7,
+     "in": "b11:vaca",
+     "fx_in": "jump",
+     "sfx": "none",
+     "idle": "breathe",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "DIGIERE COMO UNA VACA",
+      "estilo": "cartel_verde",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b11:vaca",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    },
+    {
+     "a": "halo_verde",
+     "x": 600,
+     "y": 870,
+     "s": 0.3,
+     "alpha": 0.9,
+     "z": 2,
+     "in": "b11:fermentando",
+     "fx_in": "fade",
+     "idle": "latido",
+     "fx_out": "fade"
+    },
+    {
+     "particulas": {
+      "a": "burbuja",
+      "n": 8,
+      "semilla": 4,
+      "zona": [
+       540,
+       800,
+       660,
+       940
+      ],
+      "vy": [
+       -40,
+       -20
+      ],
+      "s": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       6,
+       0.6
+      ]
+     },
+     "in": "b11:fermentando",
+     "fx_in": "fade",
+     "fx_out": "fade",
+     "z": 3
+    },
+    {
+     "a": "hoja",
+     "x": 860,
+     "y": 640,
+     "s": 0.3,
+     "in": "b11:hojas",
+     "fx_in": "pop",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b11:hojas+0.2",
+       "dur": 0.5,
+       "x": 600,
+       "y": 870,
+       "s": 0.1,
+       "alpha": 0,
+       "r": 200,
+       "ease": "in"
+      }
+     ],
+     "fx_out": "pop"
+    }
+   ]
+  },
+  {
+   "nombre": "hoacin_olor",
+   "beats": [
+    12
+   ],
+   "fondo": "fondo_rio",
+   "ambiente": "selva",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.08,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b12:estiércol",
+     "s": "boing",
+     "vol": 0.6
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_rayos",
+     "alpha": 0.8,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_hojas_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 7,
+      "semilla": 3,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "a": "rama",
+     "x": 540,
+     "y": 1020,
+     "s": 1.0,
+     "z": -1
+    },
+    {
+     "a": "hoacin",
+     "x": 520,
+     "y": 1015,
+     "s": 1.0,
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0
+    },
+    {
+     "a": "olor",
+     "x": 420,
+     "y": 600,
+     "s": 0.5,
+     "idle": "sway",
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b12:huele",
+       "dur": 0.5,
+       "s": 0.75,
+       "y": 560
+      }
+     ]
+    },
+    {
+     "a": "olor",
+     "x": 640,
+     "y": 590,
+     "s": 0.45,
+     "idle": "sway",
+     "flip": true,
+     "fase": 1,
+     "keys": [
+      {
+       "at": "b12:huele",
+       "dur": 0.5,
+       "s": 0.7,
+       "y": 550
+      }
+     ]
+    },
+    {
+     "a": "olor",
+     "x": 300,
+     "y": 720,
+     "s": 0.6,
+     "in": "b12:estiércol",
+     "fx_in": "fade",
+     "idle": "sway",
+     "fx_out": "fade"
+    },
+    {
+     "a": "olor",
+     "x": 770,
+     "y": 700,
+     "s": 0.55,
+     "in": "b12:estiércol+0.1",
+     "fx_in": "fade",
+     "idle": "sway",
+     "flip": true,
+     "fx_out": "fade"
+    },
+    {
+     "a": "vos_explo_nariz",
+     "x": 860,
+     "y": 1330,
+     "s": 0.42,
+     "in": "b12:huele",
+     "fx_in": "jump",
+     "idle": "shake",
+     "fase": 0
+    },
+    {
+     "texto": {
+      "t": "¡OLOR A ESTIÉRCOL!",
+      "estilo": "cartel_marron",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:estiércol",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:nadie"
+    },
+    {
+     "a": "jaguar",
+     "x": -200,
+     "y": 1015,
+     "s": 0.55,
+     "in": "b12:nadie-0.6",
+     "out": "b12:anima-0.2",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b12:nadie-0.6",
+       "dur": 0.6,
+       "x": 230,
+       "ease": "out"
+      }
+     ],
+     "idle": "breathe"
+    },
+    {
+     "a": "jaguar_asco",
+     "x": 230,
+     "y": 1015,
+     "s": 0.55,
+     "flip": true,
+     "in": "b12:anima-0.2",
+     "sfx": "boing",
+     "keys": [
+      {
+       "at": "b12:anima+0.2",
+       "dur": 0.45,
+       "x": -300,
+       "ease": "in",
+       "sfx": "whoosh"
+      }
+     ],
+     "idle": "shake"
+    },
+    {
+     "texto": {
+      "t": "NADIE LO CAZA",
+      "estilo": "cartel_rojo",
+      "size": 74
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:nadie",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "hoacin_pichon",
+   "beats": [
+    13
+   ],
+   "fondo": "fondo_rio",
+   "ambiente": "selva",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.08
+     },
+     {
+      "at": "esc+0.01",
+      "dur": 1.0,
+      "zoom": 1.0
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b13:polluelos+0.3",
+     "s": "pio"
+    },
+    {
+     "at": "b13:trepan+0.6",
+     "s": "pio",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_rayos",
+     "alpha": 0.8,
+     "z": 12,
+     "idle": {
+      "fx": "latido",
+      "vel": 0.25,
+      "fuerza": 0.5
+     },
+     "fase": 0
+    },
+    {
+     "a": "capa_hojas_frente",
+     "z": 15,
+     "idle": {
+      "fx": "sway",
+      "fuerza": 0.25
+     },
+     "fase": 0
+    },
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 7,
+      "semilla": 3,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "a": "rama",
+     "x": 540,
+     "y": 1020,
+     "s": 1.0,
+     "z": -1
+    },
+    {
+     "a": "hoacin",
+     "x": 520,
+     "y": 1015,
+     "s": 1.0,
+     "idle": "breathe",
+     "blink": true,
+     "fase": 0
+    },
+    {
+     "a": "olor",
+     "x": 420,
+     "y": 560,
+     "s": 0.75,
+     "idle": "sway",
+     "fase": 0,
+     "fx_out": "fade",
+     "keys": [
+      {
+       "at": "esc+0.2",
+       "dur": 0.6,
+       "alpha": 0
+      }
+     ]
+    },
+    {
+     "a": "olor",
+     "x": 640,
+     "y": 550,
+     "s": 0.7,
+     "idle": "sway",
+     "flip": true,
+     "fase": 1,
+     "keys": [
+      {
+       "at": "esc+0.2",
+       "dur": 0.6,
+       "alpha": 0
+      }
+     ]
+    },
+    {
+     "a": "vos_explo_nariz",
+     "x": 860,
+     "y": 1330,
+     "s": 0.42,
+     "idle": "shake",
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b13:garras",
+       "a": "vos_explo_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "rama",
+     "x": 420,
+     "y": 1190,
+     "s": 0.75,
+     "r": -35,
+     "in": "b13:polluelos",
+     "fx_in": "grow",
+     "z": -2,
+     "sfx": "none",
+     "fx_out": "pop"
+    },
+    {
+     "a": "hoacin_pichon_0",
+     "x": 230,
+     "y": 1240,
+     "s": 0.8,
+     "r": -20,
+     "in": "b13:polluelos+0.2",
+     "fx_in": "pop",
+     "sfx": "none",
+     "loops": [
+      {
+       "frames": [
+        "hoacin_pichon_0",
+        "hoacin_pichon_1"
+       ],
+       "fps": 4,
+       "from": "b13:trepan",
+       "to": "esc>"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b13:trepan",
+       "dur": 2.4,
+       "x": 540,
+       "y": 1050,
+       "ease": "linear"
+      }
+     ],
+     "fx_out": "pop"
+    },
+    {
+     "a": "flecha_roja",
+     "x": 110,
+     "y": 1060,
+     "s": 0.3,
+     "r": -45,
+     "in": "b13:garras",
+     "fx_in": "pop",
+     "idle": "work",
+     "out": "b13:trepan",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "GARRAS EN LAS ALAS",
+      "estilo": "cartel",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b13:garras",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b13:como"
+    },
+    {
+     "a": "dino",
+     "x": 300,
+     "y": 840,
+     "s": 0.45,
+     "alpha": 0.9,
+     "in": "b13:como",
+     "fx_in": "pop",
+     "idle": "bob",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡COMO DINOSAURIOS!",
+      "estilo": "cartel_verde",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b13:como",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "cierre",
+   "beats": [
+    14
+   ],
+   "fondo": "fondo_burst_verde",
+   "ambiente": {
+    "tipo": "selva",
+    "vol": 0.6
+   },
+   "elementos": [
+    {
+     "particulas": {
+      "a": "hoja",
+      "n": 6,
+      "semilla": 5,
+      "zona": [
+       -100,
+       -200,
+       1180,
+       2100
+      ],
+      "vx": [
+       -30,
+       40
+      ],
+      "vy": [
+       60,
+       120
+      ],
+      "s": [
+       0.18,
+       0.3
+      ],
+      "giro": [
+       -60,
+       60
+      ],
+      "ondula": [
+       40,
+       0.3
+      ],
+      "alpha": [
+       0.7,
+       1
+      ]
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "z": 16
+    },
+    {
+     "a": "picozapato_0",
+     "x": 215,
+     "y": 980,
+     "s": 0.55,
+     "in": "b14:tendrías",
+     "fx_in": "pop",
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true
+    },
+    {
+     "a": "urutau_ojos",
+     "x": 540,
+     "y": 860,
+     "s": 0.48,
+     "in": "b14:tendrías+0.12",
+     "fx_in": "pop",
+     "idle": "breathe"
+    },
+    {
+     "a": "hoacin",
+     "x": 850,
+     "y": 960,
+     "s": 0.66,
+     "in": "b14:tendrías+0.24",
+     "fx_in": "pop",
+     "sfx": "aleteo",
+     "idle": "breathe",
+     "blink": true
+    },
+    {
+     "a": "vos_explo_pensando",
+     "x": 540,
+     "y": 1330,
+     "s": 0.55,
+     "in": "b14",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "swaps": [
+      {
+       "at": "b14>+1.2",
+       "a": "vos_explo_pulgar",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta"
+     },
+     "x": 720,
+     "y": 1070,
+     "r": 12,
+     "in": "b14:alguno",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "out": "b14>+0.9",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "SUSCRIBIRSE",
+      "estilo": "boton"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b14>+0.1",
+     "fx_in": "pop",
+     "out": "b14>+1.15",
+     "z": 20,
+     "keys": [
+      {
+       "at": "b14>+1.05",
+       "dur": 0.1,
+       "s": 0.92
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "SUSCRIPTO",
+      "estilo": "boton_hecho"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b14>+1.15",
+     "z": 20,
+     "sfx": "none",
+     "fx_in": "none",
+     "swaps": [],
+     "keys": [
+      {
+       "at": "b14>+1.15",
+       "dur": 0.25,
+       "s": 1.0,
+       "ease": "back"
+      }
+     ],
+     "s": 0.9
+    },
+    {
+     "a": "anillo",
+     "x": 660,
+     "y": 410,
+     "s": 0.2,
+     "z": 22,
+     "in": "b14>+1.1",
+     "out": "b14>+1.6",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b14>+1.1",
+       "dur": 0.5,
+       "s": 0.9,
+       "alpha": 0,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "cursor_mano",
+     "x": 960,
+     "y": 900,
+     "s": 0.8,
+     "z": 23,
+     "in": "b14>+0.4",
+     "fx_in": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b14>+0.4",
+       "dur": 0.6,
+       "x": 660,
+       "y": 410,
+       "ease": "out"
+      },
+      {
+       "at": "b14>+1.05",
+       "dur": 0.08,
+       "s": 0.7
+      },
+      {
+       "at": "b14>+1.15",
+       "dur": 0.1,
+       "s": 0.8
+      },
+      {
+       "at": "b14>+1.6",
+       "dur": 0.5,
+       "x": 980,
+       "y": 980,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "campana",
+     "x": 860,
+     "y": 370,
+     "s": 0.5,
+     "z": 21,
+     "in": "b14>+1.5",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 2.2
+     }
+    }
+   ],
+   "sonidos": [
+    {
+     "at": "b14>+1.1",
+     "s": "click"
+    },
+    {
+     "at": "b14>+1.5",
+     "s": "ding"
+    }
+   ]
+  }
+ ],
+ "pausas": [
+  {
+   "despues": "b4:disparos",
+   "dur": 1.5
+  }
+ ],
+ "volumen_ambiente": 0.35,
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}

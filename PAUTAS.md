@@ -19,7 +19,11 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - El gancho tiene que crear curiosidad ("…y la primera es la peor"); la primera tiene que ser la más fuerte.
 - Si el usuario escribe el guion, es palabra por palabra. No cambiar palabras sin preguntar.
 - Si el audio no dice lo mismo que el texto (p. ej. falta un "más"), **los subtítulos siguen al audio**
-  y se avisa al usuario.
+  y se avisa al usuario. Excepción: un error gramatical de la voz ("el único ave") se escribe bien en
+  el subtítulo ("la única ave") y se avisa.
+- **Cierre de cada video**: una pregunta amena para el público (p. ej. "¿Tendrías alguno de ellos?")
+  y la animación de suscripción (`suscripcion()` de `comun.py`: botón, cursor, clic, campanita), con
+  ~3,4 s de `cola`. El usuario puede traer la pregunta ya grabada en el audio.
 - Revisar los datos y **avisar antes de cambiar**: época equivocada (el escafismo es de la Persia
   antigua, no de la Edad Media), afirmaciones sin fuente, repeticiones ("extremas … extrema").
 - Duración: el usuario prefiere contenido completo antes que cortar; 50-90 s está bien (no recortar
@@ -41,9 +45,23 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   sostienen los verdugos con las manos en los mangos).
 - Mirar cada dibujo nuevo con zoom: los detalles chicos (dientes de una sierra) se rompen fácil.
 
+## Ambientación (profundidad)
+- Cada lugar se ambienta en capas, no se llena de cosas: fondo propio del hábitat real + luz (rayos,
+  sol, luna) + atmósfera (niebla, hojas que caen, luciérnagas) + primer plano desenfocado que se
+  mece (profundidad de campo) + **sonido ambiente** (`"ambiente"`: selva, pantano, noche, bosque).
+- Las capas de primer plano van por delante de los personajes (z 12-16) pero detrás de los carteles (z 20+).
+- La cámara siempre "respira" (zoom lento) y se usa para contar: primer plano de un detalle (el ojo),
+  acercarse a la acción (el pico), alejarse para revelar (de la cara al bosque de noche).
+- Cambios de momento dentro del mismo lugar con fundidos (día → noche: el fondo de día se desvanece).
+- Entre ítems, una transición (`cortina()` de `comun.py`) en vez de un corte seco.
+- Los animales tienen vida propia: parpadean, respiran, y su acción característica se anima cuadro a
+  cuadro (`loops` con ventana de tiempo) con su sonido propio.
+- Un efecto pedido por el usuario va `"destacado": true` (no se baja bajo la voz) y con su hueco
+  (`"pausas"` en la voz).
+
 ## Personajes
 - "Vos" es el personaje de la cuenta: aparece en cada video, con variante temática (astronauta,
-  explorador). Su cara tiene que corresponder a la emoción de la narración (**miedo** ante algo
+  explorador) y con objetos según la escena (binoculares, linterna de noche, tapándose la nariz). Su cara tiene que corresponder a la emoción de la narración (**miedo** ante algo
   terrible, **asco** ante algo asqueroso; no confundirlas).
 - Los objetos y animales llevan cara simple y reaccionan.
 
@@ -97,3 +115,6 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   cortes (`revisar.py` ahora también lo detecta), flash en el salto de tiempo.
 - 2026-10-25 · aves · Corrección de borrador: formato de serie, datos, apodos entre paréntesis; notas
   de producción aparte; "no pasa nada si dura un poco más"; del agregado al nº 2 solo la boca enorme.
+- 2026-10-25 · aves · "Le falta algo más a las animaciones, profundizar y ambientar más fino" → capas
+  de luz/niebla/primer plano desenfocado, sonido ambiente, cámara narrativa, transición de hojas,
+  animaciones cuadro a cuadro, efecto destacado con pausa. Cierre con pregunta + suscripción.

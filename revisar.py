@@ -9,6 +9,7 @@ Cada chequeo sale de una corrección real (ver PAUTAS.md). Avisa, no corrige:
     grande se lee como re-encuadre y no se avisa; uno chico parece un error
   - carteles que desaparecen de golpe en un corte (sin fx_out)
   - personajes/objetos que desaparecen de golpe en un corte cuando el lugar (fondo) sigue igual
+    (no se revisan los cortes tapados por una cortina ni las escenas con "transicion": "...")
 """
 import argparse
 import os
@@ -25,7 +26,11 @@ SUBTITULOS = (0, 1420, W, 1525)
 
 def familia(asset):
     """"jarra_malo" -> "jarra", "vos_explo_miedo" -> "vos": mismo personaje/objeto con otra cara."""
-    return asset.split("_")[0] if isinstance(asset, str) else None
+    if not isinstance(asset, str):
+        return None
+    if asset.startswith(("capa_", "fondo_")):   # capas y fondos usados como elemento: cada uno es único
+        return asset
+    return asset.split("_")[0]
 
 
 def caja(el, st, cam=None):
@@ -108,21 +113,36 @@ def revisar(path):
     for i in range(1, len(proj.scenes)):
         tc = tl.scene_start[i]
         antes, despues = proj.scenes[i - 1], proj.scenes[i]
+        # corte declarado a propósito ("transicion": "primer plano", etc.): no se revisa la continuidad
+        if despues.get("transicion"):
+            continue
+        # una cortina de transición tapa el corte: ahí los saltos no se ven
+        if any(isinstance(p.asset, str) and p.asset.startswith("cortina") and p.tin <= tc <= p.tout for p in proj.persist):
+            continue
+
+        def en_pantalla(el, st):
+            st["_t"] = tc
+            return caja(el, st) is not None and not (lambda b: b[2] < 0 or b[0] > W or b[3] < 0 or b[1] > H)(caja(el, st))
         a_vis = []
         for el in antes["els"]:
-            if not isinstance(el, Particles) and el.active(tc - 0.02):
-                st = el.state(tc - 0.02)
-                if es_texto(el):
-                    if el.fx_out == "none" and st["alpha"] > .5:
-                        avisar(f"[{antes.get('nombre', i - 1)}] {nombre(el)} desaparece de golpe en el corte "
-                               f"(poné fx_out o un out antes del final)", tc)
-                elif st["alpha"] > .5:
-                    st["_salida"] = el.fx_out
-                    st["_alto"] = _IMG_REG[img_key(st["asset"])].height / RS
-                    a_vis.append(st)
-        d_vis = [el.state(tc + 0.02) for el in despues["els"]
-                 if not isinstance(el, Particles) and not es_texto(el) and el.active(tc + 0.02)]
-        d_vis = [st for st in d_vis if st["alpha"] > .5]
+            if isinstance(el, Particles) or not el.active(tc - 0.02):
+                continue
+            st = el.state(tc)   # mismo instante a los dos lados del corte (la salida ya terminó)
+            if es_texto(el):
+                if el.fx_out == "none" and st["alpha"] > .5:
+                    avisar(f"[{antes.get('nombre', i - 1)}] {nombre(el)} desaparece de golpe en el corte "
+                           f"(poné fx_out o un out antes del final)", tc)
+            elif st["alpha"] > .5 and en_pantalla(el, st):
+                st["_salida"] = el.fx_out
+                st["_alto"] = _IMG_REG[img_key(st["asset"])].height / RS
+                a_vis.append(st)
+        d_vis = []
+        for el in despues["els"]:
+            if isinstance(el, Particles) or es_texto(el) or not el.active(tc + 0.02):
+                continue
+            st = el.state(tc)
+            if st["alpha"] > .5 and en_pantalla(el, st):
+                d_vis.append(st)
         mismo_lugar = antes["fondo"] == despues["fondo"] and not despues.get("flash")
         for s0 in a_vis:
             mismos = [st for st in d_vis if familia(st["asset"]) == familia(s0["asset"])]

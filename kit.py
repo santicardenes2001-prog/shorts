@@ -223,7 +223,18 @@ def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=
     if astro:   # mochila de oxígeno, detrás de todo
         s.append(f'<rect x="120" y="440" width="280" height="250" rx="40" fill="{TRAJE2}" stroke="{INK}" stroke-width="{SW}"/>')
         s.append(f'<rect x="132" y="470" width="30" height="120" rx="15" fill="{P["coral"]}" stroke="{INK}" stroke-width="6"/>')
-    front, back = arms(arm_kind, GUANTE if astro else None, TRAJE if astro else None)
+    encima = ""   # brazos/objetos que van por delante de la cara (binoculares, nariz)
+    if arm_kind in ("binoculares", "nariz", "linterna"):
+        encima, arm_kind_base = accesorio(arm_kind), "down"
+    else:
+        arm_kind_base = arm_kind
+    front, back = arms(arm_kind_base, GUANTE if astro else None, TRAJE if astro else None)
+    if arm_kind in ("binoculares", "nariz", "linterna"):
+        front = arms("down")[0] if arm_kind == "linterna" else ""
+        if arm_kind == "linterna":   # solo el brazo izquierdo abajo; el derecho sostiene la linterna
+            front = (stroke_path("M 182 505 Q 150 575 148 652", P["piel"], 28)
+                     + f'<circle cx="148" cy="655" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
+                     + f'<circle cx="186" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
     s.append(back)
     legs = TRAJE if astro else P["pantalon"]
     for x in (205, 269):
@@ -245,7 +256,40 @@ def vos(eyes="open", brows="neutral", mouth_kind="smile", arm_kind="down", look=
         s.append(casco())
     if explorador:
         s.append(casco_safari())
+    s.append(encima)
     return "".join(s)
+
+
+def accesorio(kind):
+    """Brazos con objetos que se dibujan encima de la cara de Vos."""
+    piel, manga = P["piel"], P["remera"]
+    hombros = (f'<circle cx="186" cy="500" r="30" fill="{manga}" stroke="{INK}" stroke-width="{SW}"/>'
+               f'<circle cx="334" cy="500" r="30" fill="{manga}" stroke="{INK}" stroke-width="{SW}"/>')
+    if kind == "binoculares":
+        brazos = (stroke_path("M 182 505 Q 110 440 184 330", piel, 28) + stroke_path("M 338 505 Q 410 440 336 330", piel, 28))
+        bino = (f'<rect x="150" y="272" width="96" height="74" rx="22" fill="#2E3440" stroke="{INK}" stroke-width="{SW}"/>'
+                f'<rect x="274" y="272" width="96" height="74" rx="22" fill="#2E3440" stroke="{INK}" stroke-width="{SW}"/>'
+                f'<rect x="232" y="290" width="56" height="30" rx="8" fill="#2E3440" stroke="{INK}" stroke-width="6"/>'
+                f'<circle cx="198" cy="309" r="22" fill="#7FC8F0" stroke="{INK}" stroke-width="5"/>'
+                f'<circle cx="322" cy="309" r="22" fill="#7FC8F0" stroke="{INK}" stroke-width="5"/>'
+                + ln("M 186 300 Q 192 292 202 292", 5, "#fff") + ln("M 310 300 Q 316 292 326 292", 5, "#fff"))
+        manos = (f'<circle cx="180" cy="350" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>'
+                 f'<circle cx="340" cy="350" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+        return brazos + hombros + bino + manos
+    if kind == "nariz":   # se tapa la nariz con la mano derecha
+        return (stroke_path("M 182 505 Q 150 575 148 652", piel, 28)
+                + f'<circle cx="148" cy="655" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>'
+                + stroke_path("M 338 505 Q 380 430 290 352", piel, 28) + hombros
+                + f'<ellipse cx="272" cy="350" rx="30" ry="22" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>'
+                + ln("M 252 342 L 292 342 M 254 356 L 290 356", 4))
+    if kind == "linterna":   # brazo derecho estirado con una linterna; el haz sale de (500, 470)
+        return (stroke_path("M 338 505 Q 400 520 440 486", piel, 28)
+                + f'<circle cx="334" cy="500" r="30" fill="{manga}" stroke="{INK}" stroke-width="{SW}"/>'
+                + f'<g transform="rotate(-20 470 480)"><rect x="430" y="462" width="76" height="34" rx="8" fill="#5B5566" '
+                  f'stroke="{INK}" stroke-width="{SW}"/><rect x="498" y="454" width="22" height="50" rx="6" fill="#FFE27A" '
+                  f'stroke="{INK}" stroke-width="{SW}"/></g>'
+                + f'<circle cx="440" cy="486" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+    raise ValueError(kind)
 
 
 VOS_VARIANTS = {
@@ -276,9 +320,15 @@ VOS_VARIANTS = {
                                  f'<ellipse cx="355" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'),
     "vos_explo_miedo": dict(explorador=True, eyes="wide", brows="sad", mouth_kind="nervio"),
     "vos_explo_pulgar": dict(explorador=True, eyes="happy", brows="happy", mouth_kind="open_smile", arm_kind="thumb"),
+    "vos_explo_binoculares": dict(explorador=True, mouth_kind="o", arm_kind="binoculares"),
+    "vos_explo_linterna": dict(explorador=True, eyes="wide", brows="sad", mouth_kind="nervio", arm_kind="linterna"),
+    "vos_explo_nariz": dict(explorador=True, eyes="squint", brows="asco", mouth_kind="flat", arm_kind="nariz",
+                            extra=f'<ellipse cx="165" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'
+                                  f'<ellipse cx="355" cy="372" rx="34" ry="20" fill="{P["verde"]}" opacity=".7"/>'),
+    "vos_explo_pensando": dict(explorador=True, look=(1, -1), brows="up", mouth_kind="flat"),
 }
 # Variantes de parpadeo automáticas para las que tienen ojos abiertos
-BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa", "vos_miedo",
+BLINKABLE = ["vos_neutral", "vos_mira", "vos_cansado", "vos_sorpresa", "vos_miedo", "vos_explo_linterna", "vos_explo_pensando",
              "vos_explo", "vos_explo_mira", "vos_explo_sorpresa", "vos_explo_miedo",
              "vos_astro", "vos_astro_mira", "vos_astro_sorpresa", "vos_astro_susto"]
 
@@ -1694,6 +1744,330 @@ def gota_agua():
     return ln(d, SW, INK, "#5CC8F0") + ln("M 36 104 Q 36 84 50 70", 8, "#fff", extra='opacity=".7"')
 
 
+# ---------------------------------------------------------------- aves (short "3 aves raras")
+PZ, PZ2, PZ_PICO, PZ_MANCHA = "#8E9CAB", "#71808E", "#D8CDA0", "#B5A777"
+
+
+def picozapato(ojo="abierto", pico=0.0):
+    """Picozapato (Balaeniceps rex), de perfil mirando a la derecha (600x900, ancla en los pies).
+    pico 0-1 = apertura de la mandíbula de abajo (para el castañeteo). ojo: abierto | cerrado."""
+    s = [f'<ellipse cx="282" cy="884" rx="130" ry="14" fill="#000" opacity=".15"/>']
+    # patas (la "rodilla" de las aves dobla hacia atrás) y dedos largos
+    for x0, xk, xf in [(252, 238, 248), (318, 330, 318)]:
+        s.append(stroke_path(f"M {x0} 640 L {xk} 760 L {xf} 872", "#4A4F58", 18))
+        s.append(ln(f"M {xf} 872 L {xf - 52} 884 M {xf} 872 L {xf + 46} 886 M {xf} 872 L {xf - 6} 888", 9, "#4A4F58"))
+    # cola, cuerpo y ala
+    s.append(ln("M 196 600 Q 150 690 176 716 Q 214 700 236 640 Z", SW, INK, PZ2))
+    s.append(f'<ellipse cx="290" cy="520" rx="128" ry="178" fill="{PZ}" stroke="{INK}" stroke-width="{SW}" transform="rotate(-12 290 520)"/>')
+    s.append(ln("M 214 420 Q 300 400 360 470 Q 380 580 320 670 Q 250 690 210 640 Q 180 540 214 420 Z", SW, INK, PZ2))
+    for y in (480, 530, 580, 630):
+        s.append(ln(f"M 226 {y} Q 270 {y + 16} 330 {y - 6}", 4, "#5E6C79"))
+    # cuello grueso
+    s.append(ln("M 286 400 Q 296 330 320 290 L 410 300 Q 400 360 396 430 Z", SW, INK, PZ))
+    # cabeza y copete
+    s.append(f'<circle cx="358" cy="250" r="90" fill="#9DAAB8" stroke="{INK}" stroke-width="{SW}"/>')
+    for d in ("M 286 226 Q 262 214 254 194", "M 290 244 Q 262 240 248 226", "M 296 210 Q 280 190 282 170"):
+        s.append(stroke_path(d, "#9DAAB8", 12))
+    # pico en forma de zueco: mandíbula de abajo (rota para abrir) y de arriba
+    bisagra = (410, 262)
+    lower = "M 410 262 L 562 262 Q 552 314 470 330 Q 414 336 396 310 Z"
+    if pico > 0:
+        s.append(f'<path d="M 410 262 L 566 262 L 560 {262 + 44 * pico:.0f} Z" fill="#5A3A3A" transform="rotate({8 * pico:.1f} 410 262)"/>')
+    s.append(f'<g transform="rotate({14 * pico:.1f} {bisagra[0]} {bisagra[1]})">' + ln(lower, SW, INK, PZ_PICO)
+             + f'<circle cx="470" cy="300" r="10" fill="{PZ_MANCHA}"/><circle cx="520" cy="290" r="7" fill="{PZ_MANCHA}"/></g>')
+    upper = "M 396 192 Q 480 168 562 204 Q 600 222 594 262 Q 592 282 572 290 Q 578 266 560 262 L 410 262 Z"
+    s.append(ln(upper, SW, INK, PZ_PICO))
+    s.append(ln("M 430 216 Q 500 204 556 226", 5, PZ_MANCHA))
+    for x, y, r in [(452, 236, 10), (500, 230, 8), (540, 242, 7), (476, 250, 6)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{PZ_MANCHA}"/>')
+    s.append(ln("M 404 262 L 566 262", 6))
+    # ojo pálido de mirada fija y ceja severa
+    if ojo == "cerrado":
+        s.append(ln("M 362 244 Q 380 254 398 244", 8))
+    else:
+        s.append(f'<circle cx="380" cy="240" r="17" fill="#EDE8C0" stroke="{INK}" stroke-width="5"/>'
+                 f'<circle cx="384" cy="241" r="6" fill="{INK}"/>')
+    s.append(ln("M 352 214 L 408 226", 10))
+    return "".join(s)
+
+
+UR, UR2, UR3 = "#9A8A72", "#6E604E", "#B8A88E"
+
+
+def urutau(modo="rama"):
+    """Urutaú (Nyctibius griseus) parado en la punta de un tronco roto, mimetizado (360x760, ancla abajo).
+    modo: rama (ojos cerrados con ranuras) | ojos (enormes y amarillos) | boca (abierta enorme) | canto."""
+    s = [f'<ellipse cx="180" cy="752" rx="80" ry="10" fill="#000" opacity=".15"/>']
+    # tronco roto
+    s.append(ln("M 120 760 L 128 484 L 150 474 L 160 494 L 180 468 L 200 490 L 222 476 L 236 760 Z", SW, INK, "#7A6650"))
+    for d in ("M 148 520 Q 140 600 150 700", "M 200 540 Q 210 620 200 720", "M 176 600 L 176 660"):
+        s.append(ln(d, 5, "#5E4E3C"))
+    # cuerpo alargado y vertical, como si siguiera el tronco
+    body = "M 180 478 Q 106 470 108 340 Q 108 250 122 196 Q 140 150 180 148 Q 220 150 238 196 Q 252 250 252 340 Q 254 470 180 478 Z"
+    s.append(ln(body, SW, INK, UR))
+    s.append(f'<clipPath id="ub"><path d="{body}"/></clipPath><g clip-path="url(#ub)">')
+    rnd = random.Random(9)
+    for _ in range(28):
+        x, y = rnd.uniform(112, 248), rnd.uniform(270, 470)
+        s.append(ln(f"M {x:.0f} {y:.0f} l {rnd.uniform(-8, 8):.0f} {rnd.uniform(10, 22):.0f}", 4, UR2))
+    for _ in range(10):
+        s.append(f'<ellipse cx="{rnd.uniform(116, 244):.0f}" cy="{rnd.uniform(280, 460):.0f}" rx="9" ry="5" fill="{UR3}"/>')
+    s.append('</g>')
+    ojos = (140, 220)
+    if modo == "boca":
+        # boca abierta enorme: la mitad de arriba de la cabeza se levanta y parece partirse en dos
+        s.append(ln("M 104 262 Q 180 330 256 262 Q 180 150 104 262 Z", SW, INK, "#7A1E2E"))
+        s.append(ln("M 126 262 Q 180 312 234 262 Q 180 196 126 262 Z", 0, "none", "#E8788A"))
+        s.append(ln("M 104 248 Q 110 150 180 96 Q 250 150 256 248 Q 180 196 104 248 Z", SW, INK, UR))
+        for x in ojos:
+            s.append(f'<circle cx="{x}" cy="176" r="24" fill="#F5C518" stroke="{INK}" stroke-width="5"/>'
+                     f'<circle cx="{x}" cy="178" r="9" fill="{INK}"/><circle cx="{x - 7}" cy="170" r="5" fill="#fff"/>')
+        s.append(ln("M 174 100 L 180 82 L 188 100 Z", 4, INK, UR2))
+        return "".join(s)
+    s.append(ln("M 172 152 L 180 132 L 190 152 Z", 5, INK, UR2))
+    s.append(ln("M 116 262 Q 180 286 244 262", 5, UR2))   # comisura ancha de la boca
+    if modo == "ojos":
+        for x in ojos:
+            s.append(f'<circle cx="{x}" cy="212" r="34" fill="#F5C518" stroke="{INK}" stroke-width="6"/>'
+                     f'<circle cx="{x}" cy="214" r="12" fill="{INK}"/><circle cx="{x - 10}" cy="202" r="7" fill="#fff"/>')
+    else:
+        for x in ojos:   # párpados cerrados con dos ranuritas
+            s.append(f'<ellipse cx="{x}" cy="212" rx="32" ry="24" fill="{UR3}" stroke="{INK}" stroke-width="5"/>')
+            s.append(ln(f"M {x - 28} 214 Q {x} 228 {x + 28} 214", 5))
+            if modo == "rama":
+                for dx in (-10, 10):
+                    s.append(f'<circle cx="{x + dx}" cy="220" r="4.5" fill="#F5C518" stroke="{INK}" stroke-width="1.5"/>')
+        if modo == "canto":
+            s.append(ln("M 104 186 L 140 196 M 256 186 L 220 196", 7))
+            s.append(f'<ellipse cx="180" cy="270" rx="16" ry="20" fill="#7A1E2E" stroke="{INK}" stroke-width="5"/>')
+    return "".join(s)
+
+
+def urutau_ojo(modo="ranura", mira=0):
+    """Primer plano del ojo del urutaú (700x460). modo: ranura (cerrado, se ve por dos muescas;
+    mira -1/0/1 mueve la pupila) | abierto (enorme y amarillo, con brillo)."""
+    cx, cy = 350, 230
+    s = [f'<ellipse cx="{cx}" cy="{cy}" rx="330" ry="210" fill="{UR}" stroke="{INK}" stroke-width="{SW}"/>']
+    rnd = random.Random(5)
+    for _ in range(40):
+        x, y = rnd.uniform(40, 660), rnd.uniform(40, 420)
+        if ((x - cx) / 300) ** 2 + ((y - cy) / 190) ** 2 < 1 and abs(y - cy) > 120 or abs(x - cx) > 230:
+            s.append(ln(f"M {x:.0f} {y:.0f} l {rnd.uniform(-14, 14):.0f} {rnd.uniform(14, 30):.0f}", 6, UR2))
+    if modo == "abierto":
+        s.append(f'<circle cx="{cx}" cy="{cy}" r="150" fill="#F5C518" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<circle cx="{cx}" cy="{cy + 6}" r="58" fill="{INK}"/>')
+        s.append(f'<circle cx="{cx - 50}" cy="{cy - 52}" r="26" fill="#fff"/><circle cx="{cx + 40}" cy="{cy + 40}" r="10" fill="#fff"/>')
+        for a in range(0, 360, 30):
+            t = math.radians(a)
+            s.append(ln(f"M {cx + 70 * math.cos(t):.0f} {cy + 6 + 70 * math.sin(t):.0f} L {cx + 135 * math.cos(t):.0f} "
+                        f"{cy + 6 + 135 * math.sin(t):.0f}", 4, "#D9A800"))
+        return "".join(s)
+    # párpado cerrado: la línea del ojo y dos muescas por donde se ve el iris amarillo
+    s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="170" ry="120" fill="{UR3}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln(f"M {cx - 160} {cy + 10} Q {cx} {cy + 70} {cx + 160} {cy + 10}", SW + 2))
+    for mx in (-60, 60):
+        x0 = cx + mx
+        y0 = cy + 10 + 60 * (1 - (mx / 160) ** 2) - 6
+        s.append(f'<clipPath id="m{mx + 100}"><path d="M {x0 - 22} {y0 - 6} L {x0} {y0 + 26} L {x0 + 22} {y0 - 6} Z"/></clipPath>')
+        s.append(f'<path d="M {x0 - 22} {y0 - 6} L {x0} {y0 + 26} L {x0 + 22} {y0 - 6} Z" fill="#F5C518"/>')
+        s.append(f'<g clip-path="url(#m{mx + 100})"><circle cx="{x0 + 10 * mira}" cy="{y0 + 8}" r="11" fill="{INK}"/></g>')
+        s.append(ln(f"M {x0 - 22} {y0 - 6} L {x0} {y0 + 26} L {x0 + 22} {y0 - 6}", 5))
+    return "".join(s)
+
+
+HO_CUERPO, HO_CREMA, HO_RUFO, HO_ALA = "#8A5A3A", "#E8C98A", "#C0703A", "#9E4A2A"
+
+
+def hoacin(ojo="abierto"):
+    """Hoacín (Opisthocomus hoazin) posado, mirando a la derecha (520x640, ancla en las patas, y=590).
+    Cresta de plumas en punta, piel azul en la cara, ojo rojo, cuerpo marrón con rayas crema."""
+    s = []
+    # cola larga que cuelga
+    s.append(ln("M 220 430 Q 150 520 132 630 Q 160 640 186 626 Q 220 530 262 456 Z", SW, INK, "#4E3A2A"))
+    s.append(ln("M 134 612 Q 160 626 184 612", 12, HO_CREMA))
+    # cuerpo, pecho, panza y ala
+    s.append(f'<ellipse cx="282" cy="420" rx="118" ry="98" fill="{HO_CUERPO}" stroke="{INK}" stroke-width="{SW}" transform="rotate(-25 282 420)"/>')
+    s.append(f'<ellipse cx="334" cy="430" rx="58" ry="78" fill="{HO_CREMA}"/>')
+    s.append(f'<ellipse cx="318" cy="486" rx="56" ry="34" fill="{HO_RUFO}"/>')
+    s.append(ln("M 196 360 Q 280 330 320 400 Q 300 480 230 500 Q 180 470 196 360 Z", SW, INK, HO_ALA))
+    for d in ("M 214 390 Q 250 380 290 410", "M 210 424 Q 250 416 286 444", "M 214 458 Q 246 452 270 472"):
+        s.append(ln(d, 6, HO_CREMA))
+    # patas agarrando la rama
+    for x in (286, 326):
+        s.append(ln(f"M {x} 506 L {x - 4} 584", 9, "#5A4A3A") + ln(f"M {x - 4} 584 l -18 8 M {x - 4} 584 l 16 8", 7, "#5A4A3A"))
+    # cuello con rayas
+    s.append(stroke_path("M 330 350 Q 344 290 366 236", HO_CUERPO, 46))
+    s.append(ln("M 340 330 Q 350 300 362 270", 6, HO_CREMA))
+    # cresta en punta (va detrás de la cabeza)
+    for i in range(9):
+        a = math.radians(-160 + i * 17)
+        x0, y0 = 366 + 30 * math.cos(a), 176 + 30 * math.sin(a)
+        x1, y1 = 366 + 104 * math.cos(a), 176 + 98 * math.sin(a)
+        s.append(stroke_path(f"M {x0:.0f} {y0:.0f} L {x1:.0f} {y1:.0f}", "#D98A3A" if i % 2 else "#E8A84A", 12))
+        s.append(f'<circle cx="{x1:.0f}" cy="{y1:.0f}" r="7" fill="#4E3A2A"/>')
+    # cabeza, piel azul y ojo rojo; pico corto
+    s.append(f'<circle cx="372" cy="196" r="50" fill="#7A4A2A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="396" cy="194" rx="30" ry="24" fill="#4FA8E0" stroke="{INK}" stroke-width="4"/>')
+    if ojo == "cerrado":
+        s.append(ln("M 386 196 Q 398 204 410 196", 6))
+    else:
+        s.append(f'<circle cx="398" cy="194" r="11" fill="#C0392B" stroke="{INK}" stroke-width="3"/><circle cx="400" cy="194" r="4.5" fill="{INK}"/>')
+    s.append(ln("M 416 206 Q 446 206 458 216 Q 440 224 414 220 Z", 5, INK, "#5A5A62"))
+    return "".join(s)
+
+
+def hoacin_pichon(frame=0):
+    """Pichón de hoacín trepando, con dos garras en cada ala (320x320). frame 0/1 alterna las alas."""
+    s = []
+    up = 1 if frame == 0 else -1
+    for side, (x0, y0) in ((-1, (118, 170)), (1, (202, 160))):
+        tip = (x0 + side * 92, y0 - 40 * up * side + (10 if side > 0 else 0))
+        s.append(stroke_path(f"M {x0} {y0} Q {x0 + side * 50} {y0 - 30} {tip[0]} {tip[1]}", "#5E4A3A", 26))
+        for k in (0, 1):   # dos garras en la punta del ala
+            gx, gy = tip[0] + side * 8, tip[1] - 6 + k * 14
+            s.append(stroke_path(f"M {gx - side * 6} {gy} Q {gx + side * 16} {gy - 2} {gx + side * 14} {gy + 16}", "#F0E6CC", 7))
+    s.append(f'<ellipse cx="160" cy="190" rx="70" ry="78" fill="#6E5A48" stroke="{INK}" stroke-width="{SW}"/>')
+    for a in range(0, 360, 30):   # pelusa
+        t = math.radians(a)
+        s.append(f'<circle cx="{160 + 70 * math.cos(t):.0f}" cy="{190 + 78 * math.sin(t):.0f}" r="10" fill="#6E5A48"/>')
+    s.append(f'<ellipse cx="164" cy="210" rx="36" ry="44" fill="#A08A70"/>')
+    for x in (140, 182):
+        s.append(ln(f"M {x} 262 L {x - 2} 296", 8, "#4A3A2A") + ln(f"M {x - 2} 296 l -12 6 M {x - 2} 296 l 12 6", 6, "#4A3A2A"))
+    s.append(f'<circle cx="186" cy="104" r="42" fill="#6E5A48" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 172 66 L 166 46 M 186 64 L 188 42 M 198 68 L 208 50", 6, "#8A6A50"))
+    s.append(f'<circle cx="200" cy="100" r="13" fill="#fff" stroke="{INK}" stroke-width="4"/><circle cx="204" cy="101" r="6" fill="{INK}"/>')
+    s.append(ln("M 222 112 L 242 118 L 222 124 Z", 4, INK, "#5A5A62"))
+    return "".join(s)
+
+
+def rama(hojas=True):
+    """Rama larga con hojas (900x260); la parte de arriba (y≈120) sirve de percha."""
+    s = [stroke_path("M 10 150 Q 300 110 520 128 Q 720 140 890 100", "#7A5A3A", 34)]
+    s.append(stroke_path("M 520 128 Q 600 70 660 40", "#7A5A3A", 18))
+    s.append(ln("M 60 144 Q 200 124 300 126", 5, "#5E4430"))
+    if hojas:
+        for x, y, r in [(80, 160, 30), (230, 150, -20), (650, 50, 40), (700, 30, -30), (820, 110, 20), (870, 90, -40)]:
+            s.append(f'<g transform="translate({x} {y}) rotate({r})">'
+                     + ln("M 0 0 Q 40 -36 90 0 Q 40 36 0 0 Z", 5, INK, "#5FA845") + ln("M 4 0 L 84 0", 3, "#3E8A3A") + '</g>')
+    return "".join(s)
+
+
+def pez_pulmonado():
+    s = [ln("M 20 70 Q 120 30 260 50 Q 320 60 330 70 Q 320 84 260 92 Q 120 110 20 70 Z", SW, INK, "#7A8A6A")]
+    s.append(ln("M 20 70 L 0 50 L 6 90 Z", 5, INK, "#6A7A5A"))
+    s += [f'<circle cx="{x}" cy="{y}" r="6" fill="#5A6A4A"/>' for x, y in [(80, 66), (130, 60), (180, 74), (220, 62)]]
+    s.append(ln("M 150 90 L 140 112 M 200 92 L 196 114", 5))
+    s.append(f'<circle cx="294" cy="62" r="9" fill="#fff" stroke="{INK}" stroke-width="3"/><circle cx="296" cy="63" r="4" fill="{INK}"/>')
+    s.append(ln("M 318 76 Q 310 82 300 80", 4))
+    return "".join(s)
+
+
+def cocodrilo_bebe(cara_kind="susto"):
+    s = [stroke_path("M 40 110 Q 10 100 4 80", "#5FA845", 20)]
+    for x in (90, 170):
+        s.append(stroke_path(f"M {x} 120 L {x - 6} 148", "#5FA845", 14))
+    s.append(ln("M 30 110 Q 40 70 120 66 Q 200 62 260 88 Q 280 100 262 112 Q 200 126 120 128 Q 50 130 30 110 Z", SW, INK, "#6FC456"))
+    s += [ln(f"M {x} 70 l 8 -10 l 8 10", 4, INK, "#5FA845") for x in (80, 110, 140)]
+    s.append(f'<circle cx="214" cy="66" r="22" fill="#6FC456" stroke="{INK}" stroke-width="5"/>')
+    s.append(f'<circle cx="214" cy="64" r="13" fill="#fff" stroke="{INK}" stroke-width="3"/><circle cx="216" cy="66" r="6" fill="{INK}"/>')
+    if cara_kind == "susto":
+        s.append(ln("M 200 40 L 228 46", 6))
+    s.append(ln("M 220 104 L 262 104", 4))
+    s += [ln(f"M {x} 104 l 4 6 l 4 -6", 3, INK, "#fff") for x in (228, 240, 252)]
+    return "".join(s)
+
+
+def zueco():
+    """Zueco (zapato de madera) visto de costado (320x170), para comparar con el pico."""
+    s = [ln("M 20 120 Q 20 60 90 50 L 200 40 Q 290 40 304 100 Q 310 130 280 140 L 60 150 Q 20 150 20 120 Z", SW, INK, "#C9A46A")]
+    s.append(ln("M 120 44 Q 160 90 230 70 Q 270 60 290 80", 6, "#8E6E3E"))
+    s.append(ln("M 60 140 L 280 132", 6, "#8E6E3E"))
+    s.append(ln("M 60 70 Q 80 58 110 54", 8, "#fff", extra='opacity=".5"'))
+    return "".join(s)
+
+
+def vaca():
+    s = [f'<rect x="40" y="110" width="220" height="120" rx="50" fill="#fff" stroke="{INK}" stroke-width="{SW}"/>']
+    s += [f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" fill="{INK}"/>' for x, y, rx, ry in [(100, 150, 26, 20), (180, 190, 22, 16)]]
+    for x in (80, 120, 190, 230):
+        s.append(f'<rect x="{x - 10}" y="220" width="20" height="40" rx="6" fill="#fff" stroke="{INK}" stroke-width="5"/>')
+    s.append(f'<ellipse cx="270" cy="110" rx="56" ry="50" fill="#fff" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 236 70 Q 226 46 240 40 M 300 70 Q 312 46 298 40", 8, INK))
+    s.append(f'<ellipse cx="280" cy="140" rx="40" ry="24" fill="#F7B6C2" stroke="{INK}" stroke-width="5"/>')
+    s.append(f'<circle cx="268" cy="140" r="5" fill="{INK}"/><circle cx="292" cy="140" r="5" fill="{INK}"/>')
+    s.append(f'<circle cx="252" cy="100" r="8" fill="{INK}"/><circle cx="290" cy="100" r="8" fill="{INK}"/>')
+    return "".join(s)
+
+
+def jaguar(cara_kind="mira"):
+    """Jaguar caminando hacia la derecha (440x280); cara_kind: mira | asco."""
+    s = [stroke_path("M 60 120 Q 10 110 20 60", "#E8A83A", 18)]
+    for x in (110, 150, 290, 330):
+        s.append(f'<rect x="{x - 14}" y="170" width="28" height="90" rx="12" fill="#E8A83A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 60 130 Q 70 80 180 80 L 300 84 Q 360 90 360 150 Q 350 196 300 196 L 110 196 Q 60 190 60 130 Z", SW, INK, "#F0B84A"))
+    rnd = random.Random(2)
+    for _ in range(14):
+        x, y = rnd.uniform(90, 330), rnd.uniform(100, 180)
+        s.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="10" fill="none" stroke="#6A4A2A" stroke-width="5"/>')
+    s.append(f'<circle cx="376" cy="110" r="52" fill="#F0B84A" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="346" cy="66" r="14" fill="#F0B84A" stroke="{INK}" stroke-width="5"/><circle cx="398" cy="64" r="14" fill="#F0B84A" stroke="{INK}" stroke-width="5"/>')
+    s.append(f'<ellipse cx="400" cy="128" rx="22" ry="16" fill="#FBE3B0"/><path d="M 404 116 L 416 116 L 410 124 Z" fill="{INK}"/>')
+    if cara_kind == "asco":
+        s.append(ln("M 360 96 Q 370 88 382 96 M 392 96 Q 402 88 414 96", 6))
+        s.append(ln("M 396 142 Q 404 136 412 144 Q 418 150 424 142", 5) + f'<ellipse cx="420" cy="150" rx="8" ry="10" fill="{P["lengua"]}" stroke="{INK}" stroke-width="3"/>')
+        s.append(f'<ellipse cx="370" cy="126" rx="12" ry="8" fill="{P["verde"]}" opacity=".7"/>')
+    else:
+        s += [f'<circle cx="{x}" cy="100" r="8" fill="#2A2420"/>' for x in (368, 404)]
+        s.append(ln("M 400 140 Q 410 146 418 140", 4))
+    return "".join(s)
+
+
+def polilla():
+    return (f'<ellipse cx="28" cy="34" rx="26" ry="20" fill="#C9B89A" stroke="{INK}" stroke-width="4" transform="rotate(-20 28 34)"/>'
+            f'<ellipse cx="62" cy="34" rx="26" ry="20" fill="#C9B89A" stroke="{INK}" stroke-width="4" transform="rotate(20 62 34)"/>'
+            f'<ellipse cx="45" cy="40" rx="8" ry="20" fill="#8A7A5A" stroke="{INK}" stroke-width="4"/>'
+            + ln("M 42 22 Q 34 6 26 4 M 48 22 Q 56 6 64 4", 3))
+
+
+def luciernaga():
+    defs = ('<radialGradient id="lg" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#F7FF9A" stop-opacity="1"/>'
+            '<stop offset=".35" stop-color="#E8F05A" stop-opacity=".7"/><stop offset="1" stop-color="#E8F05A" stop-opacity="0"/></radialGradient>')
+    return '<circle cx="30" cy="30" r="30" fill="url(#lg)"/><circle cx="30" cy="30" r="5" fill="#FFFFE0"/>', defs
+
+
+def nota_musical():
+    return (ln("M 30 90 L 30 14 L 70 6 L 70 74", 8, INK)
+            + f'<ellipse cx="20" cy="92" rx="18" ry="13" fill="#7A9BFF" stroke="{INK}" stroke-width="5"/>'
+            + f'<ellipse cx="60" cy="76" rx="18" ry="13" fill="#7A9BFF" stroke="{INK}" stroke-width="5"/>'
+            + ln("M 30 14 L 70 6", 12, INK))
+
+
+def cursor_mano():
+    """Cursor de mano con el dedo índice (110x150); la punta del dedo en (38, 8)."""
+    d = ("M 30 14 Q 38 2 46 14 L 46 66 Q 52 56 62 62 Q 70 56 78 64 Q 86 60 94 70 L 96 104 Q 96 138 66 142 "
+         "L 48 142 Q 22 138 14 110 L 6 86 Q 4 72 18 74 L 30 90 Z")
+    return ln(d, 6, INK, "#fff") + ln("M 62 64 L 62 92 M 78 66 L 78 94", 4)
+
+
+def campana():
+    d = "M 90 30 Q 150 30 156 110 Q 160 150 176 166 L 4 166 Q 20 150 24 110 Q 30 30 90 30 Z"
+    return (ln(d, SW, INK, P["amarillo"]) + f'<circle cx="90" cy="186" r="16" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="6"/>'
+            + f'<rect x="80" y="10" width="20" height="24" rx="8" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="6"/>'
+            + ln("M 50 60 Q 56 44 72 40", 8, "#fff", extra='opacity=".6"'))
+
+
+def anillo():
+    return f'<circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="14"/>'
+
+
+def tronco_roto():
+    """Tronco roto suelto (como el del urutaú, para comparar), 200x420, ancla abajo."""
+    s = [ln("M 40 420 L 48 120 L 70 110 L 80 130 L 100 92 L 120 126 L 142 112 L 156 420 Z", SW, INK, "#7A6650")]
+    for d in ("M 68 160 Q 60 260 70 380", "M 120 170 Q 130 280 120 400"):
+        s.append(ln(d, 5, "#5E4E3C"))
+    return "".join(s)
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
 
@@ -1802,6 +2176,158 @@ def fondo_pantano():
             '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3E5A3A" stop-opacity="0"/>'
             '<stop offset="1" stop-color="#1A2A1C" stop-opacity=".8"/></linearGradient>')
     return "".join(s), defs
+
+
+def papiro(x, base, alto, k=1.0, color="#5E8A3A", color2="#7FA84A", contorno=INK):
+    """Mata de papiro: tallos finos con una 'explosión' de hebras arriba."""
+    s = []
+    for dx, h in [(-14, alto), (0, alto * 1.12), (16, alto * .95)]:
+        x0, y1 = x + dx * k, base - h * k
+        s.append(stroke_path(f"M {x0:.0f} {base} Q {x0 + 6:.0f} {(base + y1) / 2:.0f} {x0:.0f} {y1:.0f}", color, 8 * k, contorno, 16 * k))
+        for a in range(-84, 85, 12):
+            t = math.radians(a - 90)
+            L = 80 * k
+            s.append(ln(f"M {x0:.0f} {y1:.0f} Q {x0 + L * .6 * math.cos(t):.0f} {y1 + L * .6 * math.sin(t) - 10 * k:.0f} "
+                        f"{x0 + L * math.cos(t):.0f} {y1 + L * math.sin(t) + 16 * k:.0f}", 4.5 * k, color2))
+    return "".join(s)
+
+
+def fondo_humedal():
+    """Pantano de papiros a la mañana (hábitat del picozapato): agua desde y≈1250 y una orilla de pasto."""
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    s.append(f'<circle cx="780" cy="560" r="90" fill="#FFF0C8"/><circle cx="780" cy="560" r="170" fill="#FFF0C8" opacity=".3"/>')
+    s.append(ln("M -10 900 Q 150 820 320 880 Q 500 800 700 870 Q 880 810 1090 870 L 1090 1000 L -10 1000 Z", 0, "none", "#A9C2B4"))
+    s.append(ln("M -10 960 Q 200 900 400 950 Q 640 890 860 950 Q 980 930 1090 950 L 1090 1060 L -10 1060 Z", 0, "none", "#8FB09A"))
+    for x, h, k in [(60, 260, .8), (190, 220, .7), (900, 250, .8), (1010, 230, .7), (420, 180, .55), (640, 200, .6)]:
+        s.append(papiro(x, 1080, h, k, "#6E9A5A", "#8FB86A", "#4E6A44"))
+    s.append(f'<rect x="0" y="1060" width="{W}" height="{H - 1060}" fill="url(#agua)"/>')
+    for y in range(1100, H, 90):
+        s.append(ln(f"M 80 {y} Q 300 {y - 12} 520 {y} Q 760 {y + 12} 1000 {y}", 5, "#BFE0DA", extra='opacity=".35"'))
+    # orilla flotante de vegetación donde se para el picozapato
+    s.append(ln("M 120 1250 Q 300 1200 560 1215 Q 820 1200 1000 1260 Q 980 1330 780 1340 Q 520 1360 280 1340 Q 110 1320 120 1250 Z",
+                SW, INK, "#7A944A"))
+    for x in range(160, 980, 46):
+        s.append(ln(f"M {x} 1250 l -6 -26 M {x} 1250 l 8 -30", 5, "#5E7A3A"))
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D2B2"/>'
+            '<stop offset=".55" stop-color="#D5E8E4"/></linearGradient>'
+            '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7AA8A2"/>'
+            '<stop offset="1" stop-color="#3E6A66"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_bosque(noche=False):
+    """Bosque seco (hábitat del urutaú). La misma composición de día y de noche, para fundirlas."""
+    c = dict(c0="#1E2552", c1="#3A2E62", lejos="#2A2E52", arbol="#1E1A2E", copa="#25324A", suelo="#2A3A34",
+             pasto="#3A4E44") if noche else \
+        dict(c0="#9ED4F0", c1="#F5EBC8", lejos="#B8C8A0", arbol="#6E5A44", copa="#8AAA5A", suelo="#C9B07A", pasto="#A89A5A")
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    if noche:
+        rnd = random.Random(14)
+        for _ in range(60):
+            s.append(f'<circle cx="{rnd.uniform(0, W):.0f}" cy="{rnd.uniform(0, 900):.0f}" r="{rnd.choice([1.5, 2, 2.5])}" '
+                     f'fill="#fff" opacity="{rnd.uniform(.4, .9):.2f}"/>')
+        s.append(f'<circle cx="800" cy="420" r="80" fill="#F4F1C9"/><circle cx="800" cy="420" r="150" fill="#F4F1C9" opacity=".15"/>')
+    else:
+        s.append(f'<circle cx="820" cy="380" r="80" fill="#FFF4C2" opacity=".9"/>')
+    s.append(ln("M -10 1150 Q 200 1080 400 1130 Q 640 1070 860 1120 Q 980 1100 1090 1130 L 1090 1400 L -10 1400 Z", 0, "none", c["lejos"]))
+    # árboles finos y secos con copas ralas
+    for x, h, w in [(90, 900, 26), (300, 760, 20), (760, 820, 22), (980, 940, 28)]:
+        s.append(ln(f"M {x - w} 1380 L {x - w / 2:.0f} {1380 - h} L {x + w / 2:.0f} {1380 - h} L {x + w} 1380 Z", 0, "none", c["arbol"]))
+        for dy, d in [(.55, 1), (.75, -1), (.85, 1)]:
+            y0 = 1380 - h * dy
+            s.append(stroke_path(f"M {x} {y0:.0f} L {x + d * 120} {y0 - 90:.0f}", c["arbol"], 10, c["arbol"], 10))
+            s.append(f'<ellipse cx="{x + d * 130}" cy="{y0 - 110:.0f}" rx="90" ry="40" fill="{c["copa"]}" opacity=".85"/>')
+    s.append(ln(f"M -10 1360 Q 270 1330 540 1360 Q 810 1390 1090 1350 L 1090 1930 L -10 1930 Z", SW, INK, c["suelo"]))
+    rnd = random.Random(15)
+    for _ in range(40):
+        x, y = rnd.uniform(0, W), rnd.uniform(1380, 1880)
+        s.append(ln(f"M {x:.0f} {y:.0f} l -8 -22 M {x:.0f} {y:.0f} l 6 -26", 5, c["pasto"]))
+    defs = (f'<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{c["c0"]}"/>'
+            f'<stop offset=".65" stop-color="{c["c1"]}"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_rio():
+    """Río amazónico (hábitat del hoacín): paredes de selva, ramas sobre el agua."""
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cielo)"/>']
+    for x0, w, c in [(-60, 420, "#2E6A3A"), (720, 440, "#2E6A3A"), (-20, 300, "#3E8A4A"), (820, 300, "#3E8A4A")]:
+        rnd = random.Random(int(x0) + 99)
+        for _ in range(14):
+            cx, cy, r = x0 + rnd.uniform(0, w), rnd.uniform(200, 1250), rnd.uniform(60, 130)
+            s.append(f'<circle cx="{cx:.0f}" cy="{cy:.0f}" r="{r:.0f}" fill="{c}"/>')
+    s.append(f'<rect x="0" y="1250" width="{W}" height="{H - 1250}" fill="url(#agua)"/>')
+    for y in range(1290, H, 80):
+        s.append(ln(f"M 60 {y} Q 300 {y - 14} 540 {y} Q 780 {y + 14} 1020 {y}", 5, "#B9D89A", extra='opacity=".3"'))
+    s.append(ln("M -10 1250 Q 270 1236 540 1250 Q 810 1264 1090 1246", SW))
+    defs = ('<linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE6C8"/>'
+            '<stop offset=".7" stop-color="#E8F2C8"/></linearGradient>'
+            '<linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7A8A4A"/>'
+            '<stop offset="1" stop-color="#4E5A2E"/></linearGradient>')
+    return "".join(s), defs
+
+
+def pajarito():
+    """Silueta de pájaro volando (60x34)."""
+    return ln("M 4 22 Q 16 4 30 20 Q 44 4 56 22 Q 44 14 30 28 Q 16 14 4 22 Z", 3, "#2A2A34", "#2A2A34")
+
+
+def rayitas():
+    """Líneas de acción de historieta alrededor de un punto (300x300, centro libre)."""
+    s = []
+    for a in range(0, 360, 30):
+        t = math.radians(a + 8)
+        s.append(ln(f"M {150 + 95 * math.cos(t):.0f} {150 + 95 * math.sin(t):.0f} L {150 + 140 * math.cos(t):.0f} "
+                    f"{150 + 140 * math.sin(t):.0f}", 9, INK))
+    return "".join(s)
+
+
+def capa_rayos():
+    """Rayos de luz diagonales, transparentes (capa de pantalla completa)."""
+    s = []
+    for x0, w, op in [(-200, 140, .16), (60, 90, .12), (300, 160, .14), (620, 100, .1), (820, 140, .12)]:
+        s.append(f'<path d="M {x0} -40 L {x0 + w} -40 L {x0 + w + 700} {H} L {x0 + 500} {H} Z" fill="url(#rayo)" opacity="{op}"/>')
+    defs = ('<linearGradient id="rayo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6C8"/>'
+            '<stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/></linearGradient>')
+    return "".join(s), defs
+
+
+def hoja_grande(x, y, r, k, c1="#2E6A2A", c2="#1E4A1E"):
+    return (f'<g transform="translate({x} {y}) rotate({r}) scale({k})">'
+            + ln("M 0 0 Q 160 -120 400 -20 Q 200 100 0 0 Z", 10, "#163A16", c1) + ln("M 10 0 Q 200 -40 390 -20", 8, c2) + '</g>')
+
+
+def capa_hojas_frente():
+    """Hojas grandes en primer plano, en las esquinas (se desenfocan: profundidad de campo)."""
+    return "".join([hoja_grande(-60, 160, 20, 1.2), hoja_grande(-80, 330, -10, 1.0, "#3E7A3A"),
+                    hoja_grande(1140, 120, 160, 1.1), hoja_grande(1150, 300, 200, .9, "#3E7A3A"),
+                    hoja_grande(-90, 1720, -30, 1.3), hoja_grande(1170, 1760, 210, 1.3, "#3E7A3A")])
+
+
+def capa_papiros_frente():
+    return (papiro(40, 1990, 520, 1.6, "#4E7A3A", "#6E9A4A") + papiro(1030, 1990, 480, 1.5, "#4E7A3A", "#6E9A4A")
+            + papiro(150, 1990, 300, 1.3, "#5E8A3A", "#7FA84A"))
+
+
+def capa_vineta():
+    defs = ('<radialGradient id="vg" cx="0.5" cy="0.45" r="0.75"><stop offset="0.55" stop-color="#000" stop-opacity="0"/>'
+            '<stop offset="1" stop-color="#05081A" stop-opacity="0.7"/></radialGradient>')
+    return f'<rect width="{W}" height="{H}" fill="url(#vg)"/>', defs
+
+
+def niebla():
+    defs = ('<radialGradient id="nb" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/>'
+            '<stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>')
+    return '<ellipse cx="700" cy="200" rx="700" ry="200" fill="url(#nb)"/>', defs
+
+
+def cortina_hojas():
+    """Cortina de hojas para las transiciones entre ítems (1500x2100): cubre toda la pantalla al pasar."""
+    rnd = random.Random(77)
+    s = [f'<rect x="150" y="0" width="1200" height="2100" rx="200" fill="#2E6A2A"/>']
+    for _ in range(60):
+        x, y = rnd.uniform(0, 1400), rnd.uniform(-100, 2100)
+        s.append(hoja_grande(x, y, rnd.uniform(0, 360), rnd.uniform(.5, .9), rnd.choice(["#2E6A2A", "#3E8A3A", "#4E9A4A", "#26582A"])))
+    return "".join(s)
 
 
 def fondo_burst_verde():
@@ -2042,7 +2568,7 @@ def build():
     for f in ("neutral", "contento", "sorpresa"):
         add(f"cancri_{f}", 600, 600, cancri(f))
     add("cancri_corte", 600, 600, cancri("contento", corte=True))
-    for name, col in [("halo_rojo", "#FF4A2A"), ("halo_blanco", "#FFFFFF"), ("halo_celeste", "#9FE8FF"),
+    for name, col in [("halo_rojo", "#FF4A2A"), ("halo_blanco", "#FFFFFF"), ("halo_celeste", "#9FE8FF"), ("halo_verde", "#8BD06A"),
                       ("halo_amarillo", "#FFE27A"), ("halo_azul", "#6E97FF")]:
         body, defs = halo(col)
         add(name, 800, 800, body, defs)
@@ -2142,8 +2668,48 @@ def build():
     add("dino", 440, 420, dino(), anchor=(0.5, 1.0))
     add("torta", 320, 320, torta(), anchor=(0.5, 310 / 320))
     add("gota_agua", 120, 170, gota_agua())
+    # ---- short "3 aves raras"
+    for i, ap in enumerate([0, .5, 1]):
+        add(f"picozapato_{i}", 600, 900, picozapato("abierto", ap), anchor=(282 / 600, 1.0))
+    add("picozapato_0__blink", 600, 900, picozapato("cerrado"), anchor=(282 / 600, 1.0))
+    for mo in ("rama", "ojos", "boca", "canto"):
+        add(f"urutau_{mo}", 360, 760, urutau(mo), anchor=(0.5, 1.0))
+    for i, mi in enumerate([-1, 0, 1]):
+        add(f"urutau_ojo_{i}", 700, 460, urutau_ojo("ranura", mi))
+    add("urutau_ojo_abierto", 700, 460, urutau_ojo("abierto"))
+    add("hoacin", 520, 640, hoacin(), anchor=(0.5, 590 / 640))
+    add("hoacin__blink", 520, 640, hoacin("cerrado"), anchor=(0.5, 590 / 640))
+    for i in (0, 1):
+        add(f"hoacin_pichon_{i}", 320, 320, hoacin_pichon(i))
+    add("rama", 900, 260, rama())
+    add("pez_pulmonado", 340, 120, pez_pulmonado())
+    add("cocodrilo_bebe", 290, 160, cocodrilo_bebe())
+    add("zueco", 320, 170, zueco())
+    add("vaca", 340, 270, vaca(), anchor=(0.5, 1.0))
+    add("jaguar", 440, 280, jaguar(), anchor=(0.5, 1.0))
+    add("jaguar_asco", 440, 280, jaguar("asco"), anchor=(0.5, 1.0))
+    add("polilla", 90, 70, polilla())
+    body, defs = luciernaga()
+    add("luciernaga", 60, 60, body, defs)
+    add("nota_musical", 90, 110, nota_musical())
+    add("cursor_mano", 110, 150, cursor_mano(), anchor=(38 / 110, 8 / 150))
+    add("campana", 180, 210, campana())
+    add("anillo", 200, 200, anillo())
+    add("tronco_roto", 200, 420, tronco_roto(), anchor=(0.5, 1.0))
+    for name, fn in [("capa_rayos", capa_rayos), ("capa_vineta", capa_vineta)]:
+        body, defs = fn()
+        add(name, W, H, body, defs)
+    add("capa_hojas_frente", W, H, capa_hojas_frente())
+    add("capa_papiros_frente", W, H, capa_papiros_frente())
+    body, defs = niebla()
+    add("niebla", 1400, 400, body, defs)
+    add("cortina_hojas", 1500, 2100, cortina_hojas())
+    add("pajarito", 60, 34, pajarito())
+    add("rayitas", 300, 300, rayitas())
     for name, fn in [("fondo_liso", fondo_liso), ("fondo_burst", fondo_burst), ("fondo_piel", fondo_piel),
                      ("fondo_burst_verde", fondo_burst_verde), ("fondo_subsuelo", fondo_subsuelo),
+                     ("fondo_humedal", fondo_humedal), ("fondo_bosque_dia", lambda: fondo_bosque(False)),
+                     ("fondo_bosque_noche", lambda: fondo_bosque(True)), ("fondo_rio", fondo_rio),
                      ("fondo_sabana", fondo_sabana), ("fondo_selva", fondo_selva), ("fondo_desierto", fondo_desierto),
                      ("fondo_mazmorra", fondo_mazmorra), ("fondo_pantano", fondo_pantano),
                      ("fondo_exterior", fondo_exterior), ("fondo_cabeza", fondo_cabeza),
@@ -2157,11 +2723,17 @@ def build():
 
     os.makedirs(os.path.join(OUT, "svg"), exist_ok=True)
     os.makedirs(os.path.join(OUT, "png"), exist_ok=True)
+    # capas de primer plano desenfocadas (profundidad de campo): nombre -> radio en px
+    DESENFOQUE = {"capa_hojas_frente": 9, "capa_papiros_frente": 7}
     for name, s in ASSETS.items():
         with open(os.path.join(OUT, "svg", name + ".svg"), "w") as f:
             f.write(s)
-        scale = 1.0 if name.startswith(("fondo", "dormitorio", "blanco")) else RS
-        cairosvg.svg2png(bytestring=s.encode(), write_to=os.path.join(OUT, "png", name + ".png"), scale=scale)
+        scale = 1.0 if name.startswith(("fondo", "dormitorio", "blanco", "capa")) else RS
+        png = os.path.join(OUT, "png", name + ".png")
+        cairosvg.svg2png(bytestring=s.encode(), write_to=png, scale=scale)
+        if name in DESENFOQUE:
+            from PIL import Image, ImageFilter
+            Image.open(png).filter(ImageFilter.GaussianBlur(DESENFOQUE[name])).save(png)
     META["rs"] = RS
     with open(os.path.join(OUT, "meta.json"), "w") as f:
         json.dump(META, f, indent=1)

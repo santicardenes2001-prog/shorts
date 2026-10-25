@@ -11,6 +11,9 @@ Extras (todo opcional desde el JSON):
   - elemento "particulas": lluvia/viento/estrellas con semilla fija (clase Particles).
   - idle "latido" (la opacidad late: halos, brasas) y "titila" (estrellas).
   - fx_in/fx_out "suave" (carteles prolijos) y "sombra" en los textos con caja.
+  - "pausas" (silencio en la voz para lucir un efecto) y "ambiente" por escena (selva, pantano, noche, bosque).
+  - más sonidos: matraca, llanto, muu, aleteo, pio, click.
+  - "loops" con ventana de tiempo (from/to) para animar cuadro a cuadro solo en un momento.
   - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
   - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe, glup.
 """
@@ -324,6 +327,11 @@ class Element:
             self.asset = merged
         self.swaps = sorted([dict(s, t=R(s["at"])) for s in spec.get("swaps", [])], key=lambda s: s["t"])
         self.keys = sorted([dict(k, t=R(k["at"])) for k in spec.get("keys", [])], key=lambda k: k["t"])
+        for k in self.keys:   # "hasta": ref = el movimiento dura hasta ese momento (en vez de "dur")
+            if "hasta" in k:
+                k["dur"] = max(R(k["hasta"]) - k["t"], .001)
+        # "loops": [{"frames": [...], "fps": 18, "from": ref, "to": ref}] = secuencias en bucle solo en esa ventana
+        self.loops = [dict(lp, t0=R(lp["from"]), t1=R(lp["to"])) for lp in spec.get("loops", [])]
         self.seq = None
         if "seq" in spec:
             sq = spec["seq"]
@@ -385,6 +393,9 @@ class Element:
         if "loop" in sp:
             lp = sp["loop"]
             asset = lp["frames"][int((t - self.tin) * lp.get("fps", 6)) % len(lp["frames"])]
+        for lp in self.loops:
+            if lp["t0"] <= t < lp["t1"]:
+                asset = lp["frames"][int((t - lp["t0"]) * lp.get("fps", 6)) % len(lp["frames"])]
         if punch is not None and punch < .3:
             q = punch / .3
             st["sx"] *= 1 + .12 * math.sin(math.pi * q) * (1 - q)
@@ -567,6 +578,9 @@ class Camera:
     def __init__(self, spec, tl, scene):
         R = lambda r: tl.resolve(r, scene)
         self.keys = sorted([dict(k, t=R(k["at"])) for k in spec.get("keys", [])], key=lambda k: k["t"])
+        for k in self.keys:   # "hasta": ref = el movimiento dura hasta ese momento (en vez de "dur")
+            if "hasta" in k:
+                k["dur"] = max(R(k["hasta"]) - k["t"], .001)
         self.shake = [dict(s, t0=R(s["from"]), t1=R(s["to"])) for s in spec.get("temblor", [])]
 
     def state(self, t):
@@ -731,6 +745,7 @@ class Project:
             self.words = align_times(beats, ww)
         else:
             self.words = estimate_times(beats, doc.get("velocidad", 1.0))
+        self.pausas = self._aplicar_pausas(doc.get("pausas", []))
         self.tl = Timeline(doc, self.words)
         self.scenes = []
         make = lambda e, sc_i, j: (Particles if "particulas" in e else Element)(e, self.tl, sc_i, j)
@@ -752,6 +767,9 @@ class Project:
             if "loop" in el.sp:
                 for f in el.sp["loop"]["frames"]:
                     img_key(f)
+            for lp in getattr(el, "loops", []):
+                for f in lp["frames"]:
+                    img_key(f)
             if el.blink and isinstance(el.asset, str):
                 for a in [el.asset] + [s["a"] for s in el.swaps]:
                     if asset_exists(a + "__blink"):
@@ -759,6 +777,61 @@ class Project:
         self.bg = {}
         for sc in self.scenes:
             self.bg[sc["fondo"]] = _IMG_REG[img_key(sc["fondo"])].convert("RGB")
+
+    def _aplicar_pausas(self, pausas):
+        """"pausas": [{"despues": "b4:disparos", "dur": 1.4}] mete silencio en la voz después de esa
+        palabra (para que se luzca un efecto de sonido) y corre todo lo que viene después.
+        Devuelve [(t_en_audio_original, dur)] para armar la voz con los huecos."""
+        if not pausas:
+            return []
+        tl0 = Timeline(dict(self.doc, escenas=[{"beats": [0]}]), self.words)
+        puntos = sorted((tl0.resolve(p["despues"] + (">" if ">" not in p["despues"] else "")), p["dur"]) for p in pausas)
+        for w in (w for bw in self.words for w in bw):
+            corrimiento = sum(d for t, d in puntos if w["start"] >= t - 1e-3)
+            w["start"] += corrimiento
+            w["end"] += corrimiento
+        return puntos
+
+    def voz_con_pausas(self, path_voz, path_out):
+        """Escribe la voz con los silencios de "pausas" insertados."""
+        raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", path_voz, "-f", "f32le", "-ac", "2", "-ar", str(SR), "-"],
+                             capture_output=True, check=True).stdout
+        x = np.frombuffer(raw, dtype=np.float32).reshape(-1, 2)
+        partes, pos = [], 0
+        for t, d in self.pausas:
+            i = min(len(x), int(t * SR))
+            partes += [x[pos:i], np.zeros((int(d * SR), 2), dtype=np.float32)]
+            pos = i
+        partes.append(x[pos:])
+        y = np.concatenate(partes)
+        pcm = (np.clip(y, -1, 1) * 32767).astype(np.int16)
+        with wave.open(path_out, "wb") as w:
+            w.setnchannels(2)
+            w.setsampwidth(2)
+            w.setframerate(SR)
+            w.writeframes(pcm.tobytes())
+        return path_out
+
+    def ambiente_track(self, n):
+        """Sonido ambiente por escena ("ambiente": "selva" | "pantano" | "noche" | "bosque", o
+        {"tipo": ..., "vol": ...}), con fundidos de 0,5 s entre escenas. Va por debajo de todo."""
+        out = np.zeros(n, dtype=np.float32)
+        for i, sc in enumerate(self.scenes):
+            amb = sc.get("ambiente")
+            if not amb:
+                continue
+            amb = {"tipo": amb} if isinstance(amb, str) else amb
+            t0, t1 = self.tl.scene_start[i], self.tl.scene_end[i]
+            i0, i1 = int(max(0, t0 - .25) * SR), min(n, int((t1 + .25) * SR))
+            if i1 <= i0:
+                continue
+            seg = ambiente(amb["tipo"], i1 - i0, seed=i) * amb.get("vol", 1.0)
+            f = min(int(.5 * SR), len(seg) // 2)
+            ramp = np.linspace(0, 1, f, dtype=np.float32)
+            seg[:f] *= ramp
+            seg[-f:] *= ramp[::-1]
+            out[i0:i1] += seg
+        return out * self.doc.get("volumen_ambiente", .22)
 
     def all_elements(self):
         for sc in self.scenes:
@@ -800,11 +873,13 @@ class Project:
         n = int((self.tl.total + 1) * SR)
         mix = np.zeros(n, dtype=np.float32)
         events = []
+        destacados = []   # "destacado": true = efecto protagonista: no se baja ni se normaliza con el resto
         for el in self.all_elements():
             events += el.sfx_events()
         for sc_i, sc in enumerate(self.scenes):
             for s in sc.get("sonidos", []):
-                events.append((self.tl.resolve(s["at"], sc_i), s["s"], s.get("vol", 1.0)))
+                ev = (self.tl.resolve(s["at"], sc_i), s["s"], s.get("vol", 1.0))
+                (destacados if s.get("destacado") else events).append(ev)
             if sc.get("flash"):
                 events.append((self.tl.scene_start[sc_i], "whoosh", .8))
         for (t, kind, vol) in events:
@@ -820,7 +895,13 @@ class Project:
         if self.doc.get("audio_voz"):
             # con voz, los efectos van más bajos para no tapar la narración
             mix *= 10 ** (self.doc.get("efectos_bajo_voz_db", -5) / 20)
-        return mix
+        for (t, kind, vol) in destacados:
+            snd = synth(kind, phase_of(f"{t:.3f}{kind}")) * vol
+            i0 = int(t * SR)
+            i1 = min(n, i0 + len(snd))
+            if i0 < n:
+                mix[i0:i1] += snd[:i1 - i0]
+        return mix + self.ambiente_track(n)
 
 
 @functools.lru_cache(maxsize=None)
@@ -976,7 +1057,120 @@ def synth(kind, ph=0.0):
             bub += (t >= t0) * np.sin(2 * np.pi * (500 + 300 * k) * (1 + 3 * tt) * tt) * np.exp(-tt * 40) * .5
         sig = plop + bub
         return (sig / (np.abs(sig).max() + 1e-6) * .7).astype(np.float32)
+    if kind == "matraca":
+        # picozapato: castañeteo de pico, golpes secos de madera muy seguidos (~18 por segundo)
+        d = 1.4
+        n = int(d * SR)
+        sig = np.zeros(n, dtype=np.float32)
+        tk = 0.0
+        k = 0
+        while tk < d - .03:
+            tt = np.arange(int(.03 * SR)) / SR
+            f = 900 + 250 * ((k * 7) % 3)
+            golpe = (np.sin(2 * np.pi * f * tt) + .6 * np.sin(2 * np.pi * 2.3 * f * tt)) * np.exp(-tt * 160)
+            i0 = int(tk * SR)
+            amp = .7 + .3 * np.sin(k * 1.7)
+            sig[i0:i0 + len(golpe)] += golpe[:n - i0] * amp
+            tk += 1 / 18 * (1 + .08 * np.sin(k * 2.1))
+            k += 1
+        env = np.minimum(1, np.arange(n) / (.05 * SR)) * np.minimum(1, (n - np.arange(n)) / (.15 * SR))
+        return (sig * env / (np.abs(sig).max() + 1e-6) * .9).astype(np.float32)
+    if kind == "llanto":
+        # urutaú: silbidos tristes que bajan, como un lamento (5 notas)
+        notas = [(1050, .55), (930, .45), (820, .45), (700, .5), (560, .9)]
+        partes = []
+        for i, (f0, d) in enumerate(notas):
+            tt = np.arange(int(d * SR)) / SR
+            f = f0 * (1 - .06 * tt / d) * (1 + .01 * np.sin(2 * np.pi * 5 * tt))
+            env = np.sin(np.pi * np.minimum(1, tt / d)) ** 1.5
+            partes.append(np.sin(2 * np.pi * np.cumsum(f) / SR) * env)
+            partes.append(np.zeros(int(.08 * SR)))
+        sig = np.concatenate(partes)
+        return (sig / (np.abs(sig).max() + 1e-6) * .6).astype(np.float32)
+    if kind == "muu":
+        d = 1.1
+        t = np.arange(int(d * SR)) / SR
+        f = 120 + 40 * np.sin(np.pi * t / d) - 25 * t
+        ph = np.cumsum(f) / SR
+        saw = 2 * (ph % 1) - 1
+        form = np.convolve(saw, np.ones(18) / 18, mode="same")
+        env = np.minimum(1, t / .12) * np.minimum(1, (d - t) / .3)
+        return (form / (np.abs(form).max() + 1e-6) * env * .7).astype(np.float32)
+    if kind == "aleteo":
+        # alas: ráfagas cortas de aire
+        d = .6
+        n = int(d * SR)
+        x = _noise(n, 7)
+        lp = np.convolve(x, np.ones(25, dtype=np.float32) / 25, mode="same")
+        t = np.arange(n) / SR
+        env = np.abs(np.sin(2 * np.pi * 9 * t)) ** 3 * np.exp(-t * 2)
+        return (lp / (np.abs(lp).max() + 1e-6) * env * .7).astype(np.float32)
+    if kind == "pio":
+        partes = []
+        for f0 in (2600, 3100):
+            tt = np.arange(int(.09 * SR)) / SR
+            f = f0 * (1 + .3 * tt / .09)
+            partes.append(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / .09) ** 2)
+            partes.append(np.zeros(int(.05 * SR)))
+        return (np.concatenate(partes) * .5).astype(np.float32)
+    if kind == "click":
+        tt = np.arange(int(.04 * SR)) / SR
+        sig = (np.sin(2 * np.pi * 3000 * tt) + .5 * _noise(len(tt), 8)) * np.exp(-tt * 180)
+        return (sig / (np.abs(sig).max() + 1e-6) * .8).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
+
+
+def ambiente(tipo, n, seed=0):
+    """Cama de sonido ambiente procedural (semilla fija) de n muestras, nivel ~0.3."""
+    rnd = np.random.default_rng(100 + seed)
+    t = np.arange(n) / SR
+    base = np.random.default_rng(200 + seed).standard_normal(n).astype(np.float32)
+    lp = np.convolve(base, np.ones(60, dtype=np.float32) / 60, mode="same")
+    out = lp / (np.abs(lp).max() + 1e-6) * .12          # rumor de fondo (hojas, aire)
+
+    def pegar(snd, at):
+        i = int(at * SR)
+        if i < n:
+            out[i:i + len(snd)] += snd[:n - i]
+
+    def pio(f0, d=.12):
+        tt = np.arange(int(d * SR)) / SR
+        f = f0 * (1 + .25 * np.sin(2 * np.pi * 18 * tt)) * (1 + .4 * tt / d)
+        return (np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / d) ** 2).astype(np.float32)
+
+    dur = n / SR
+    if tipo in ("selva", "bosque"):
+        k = 1.0 if tipo == "selva" else .5
+        at = rnd.uniform(0, .5)
+        while at < dur:
+            f0 = rnd.uniform(1800, 3600)
+            for j in range(rnd.integers(1, 4)):
+                pegar(pio(f0 * rnd.uniform(.9, 1.1)) * rnd.uniform(.15, .35) * k, at + j * .14)
+            at += rnd.uniform(.4, 1.6) / k
+        if tipo == "selva":   # insectos: zumbido agudo que va y viene
+            out += (np.sin(2 * np.pi * 5200 * t) * (.5 + .5 * np.sin(2 * np.pi * 7 * t))
+                    * (.5 + .5 * np.sin(2 * np.pi * .13 * t)) * .025).astype(np.float32)
+    elif tipo == "pantano":
+        at = rnd.uniform(0, .5)
+        while at < dur:   # ranas: trenes de pulsos graves
+            f0 = rnd.uniform(140, 260)
+            for j in range(rnd.integers(2, 6)):
+                tt = np.arange(int(.07 * SR)) / SR
+                croak = np.sign(np.sin(2 * np.pi * f0 * tt)) * np.exp(-tt * 40)
+                pegar((np.convolve(croak, np.ones(8) / 8, mode="same") * .25).astype(np.float32), at + j * .1)
+            at += rnd.uniform(.8, 2.2)
+        at = rnd.uniform(1, 3)
+        while at < dur:
+            pegar(pio(rnd.uniform(1200, 1800), .25) * .15, at)
+            at += rnd.uniform(3, 6)
+    elif tipo == "noche":   # grillos: chirridos agudos en grupos
+        for g in range(3):
+            f0 = 4300 + 300 * g
+            period = rnd.uniform(.6, .9)
+            ph = rnd.uniform(0, period)
+            env = ((t + ph) % period < .18) * (np.sin(2 * np.pi * 30 * t) > 0)
+            out += (np.sin(2 * np.pi * f0 * t) * env * .05).astype(np.float32)
+    return out.astype(np.float32)
 
 
 def write_wav(path, data):
@@ -1027,8 +1221,10 @@ def render(proj, out_path, workers=2):
     voz = proj.doc.get("audio_voz")
     if voz:
         voz = os.path.join(proj.dir, voz)
+        if proj.pausas:
+            voz = proj.voz_con_pausas(voz, os.path.join(tmp, "voz_pausas.wav"))
         cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", video, "-i", voz, "-i", sfx, "-filter_complex",
-               "[1:a][2:a]amix=inputs=2:normalize=0[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy",
+               "[1:a][2:a]amix=inputs=2:normalize=0,alimiter=limit=0.89:attack=3:release=60:level=false[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy",
                "-c:a", "aac", "-b:a", "192k", "-shortest", out_path]
     else:
         cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", video, "-i", sfx, "-map", "0:v", "-map", "1:a",
