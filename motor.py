@@ -348,7 +348,8 @@ class Element:
         self.ph = float(spec["fase"]) if "fase" in spec else phase_of(json.dumps(spec, sort_keys=True))
         self.blink = spec.get("blink", False)
         # "sigue": {"id": "rape", "punto": [640, 70]} = pegado a ese punto del dibujo (coordenadas del recurso)
-        # del elemento con ese "id": acompaña su posición, idle, inclinación y escala (luces con su fuente)
+        # del elemento con ese "id": acompaña su posición, idle, inclinación y escala (luces con su fuente).
+        # Sin "punto" conserva la distancia que ya tenía con el líder.
         self.sigue = spec.get("sigue")
         self.lider = None
 
@@ -372,20 +373,28 @@ class Element:
     def _seguir(self, st, t):
         L = self.lider
         ls, lsp = L.state(t), L.sp
-        src = _IMG_REG[img_key(ls["asset"])]
-        res = 1.0 if src.size == (W, H) else RS
-        ax, ay = anchor_of(lsp, ls["asset"])
-        px, py = self.sigue.get("punto", [ax * src.width / res, ay * src.height / res])
-        dx = (px - ax * src.width / res) * ls["s"] * ls["sx"]
-        dy = (py - ay * src.height / res) * ls["s"] * ls["sy"]
-        if lsp.get("flip"):
-            dx = -dx
-        a = math.radians(ls["r"])
+        k = ls["s"] / lsp.get("s", 1.0)
+        if "punto" in self.sigue:
+            # punto en coordenadas del dibujo del líder: se escala y se gira con él
+            src = _IMG_REG[img_key(ls["asset"])]
+            res = 1.0 if src.size == (W, H) else RS
+            ax, ay = anchor_of(lsp, ls["asset"])
+            px, py = self.sigue["punto"]
+            dx = (px - ax * src.width / res) * ls["s"] * ls["sx"]
+            dy = (py - ay * src.height / res) * ls["s"] * ls["sy"]
+            if lsp.get("flip"):
+                dx = -dx
+            a = math.radians(ls["r"])
+        else:
+            # sin "punto": conserva la distancia que ya tenía con el líder (en reposo)
+            dx = (self.sp.get("x", W / 2) - lsp.get("x", W / 2)) * k
+            dy = (self.sp.get("y", H / 2) - lsp.get("y", H / 2)) * k
+            a = math.radians(ls["r"] - lsp.get("r", 0.0))
         # lo propio del seguidor (keys, idle, entrada) se suma como desplazamiento respecto de su x/y
         st["x"] += ls["x"] + dx * math.cos(a) - dy * math.sin(a) - self.sp.get("x", W / 2)
         st["y"] += ls["y"] + dx * math.sin(a) + dy * math.cos(a) - self.sp.get("y", H / 2)
         st["r"] += ls["r"] - lsp.get("r", 0.0)
-        st["s"] *= ls["s"] / lsp.get("s", 1.0)
+        st["s"] *= k
 
     # ------------------------------------------------------------ estado en t
     def state(self, t):
@@ -543,8 +552,8 @@ class Particles(Element):
                    "s": [.5, 1], "r": [-8, 8], "giro": [0, 0], "alpha": [.7, 1],
                    "titila": 0, "orientar": false, "ondula": [amplitud_px, vueltas_por_seg]}
     "ondula" suma un vaivén circular propio de cada partícula (moscas que zumban).
-    "desvanece": true = cada partícula aparece y se apaga de a poco a lo largo de su recorrido por la zona
-    (humo o burbujas que salen de una fuente, sin que se vea dónde reaparecen); "crece": 2 = al final del
+    "desvanece": true = cada partícula se ve apenas sale de la fuente y se apaga de a poco a lo largo de su
+    recorrido por la zona (humo o burbujas que salen de una fuente, sin que se vea dónde reaparecen); "crece": 2 = al final del
     recorrido mide el doble (el gas se expande al subir).
     "continuo": true = se mueven con el tiempo absoluto del video: el mismo grupo (misma semilla) sigue
     igual de una escena a la siguiente en el mismo lugar, sin saltar en el corte.
@@ -570,6 +579,12 @@ class Particles(Element):
         self.orientar = pc.get("orientar", False)
         self.ondula = pc.get("ondula")
         self.desvanece = pc.get("desvanece", False)
+        if self.desvanece:   # chorro parejo desde la fuente: repartidas a lo largo del recorrido, sin huecos
+            orden = rnd.permutation(n)
+            if abs(np.mean(self.p["vy"])) >= abs(np.mean(self.p["vx"])):
+                self.p["y"] = y0 + (orden + rnd.uniform(.3, .7, n)) / n * (y1 - y0)
+            else:
+                self.p["x"] = x0 + (orden + rnd.uniform(.3, .7, n)) / n * (x1 - x0)
         self.crece = pc.get("crece", 1.0)
         self.continuo = pc.get("continuo", False)
 
@@ -599,7 +614,8 @@ class Particles(Element):
                 r += math.degrees(math.atan2(p["vy"][i], p["vx"][i]))
             a = base["alpha"] * p["alpha"][i]
             if self.desvanece:
-                a *= math.sin(math.pi * u)
+                # ya se ve al salir de la fuente (entra en el primer 6 % del recorrido) y se apaga al final
+                a *= min(1.0, u / .06) * (1 - u) ** .8
             if self.titila:
                 a *= clamp(1 - self.titila * (.5 + .5 * math.sin(2 * math.pi * 2.6 * t + p["ph"][i])))
             st = dict(x=x, y=y, s=base["s"] * p["s"][i] * (1 + (self.crece - 1) * u), sx=1.0, sy=1.0, r=round(r), alpha=a, crop=1.0,

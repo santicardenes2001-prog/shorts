@@ -72,14 +72,14 @@ def sale(e, fx="pop"):
     return e
 
 
-FUMAROLAS = [(200, 900, 420), (880, 660, 420), (560, 1000, 330)]   # boca (x, y) y altura del penacho en fondo_lecho
+FUMAROLAS = [(200, 900, 330), (880, 660, 330), (560, 1000, 280)]   # boca (x, y) y altura del penacho en fondo_lecho
 
 
-def humo(desde, n=3, semilla=1, alpha=(.4, .8)):
+def humo(desde, n=10, semilla=1, alpha=(.5, .85)):
     """Gases que salen de la boca de cada fumarola: nacen ahí, suben abriéndose y se apagan (n por chimenea)."""
     return [{"particulas": {"a": "humo_toxico", "n": n, "semilla": semilla + i, "zona": [x - 22, y - alto, x + 22, y + 10],
-                            "vx": [0, 0], "vy": [-95, -60], "s": [.45, .7], "alpha": list(alpha), "ondula": [18, .3],
-                            "desvanece": True, "crece": 2.2, "continuo": True},
+                            "vx": [0, 0], "vy": [-60, -60], "s": [.3, .45], "alpha": list(alpha), "ondula": [14, .3],
+                            "desvanece": True, "crece": 3.0, "continuo": True},
              "in": desde, "fx_in": "fade", "dur_in": 1.0, "z": -.5}
             for i, (x, y, alto) in enumerate(FUMAROLAS)]
 
@@ -119,7 +119,7 @@ escenas.append({
     "sonidos": [{"at": "b2:oscuridad", "s": "click"}, {"at": "b2:más", "s": "click"}],
     "elementos": [
         nieve(2), vineta(.8, keys=[{"at": "b2:oscuridad", "dur": .3, "alpha": 1.0}, {"at": "b2:más", "dur": .3, "alpha": .8}]),
-        *humo("esc", 3, 2),
+        *humo("esc", 10, 2),
         *batiscafo("neutral", (540, 1150), **{"in": "b1", "fx_in": "slide_down", "sfx": "whoosh_suave", "blink": True,
                                               "swaps": [{"at": "b2:ciego", "a": "batiscafo_pensando", "fx": "punch"}]}),
         {"a": "cangrejo_yeti_quieto", **KIWA, "in": "b1:cangrejo", "fx_in": "fade", "dur_in": .8, "idle": "sway", "fase": 0,
@@ -140,7 +140,7 @@ escenas.append({
     "sonidos": [{"at": "b3:gases", "s": "glup", "vol": .7}, {"at": "b4:comérselas", "s": "pop"},
                 {"at": "b4:comérselas+0.3", "s": "pop", "vol": .7}],
     "elementos": [
-        nieve(2), vineta(.8), *humo("esc", 3, 2), *humo("b3:gases", 4, 7, (.6, .95)),
+        nieve(2), vineta(.8), *humo("esc", 10, 2), *humo("b3:gases", 6, 7, (.6, .95)),
         *batiscafo("pensando", (540, 1150)),
         {"a": "cangrejo_yeti_quieto", **KIWA, "idle": "sway", "fase": 0,
          "loops": [{"frames": ["cangrejo_yeti_baila_a", "cangrejo_yeti_baila_b"], "fps": 3, "from": "b3:mueve", "to": "b4:alimenta"}],

@@ -56,8 +56,10 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - Toda luz va pegada a lo que la genera (halo del señuelo, haz de la lámpara, brillo de una antorcha):
   `"sigue": {"id": ..., "punto": [x, y del dibujo]}`, así acompaña el idle, los movimientos y la escala. Lo
   mismo para lo que queda pegado a un personaje (el macho del rape). `revisar.py` avisa las luces sueltas.
-- Humo, gas y burbujas nacen de su fuente (boca de la chimenea): partículas con zona angosta sobre la
-  boca, `"desvanece"` y `"crece"`; con `"continuo"` siguen igual en los cortes dentro del mismo lugar.
+- Humo, gas y burbujas nacen de su fuente (boca de la chimenea) y ya se ven al salir, en un chorro sin
+  huecos: si aparecen recién a mitad de camino parecen luces sueltas. Partículas con zona angosta sobre la
+  boca, `"desvanece"` (reparte parejo y apaga al final), misma velocidad y `"crece"`; con `"continuo"`
+  siguen igual en los cortes dentro del mismo lugar. Mirar el recorte a tamaño real en varios momentos.
 - La cámara siempre "respira" (zoom lento) y se usa para contar: primer plano de un detalle (el ojo),
   acercarse a la acción (el pico), alejarse para revelar (de la cara al bosque de noche).
 - Cambios de momento dentro del mismo lugar con fundidos (día → noche: el fondo de día se desvanece).
@@ -134,3 +136,6 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   -40 dB) → ambiente de eventos sueltos + ducking bajo la voz (piso -63 dB) y chequeo en `revisar.py`.
 - 2026-10-25 · océano · "Las luces están separadas de los generadores": halos y haces quedaban fijos mientras
   su fuente flotaba, y el gas salía de cualquier lado → `"sigue"` en el motor, gas desde las bocas, chequeo.
+- 2026-10-25 · océano · "Te pedí que corrijas eso": las burbujas de gas seguían apareciendo a mitad de
+  camino, despegadas de las chimeneas → chorro visible desde la boca, parejo y sin huecos. Solo el último
+  video (no tocar los anteriores si no lo pide).

@@ -29,3 +29,6 @@
   - Gas de las fumarolas: salía de toda la escena → penachos desde cada boca (`desvanece`, `crece`,
     `continuo`). Chimenea izquierda más baja (boca en y=900) para que el batiscafo no la tape.
   - Nube de moco: halo que se queda donde la lanzó el calamar → `"suelta": true`.
+- Segunda vuelta (2026-10-25) "te pedí que corrijas eso" → lo que se veía como luces separadas eran las
+  burbujas verdes de gas: nacían invisibles en la boca y recién se veían arriba. Ahora salen visibles de la
+  boca de cada fumarola (10 por chimenea, misma velocidad, repartidas parejo, crecen y se apagan arriba).

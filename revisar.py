@@ -101,6 +101,8 @@ def revisar(path):
                 continue
             st = el.state(t)
             st["_t"] = t
+            if es_luz(el) and st["alpha"] > .05:
+                st["alpha"] = 1.0   # un halo tenue igual se ve: también se revisa
             b = caja(el, st, sc["cam"] if el in sc["els"] else None)
             if b:
                 vis.append((el, b))
