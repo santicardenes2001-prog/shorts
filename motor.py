@@ -15,6 +15,7 @@ Extras (todo opcional desde el JSON):
   - más sonidos: matraca, llanto, muu, aleteo, pio, click.
   - "loops" con ventana de tiempo (from/to) para animar cuadro a cuadro solo en un momento.
   - escena "camara": zoom/paneo con keys y "temblor" (clase Camera).
+  - "sigue": {"id", "punto"} pega un elemento a un punto del dibujo de otro (luz con su fuente).
   - sonidos: viento, cristal, brillo, tictac, zumbido, mosca, sierra, filo, golpe, glup.
 """
 import argparse
@@ -346,6 +347,10 @@ class Element:
         # "fase" fija la fase de los idle: el mismo personaje queda sincronizado entre escenas
         self.ph = float(spec["fase"]) if "fase" in spec else phase_of(json.dumps(spec, sort_keys=True))
         self.blink = spec.get("blink", False)
+        # "sigue": {"id": "rape", "punto": [640, 70]} = pegado a ese punto del dibujo (coordenadas del recurso)
+        # del elemento con ese "id": acompaña su posición, idle, inclinación y escala (luces con su fuente)
+        self.sigue = spec.get("sigue")
+        self.lider = None
 
     # ------------------------------------------------------------ sonidos
     def sfx_events(self):
@@ -363,6 +368,24 @@ class Element:
 
     def active(self, t):
         return self.tin <= t < self.tout
+
+    def _seguir(self, st, t):
+        L = self.lider
+        ls, lsp = L.state(t), L.sp
+        src = _IMG_REG[img_key(ls["asset"])]
+        res = 1.0 if src.size == (W, H) else RS
+        ax, ay = anchor_of(lsp, ls["asset"])
+        px, py = self.sigue.get("punto", [ax * src.width / res, ay * src.height / res])
+        dx = (px - ax * src.width / res) * ls["s"] * ls["sx"]
+        dy = (py - ay * src.height / res) * ls["s"] * ls["sy"]
+        if lsp.get("flip"):
+            dx = -dx
+        a = math.radians(ls["r"])
+        # lo propio del seguidor (keys, idle, entrada) se suma como desplazamiento respecto de su x/y
+        st["x"] += ls["x"] + dx * math.cos(a) - dy * math.sin(a) - self.sp.get("x", W / 2)
+        st["y"] += ls["y"] + dx * math.sin(a) + dy * math.cos(a) - self.sp.get("y", H / 2)
+        st["r"] += ls["r"] - lsp.get("r", 0.0)
+        st["s"] *= ls["s"] / lsp.get("s", 1.0)
 
     # ------------------------------------------------------------ estado en t
     def state(self, t):
@@ -499,6 +522,8 @@ class Element:
                 st["alpha"] *= clamp(1 - .6 * a * (.5 + .5 * v))
             else:
                 raise ValueError(f"idle desconocido: {f}")
+        if self.lider is not None:
+            self._seguir(st, t)
         # parpadeo
         if self.blink and isinstance(asset, str) and asset_exists(asset + "__blink"):
             per = 3.3 + (ph % 1.0)
@@ -518,6 +543,11 @@ class Particles(Element):
                    "s": [.5, 1], "r": [-8, 8], "giro": [0, 0], "alpha": [.7, 1],
                    "titila": 0, "orientar": false, "ondula": [amplitud_px, vueltas_por_seg]}
     "ondula" suma un vaivén circular propio de cada partícula (moscas que zumban).
+    "desvanece": true = cada partícula aparece y se apaga de a poco a lo largo de su recorrido por la zona
+    (humo o burbujas que salen de una fuente, sin que se vea dónde reaparecen); "crece": 2 = al final del
+    recorrido mide el doble (el gas se expande al subir).
+    "continuo": true = se mueven con el tiempo absoluto del video: el mismo grupo (misma semilla) sigue
+    igual de una escena a la siguiente en el mismo lugar, sin saltar en el corte.
     in/out, fx_in/fx_out (fade, pop...), x/y/s/alpha y keys afectan a todo el grupo
     (x/y desplazan respecto de la posición de reposo W/2, H/2).
     """
@@ -539,17 +569,26 @@ class Particles(Element):
         self.titila = pc.get("titila", 0)
         self.orientar = pc.get("orientar", False)
         self.ondula = pc.get("ondula")
+        self.desvanece = pc.get("desvanece", False)
+        self.crece = pc.get("crece", 1.0)
+        self.continuo = pc.get("continuo", False)
 
     def draw(self, frame, t):
         base = Element.state(self, t)
         dx, dy = base["x"] - self.sp.get("x", W / 2), base["y"] - self.sp.get("y", H / 2)
         x0, y0, x1, y1 = self.zona
         zw, zh = x1 - x0, y1 - y0
-        dt = t - self.tin
+        dt = t if self.continuo else t - self.tin
         p = self.p
         for i in range(len(p["x"])):
-            x = x0 + (p["x"][i] - x0 + p["vx"][i] * dt) % zw + dx
-            y = y0 + (p["y"][i] - y0 + p["vy"][i] * dt) % zh + dy
+            ux = (p["x"][i] - x0 + p["vx"][i] * dt) % zw
+            uy = (p["y"][i] - y0 + p["vy"][i] * dt) % zh
+            x, y = x0 + ux + dx, y0 + uy + dy
+            # avance a lo largo de la zona (0 = donde nace, 1 = donde termina), según el eje del movimiento
+            if abs(p["vy"][i]) >= abs(p["vx"][i]):
+                u = uy / zh if p["vy"][i] >= 0 else 1 - uy / zh
+            else:
+                u = ux / zw if p["vx"][i] >= 0 else 1 - ux / zw
             r = p["r"][i] + p["giro"][i] * dt
             if self.ondula:
                 amp, f = self.ondula
@@ -559,9 +598,11 @@ class Particles(Element):
             if self.orientar:
                 r += math.degrees(math.atan2(p["vy"][i], p["vx"][i]))
             a = base["alpha"] * p["alpha"][i]
+            if self.desvanece:
+                a *= math.sin(math.pi * u)
             if self.titila:
                 a *= clamp(1 - self.titila * (.5 + .5 * math.sin(2 * math.pi * 2.6 * t + p["ph"][i])))
-            st = dict(x=x, y=y, s=base["s"] * p["s"][i], sx=1.0, sy=1.0, r=round(r), alpha=a, crop=1.0,
+            st = dict(x=x, y=y, s=base["s"] * p["s"][i] * (1 + (self.crece - 1) * u), sx=1.0, sy=1.0, r=round(r), alpha=a, crop=1.0,
                       asset=self.names[p["k"][i]])
             draw_element(frame, self, st)
 
@@ -751,9 +792,11 @@ class Project:
         make = lambda e, sc_i, j: (Particles if "particulas" in e else Element)(e, self.tl, sc_i, j)
         for i, sc in enumerate(doc["escenas"]):
             els = [make(e, i, j) for j, e in enumerate(sc.get("elementos", []))]
+            self._enlazar(els)
             cam = Camera(sc["camara"], self.tl, i) if sc.get("camara") else None
             self.scenes.append(dict(sc, els=els, cam=cam))
         self.persist = [make(dict(e, z=e.get("z", 50)), None, j) for j, e in enumerate(doc.get("persistentes", []))]
+        self._enlazar(self.persist)
         self.caps = Captions(self.words, doc.get("subtitulos", {})) if doc.get("subtitulos", {}).get("activos", True) else None
         for el in self.all_elements():
             img_key(el.asset)
@@ -777,6 +820,16 @@ class Project:
         self.bg = {}
         for sc in self.scenes:
             self.bg[sc["fondo"]] = _IMG_REG[img_key(sc["fondo"])].convert("RGB")
+
+    @staticmethod
+    def _enlazar(els):
+        """Conecta los elementos con "sigue" con su líder (por "id", dentro de la misma escena)."""
+        ids = {e.sp["id"]: e for e in els if "id" in e.sp}
+        for e in els:
+            if e.sigue:
+                if e.sigue["id"] not in ids:
+                    raise ValueError(f"sigue: no hay elemento con id {e.sigue['id']!r} en la escena")
+                e.lider = ids[e.sigue["id"]]
 
     def _aplicar_pausas(self, pausas):
         """"pausas": [{"despues": "b4:disparos", "dur": 1.4}] mete silencio en la voz después de esa

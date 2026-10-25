@@ -22,3 +22,10 @@
   - Primera vista de hojas: batiscafo arriba a la izquierda pisaba los carteles, animales del gancho y del
     cierre chicos, platillo casi invisible → corregido antes de entregar.
   - "pelos" no lo reconoció el ASR (tiempo interpolado); revisado a ojo, el cartel cae bien.
+- Corrección (2026-10-25) "las luces están separadas de los generadores":
+  - Halo del señuelo, haz del batiscafo y halo del calamar no acompañaban el "float" de su fuente →
+    `"sigue"` (señuelo [640, 70] del rape, lámpara [428, 250] del batiscafo). El macho pegado a la panza
+    también la sigue (sus keys pasan a ser desplazamientos respecto de la panza).
+  - Gas de las fumarolas: salía de toda la escena → penachos desde cada boca (`desvanece`, `crece`,
+    `continuo`). Chimenea izquierda más baja (boca en y=900) para que el batiscafo no la tape.
+  - Nube de moco: halo que se queda donde la lanzó el calamar → `"suelta": true`.

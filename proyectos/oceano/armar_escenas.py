@@ -27,6 +27,9 @@ narracion = [
 KIWA = dict(x=540, y=1335, s=.9)       # cangrejo yeti sobre el lecho (escenas 1 y 2)
 VAMP = dict(x=500, y=930, s=1.0)       # calamar vampiro (escenas 3 y 4)
 RAPE = dict(x=500, y=1000, s=1.1)      # hembra de rape (escenas 5 y 6)
+LAMPARA = [428, 250]                   # vidrio de la lámpara en el dibujo del batiscafo (440x420)
+SENUELO = [640, 70]                    # punta del señuelo en el dibujo de la hembra de rape (700x600)
+PANZA_L = [330 + 80 * .8 / 1.1, 520]   # donde queda pegado el macho (centro), en el dibujo de la hembra
 BATI = dict(x=150, y=700, s=.45)       # batiscafo de Vos a la izquierda, debajo de los carteles
 
 
@@ -34,7 +37,7 @@ BATI = dict(x=150, y=700, s=.45)       # batiscafo de Vos a la izquierda, debajo
 def nieve(semilla, n=30):
     """Nieve marina: partículas que bajan despacio (siempre algo se mueve, aunque esté oscuro)."""
     return {"particulas": {"a": "nieve_marina", "n": n, "semilla": semilla, "zona": [-20, -40, 1100, 1960], "vx": [-8, 8],
-                           "vy": [18, 40], "s": [.6, 1.6], "alpha": [.4, .9], "ondula": [10, .2]}, "z": 13}
+                           "vy": [18, 40], "s": [.6, 1.6], "alpha": [.4, .9], "ondula": [10, .2], "continuo": True}, "z": 13}
 
 
 def vineta(op=1.0, **kw):
@@ -46,15 +49,15 @@ def vineta(op=1.0, **kw):
 def batiscafo(cara="neutral", objetivo=None, **kw):
     """Vos en el batiscafo arriba a la izquierda, con el haz de la lámpara apuntando a 'objetivo' (x, y)."""
     import math
-    e = {"a": f"batiscafo_{cara}", **BATI, "idle": "float", "fase": 0, "z": 5}
+    e = {"a": f"batiscafo_{cara}", **BATI, "id": "bati", "idle": "float", "fase": 0, "z": 5}
     e.update(kw)
     out = [e]
     if objetivo:
-        lx, ly = BATI["x"] + (436 - 220) * BATI["s"], BATI["y"] + (250 - 210) * BATI["s"]
+        lx, ly = BATI["x"] + (LAMPARA[0] - 220) * BATI["s"], BATI["y"] + (LAMPARA[1] - 210) * BATI["s"]
         ang = math.degrees(math.atan2(objetivo[1] - ly, objetivo[0] - lx))
         largo = math.hypot(objetivo[0] - lx, objetivo[1] - ly) / 700
         out.append({"a": "rayo_luz", "x": lx, "y": ly, "r": round(ang, 1), "s": round(largo, 2), "alpha": .55, "z": -1,
-                    "idle": {"fx": "latido", "fuerza": .25}, "fase": 0})
+                    "idle": {"fx": "latido", "fuerza": .25}, "fase": 0, "sigue": {"id": "bati", "punto": LAMPARA}})
     return out
 
 
@@ -69,11 +72,16 @@ def sale(e, fx="pop"):
     return e
 
 
-def humo(desde, n=10, semilla=1):
-    """Gases que suben de las fumarolas."""
-    return {"particulas": {"a": "humo_toxico", "n": n, "semilla": semilla, "zona": [120, 300, 980, 1100],
-                           "vx": [-10, 10], "vy": [-90, -50], "s": [.5, 1.2], "alpha": [.4, .8], "ondula": [20, .4]},
-            "in": desde, "fx_in": "fade", "dur_in": 1.0, "z": 2}
+FUMAROLAS = [(200, 900, 420), (880, 660, 420), (560, 1000, 330)]   # boca (x, y) y altura del penacho en fondo_lecho
+
+
+def humo(desde, n=3, semilla=1, alpha=(.4, .8)):
+    """Gases que salen de la boca de cada fumarola: nacen ahí, suben abriéndose y se apagan (n por chimenea)."""
+    return [{"particulas": {"a": "humo_toxico", "n": n, "semilla": semilla + i, "zona": [x - 22, y - alto, x + 22, y + 10],
+                            "vx": [0, 0], "vy": [-95, -60], "s": [.45, .7], "alpha": list(alpha), "ondula": [18, .3],
+                            "desvanece": True, "crece": 2.2, "continuo": True},
+             "in": desde, "fx_in": "fade", "dur_in": 1.0, "z": -.5}
+            for i, (x, y, alto) in enumerate(FUMAROLAS)]
 
 
 escenas = []
@@ -90,14 +98,16 @@ escenas.append({
         sale({"a": "batiscafo_neutral", "x": 300, "y": -260, "s": .7, "idle": "float", "fase": 0, "blink": True,
               "keys": [{"at": "b0", "hasta": "b0:animales", "y": 760, "ease": "out"}],
               "swaps": [{"at": "b0:extraños", "a": "batiscafo_sorpresa", "fx": "punch"}]}, "fade"),
-        sale({"a": "halo_celeste", "x": 800, "y": 800, "s": .7, "alpha": .5, "in": "b0:animales", "fx_in": "fade",
-              "idle": "latido"}, "fade"),
-        sale({"a": "calamar_vampiro_brilla", "x": 800, "y": 800, "s": .6, "in": "b0:animales", "fx_in": "fade", "dur_in": .6,
+        sale({"a": "halo_celeste", "s": .7, "alpha": .5, "in": "b0:animales", "fx_in": "fade",
+              "idle": "latido", "sigue": {"id": "vamp", "punto": [260, 320]}}, "fade"),
+        sale({"a": "calamar_vampiro_brilla", "id": "vamp", "x": 800, "y": 800, "s": .6, "in": "b0:animales", "fx_in": "fade", "dur_in": .6,
               "idle": "float"}, "fade"),
         sale({"a": "cangrejo_yeti_quieto", "x": 270, "y": 1330, "s": .65, "in": "b0:océano", "fx_in": "fade", "dur_in": .6,
               "idle": "sway"}, "fade"),
-        sale({"a": "rape_hembra", "x": 760, "y": 1210, "s": .55, "in": "b0:profundo", "fx_in": "fade", "dur_in": .6,
-              "idle": "float"}, "fade"),
+        sale({"a": "rape_hembra", "id": "rape", "x": 760, "y": 1210, "s": .55, "in": "b0:profundo", "fx_in": "fade",
+              "dur_in": .6, "idle": "float"}, "fade"),
+        sale({"a": "halo_celeste", "s": .18, "alpha": .9, "in": "b0:profundo", "fx_in": "fade", "dur_in": .6, "idle": "latido",
+              "sigue": {"id": "rape", "punto": SENUELO}}, "fade"),
         {"a": "platillo", "x": -250, "y": 640, "s": 1.3, "r": -8, "in": "b0:extraterrestres", "sfx": "none", "z": 6,
          "keys": [{"at": "b0:extraterrestres", "dur": 1.1, "x": 1350, "y": 540, "ease": "inout"}]},
     ]})
@@ -109,7 +119,7 @@ escenas.append({
     "sonidos": [{"at": "b2:oscuridad", "s": "click"}, {"at": "b2:más", "s": "click"}],
     "elementos": [
         nieve(2), vineta(.8, keys=[{"at": "b2:oscuridad", "dur": .3, "alpha": 1.0}, {"at": "b2:más", "dur": .3, "alpha": .8}]),
-        humo("esc", 6, 2),
+        *humo("esc", 3, 2),
         *batiscafo("neutral", (540, 1150), **{"in": "b1", "fx_in": "slide_down", "sfx": "whoosh_suave", "blink": True,
                                               "swaps": [{"at": "b2:ciego", "a": "batiscafo_pensando", "fx": "punch"}]}),
         {"a": "cangrejo_yeti_quieto", **KIWA, "in": "b1:cangrejo", "fx_in": "fade", "dur_in": .8, "idle": "sway", "fase": 0,
@@ -130,7 +140,7 @@ escenas.append({
     "sonidos": [{"at": "b3:gases", "s": "glup", "vol": .7}, {"at": "b4:comérselas", "s": "pop"},
                 {"at": "b4:comérselas+0.3", "s": "pop", "vol": .7}],
     "elementos": [
-        nieve(2), vineta(.8), humo("esc", 6, 2), humo("b3:gases", 14, 3),
+        nieve(2), vineta(.8), *humo("esc", 3, 2), *humo("b3:gases", 4, 7, (.6, .95)),
         *batiscafo("pensando", (540, 1150)),
         {"a": "cangrejo_yeti_quieto", **KIWA, "idle": "sway", "fase": 0,
          "loops": [{"frames": ["cangrejo_yeti_baila_a", "cangrejo_yeti_baila_b"], "fps": 3, "from": "b3:mueve", "to": "b4:alimenta"}],
@@ -184,7 +194,7 @@ escenas.append({
          "swaps": [{"at": "b8:confundir", "a": "pez_vibora_mareado", "fx": "punch"}]},
         cartel("¡PARECE LLENO DE PÚAS!", 540, 470, "b7:púas", size=62, estilo="cartel_rojo", out="b8:moco"),
         # nube de moco luminoso
-        sale({"a": "halo_celeste", "x": 560, "y": 980, "s": .3, "alpha": 0, "in": "b8:nube", "z": 3, "sfx": "none",
+        sale({"a": "halo_celeste", "x": 560, "y": 980, "s": .3, "alpha": 0, "in": "b8:nube", "z": 3, "sfx": "none", "suelta": True,
               "keys": [{"at": "b8:nube", "dur": .8, "s": 1.9, "alpha": 1, "ease": "out"}], "idle": "latido"}, "fade"),
         {"particulas": {"a": "destello", "n": 34, "semilla": 6, "zona": [220, 620, 900, 1380], "vx": [-25, 25], "vy": [-25, 25],
                         "s": [.4, 1.1], "titila": .7, "ondula": [30, .4]}, "in": "b8:nube", "fx_in": "fade", "dur_in": .6,
@@ -200,7 +210,6 @@ for e in escenas[-1]["elementos"]:
                       {"at": "b8:escapar", "a": "batiscafo_contento", "fx": "punch"}]
 
 # ------------------------------------------------------------ 5. rape: la hembra gigante y el macho diminuto
-LURE = (RAPE["x"] + (640 - 350) * RAPE["s"], RAPE["y"] + (70 - 300) * RAPE["s"])
 PANZA = (RAPE["x"] + (330 - 350) * RAPE["s"] + 80 * .8, RAPE["y"] + (520 - 300) * RAPE["s"])
 escenas.append({
     "nombre": "rape_encuentro", "beats": [9, 10], "fondo": "fondo_abismo", "ambiente": "abismo",
@@ -210,13 +219,17 @@ escenas.append({
         nieve(4), vineta(1.0),
         *batiscafo("sorpresa"),
         # en la oscuridad primero se ve solo el señuelo; después aparece la hembra
-        {"a": "halo_celeste", "x": LURE[0], "y": LURE[1], "s": .35, "alpha": .9, "in": "b9:rape", "fx_in": "fade", "z": 4,
-         "idle": "latido", "fase": 0},
-        {"a": "rape_hembra", **RAPE, "alpha": 0, "idle": "float", "fase": 0, "z": 2,
+        {"a": "halo_celeste", "s": .35, "alpha": .9, "in": "b9:rape", "fx_in": "fade", "z": 4,
+         "idle": "latido", "fase": 0, "sigue": {"id": "rape", "punto": SENUELO}},
+        {"a": "rape_hembra", **RAPE, "id": "rape", "alpha": 0, "idle": "float", "fase": 0, "z": 2,
          "keys": [{"at": "b9:abisal", "dur": 1.2, "alpha": 1, "ease": "inout"}]},
         cartel("(EL MACHO SE FUSIONA\nCON LA HEMBRA)", 540, 470, "b9:macho", size=62, out="b10:difícil"),
-        {"a": "rape_macho_0", "x": 960, "y": 560, "s": .8, "in": "b10:difícil", "fx_in": "fade", "z": 6, "idle": "bob",
-         "keys": [{"at": "b10:difícil", "dur": 1.6, "x": 760, "y": 640, "ease": "inout"},
+        # sigue a la hembra: sus keys son desplazamientos respecto de la panza, así al morder queda pegado justo ahí
+        {"a": "rape_macho_0", "x": PANZA[0], "y": PANZA[1], "s": .8, "in": "b10:difícil", "fx_in": "fade", "z": 6,
+         "sigue": {"id": "rape", "punto": PANZA_L},
+         "idle": {"fx": "bob", "to": "b10:muerde-0.35"},
+         "keys": [{"at": "b10:difícil", "dur": .001, "x": 960, "y": 560},
+                  {"at": "b10:difícil+0.01", "dur": 1.6, "x": 760, "y": 640, "ease": "inout"},
                   {"at": "b10:muerde-0.35", "dur": .35, "x": PANZA[0], "y": PANZA[1], "ease": "in"}],
          "swaps": [{"at": "b10:muerde", "a": "rape_macho_1", "fx": "punch"}]},
         {"texto": {"t": "?", "estilo": "pregunta", "size": 90}, "x": 820, "y": 560, "in": "b10:difícil+0.4", "fx_in": "pop",
@@ -239,10 +252,11 @@ escenas.append({
         nieve(4), vineta(1.0),
         *batiscafo("sorpresa", None, swaps=[{"at": "b11:ojos", "a": "batiscafo_asco", "fx": "punch"},
                                             {"at": "b11:pegado", "a": "batiscafo_sorpresa"}]),
-        {"a": "halo_celeste", "x": LURE[0], "y": LURE[1], "s": .35, "alpha": .9, "z": 4, "idle": "latido", "fase": 0},
-        {"a": "rape_hembra", **RAPE, "idle": "float", "fase": 0, "z": 2,
+        {"a": "halo_celeste", "s": .35, "alpha": .9, "z": 4, "idle": "latido", "fase": 0,
+         "sigue": {"id": "rape", "punto": SENUELO}},
+        {"a": "rape_hembra", **RAPE, "id": "rape", "idle": "float", "fase": 0, "z": 2,
          "swaps": [{"at": "b11:parte", "a": "rape_hembra_feliz", "fx": "punch"}]},
-        {"a": "rape_macho_1", "x": PANZA[0], "y": PANZA[1], "s": .8, "z": 6,
+        {"a": "rape_macho_1", "x": PANZA[0], "y": PANZA[1], "s": .8, "z": 6, "sigue": {"id": "rape", "punto": PANZA_L},
          "swaps": [{"at": "b11:funden", "a": "rape_macho_2", "fx": "punch"},
                    {"at": "b11:ojos", "a": "rape_macho_3", "fx": "punch"},
                    {"at": "b11:órganos", "a": "rape_macho_4", "fx": "punch"}]},
@@ -266,7 +280,10 @@ escenas.append({
         {"a": "cangrejo_yeti_baila_a", "x": 250, "y": 1060, "s": .6, "in": "b12:cuál", "fx_in": "pop", "idle": "sway",
          "loops": [{"frames": ["cangrejo_yeti_baila_a", "cangrejo_yeti_baila_b"], "fps": 3, "from": "b12", "to": "fin"}]},
         {"a": "calamar_vampiro_brilla", "x": 540, "y": 780, "s": .55, "in": "b12:cuál+0.12", "fx_in": "pop", "idle": "float"},
-        {"a": "rape_hembra_feliz", "x": 800, "y": 1000, "s": .5, "in": "b12:cuál+0.24", "fx_in": "pop", "idle": "float"},
+        {"a": "rape_hembra_feliz", "id": "rape", "x": 800, "y": 1000, "s": .5, "in": "b12:cuál+0.24", "fx_in": "pop",
+         "idle": "float"},
+        {"a": "halo_celeste", "s": .16, "alpha": .9, "in": "b12:cuál+0.24", "fx_in": "pop", "sfx": "none", "idle": "latido",
+         "sigue": {"id": "rape", "punto": SENUELO}},
         {"a": "batiscafo_pensando", "x": 540, "y": 1270, "s": .7, "in": "b12", "fx_in": "slide_up", "idle": "float", "blink": True,
          "swaps": [{"at": f"{FIN}+1.2", "a": "batiscafo_contento", "fx": "punch"}]},
         {"texto": {"t": "?", "estilo": "pregunta"}, "x": 740, "y": 1230, "r": 12, "in": "b12:extraterrestre", "fx_in": "pop",

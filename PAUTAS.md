@@ -53,6 +53,11 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   se agacha solo cuando habla el narrador (ducking). **Nunca ruido ni tonos continuos**: debajo de la
   voz se escuchan como un siseo molesto. `revisar.py` avisa si el piso de efectos+ambiente pasa -58 dB.
 - Las capas de primer plano van por delante de los personajes (z 12-16) pero detrás de los carteles (z 20+).
+- Toda luz va pegada a lo que la genera (halo del señuelo, haz de la lámpara, brillo de una antorcha):
+  `"sigue": {"id": ..., "punto": [x, y del dibujo]}`, así acompaña el idle, los movimientos y la escala. Lo
+  mismo para lo que queda pegado a un personaje (el macho del rape). `revisar.py` avisa las luces sueltas.
+- Humo, gas y burbujas nacen de su fuente (boca de la chimenea): partículas con zona angosta sobre la
+  boca, `"desvanece"` y `"crece"`; con `"continuo"` siguen igual en los cortes dentro del mismo lugar.
 - La cámara siempre "respira" (zoom lento) y se usa para contar: primer plano de un detalle (el ojo),
   acercarse a la acción (el pico), alejarse para revelar (de la cara al bosque de noche).
 - Cambios de momento dentro del mismo lugar con fundidos (día → noche: el fondo de día se desvanece).
@@ -127,3 +132,5 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 
 - 2026-10-25 · aves · "Ruido de fondo perjudicial": el ambiente tenía ruido y tonos continuos (piso
   -40 dB) → ambiente de eventos sueltos + ducking bajo la voz (piso -63 dB) y chequeo en `revisar.py`.
+- 2026-10-25 · océano · "Las luces están separadas de los generadores": halos y haces quedaban fijos mientras
+  su fuente flotaba, y el gas salía de cualquier lado → `"sigue"` en el motor, gas desde las bocas, chequeo.

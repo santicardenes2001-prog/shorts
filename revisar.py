@@ -11,6 +11,8 @@ Cada chequeo sale de una corrección real (ver PAUTAS.md). Avisa, no corrige:
   - ruido de fondo continuo en efectos + ambiente (se escucha como un siseo debajo de la voz)
   - personajes/objetos que desaparecen de golpe en un corte cuando el lugar (fondo) sigue igual
     (no se revisan los cortes tapados por una cortina ni las escenas con "transicion": "...")
+  - luces (halo_*, rayo_luz, destello) sobre un personaje que se mueve, sin "sigue": quedan separadas
+    de su fuente (señuelo, lámpara); si la luz se suelta a propósito (una nube que queda), "suelta": true
 """
 import argparse
 import os
@@ -63,6 +65,19 @@ def es_texto(el):
     return isinstance(el.asset, dict)
 
 
+LUCES = ("halo_", "rayo_luz", "destello")
+MOVIMIENTO = {"float", "bob", "sway", "wiggle", "work", "vaiven", "shake", "spin"}   # "breathe" casi no mueve
+
+
+def es_luz(el):
+    return isinstance(el.asset, str) and el.asset.startswith(LUCES) and not el.sigue and not el.sp.get("suelta")
+
+
+def se_mueve(el):
+    return (any(i["fx"] in MOVIMIENTO for i in el.idle)
+            or any(k in ("x", "y", "r", "s") for key in el.keys for k in key))
+
+
 def nombre(el):
     return ("«" + el.asset["t"].replace("\n", " ") + "»") if es_texto(el) else el.asset
 
@@ -90,6 +105,18 @@ def revisar(path):
             if b:
                 vis.append((el, b))
         textos = [(el, b) for el, b in vis if es_texto(el)]
+        for el, b in vis:
+            if es_luz(el):
+                # la fuente de la luz es su ancla (centro del halo, origen del haz), no el centro del dibujo
+                ax, ay = anchor_of(el.sp, el.asset)
+                px, py = b[0] + ax * (b[2] - b[0]), b[1] + ay * (b[3] - b[1])
+                for e2, b2 in vis:
+                    if e2 is not el and not es_texto(e2) and not es_luz(e2) and se_mueve(e2) \
+                            and not str(e2.asset).startswith(("capa", "fondo", "cortina")) \
+                            and b2[0] <= px <= b2[2] and b2[1] <= py <= b2[3] and e2.z < el.z + 50:
+                        avisar(f"[{sc.get('nombre', si)}] {el.asset} está sobre {e2.asset}, que se mueve, pero no lo "
+                               f"sigue: usar \"sigue\": {{\"id\", \"punto\"}} (o \"suelta\": true)", t)
+                        break
         pers = [(el, b) for el, b in textos if el in proj.persist]
         for i, (e1, b1) in enumerate(textos):
             esc = sc.get("nombre", si)

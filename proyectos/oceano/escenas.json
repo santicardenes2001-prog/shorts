@@ -400,7 +400,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -450,17 +451,23 @@
     },
     {
      "a": "halo_celeste",
-     "x": 800,
-     "y": 800,
      "s": 0.7,
      "alpha": 0.5,
      "in": "b0:animales",
      "fx_in": "fade",
      "idle": "latido",
+     "sigue": {
+      "id": "vamp",
+      "punto": [
+       260,
+       320
+      ]
+     },
      "fx_out": "fade"
     },
     {
      "a": "calamar_vampiro_brilla",
+     "id": "vamp",
      "x": 800,
      "y": 800,
      "s": 0.6,
@@ -483,6 +490,7 @@
     },
     {
      "a": "rape_hembra",
+     "id": "rape",
      "x": 760,
      "y": 1210,
      "s": 0.55,
@@ -490,6 +498,23 @@
      "fx_in": "fade",
      "dur_in": 0.6,
      "idle": "float",
+     "fx_out": "fade"
+    },
+    {
+     "a": "halo_celeste",
+     "s": 0.18,
+     "alpha": 0.9,
+     "in": "b0:profundo",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "idle": "latido",
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       640,
+       70
+      ]
+     },
      "fx_out": "fade"
     },
     {
@@ -579,7 +604,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -603,45 +629,129 @@
     {
      "particulas": {
       "a": "humo_toxico",
-      "n": 6,
+      "n": 3,
       "semilla": 2,
       "zona": [
-       120,
-       300,
-       980,
-       1100
+       178,
+       480,
+       222,
+       910
       ],
       "vx": [
-       -10,
-       10
+       0,
+       0
       ],
       "vy": [
-       -90,
-       -50
+       -95,
+       -60
       ],
       "s": [
-       0.5,
-       1.2
+       0.45,
+       0.7
       ],
       "alpha": [
        0.4,
        0.8
       ],
       "ondula": [
-       20,
-       0.4
-      ]
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
      },
      "in": "esc",
      "fx_in": "fade",
      "dur_in": 1.0,
-     "z": 2
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 3,
+      "semilla": 3,
+      "zona": [
+       858,
+       240,
+       902,
+       670
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 3,
+      "semilla": 4,
+      "zona": [
+       538,
+       670,
+       582,
+       1010
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
     },
     {
      "a": "batiscafo_neutral",
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5,
@@ -659,9 +769,9 @@
     },
     {
      "a": "rayo_luz",
-     "x": 247.2,
+     "x": 243.60000000000002,
      "y": 718.0,
-     "r": 55.9,
+     "r": 55.5,
      "s": 0.75,
      "alpha": 0.55,
      "z": -1,
@@ -670,6 +780,13 @@
       "fuerza": 0.25
      },
      "fase": 0,
+     "sigue": {
+      "id": "bati",
+      "punto": [
+       428,
+       250
+      ]
+     },
      "keys": [
       {
        "at": "b2:oscuridad",
@@ -847,7 +964,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -859,82 +977,249 @@
     {
      "particulas": {
       "a": "humo_toxico",
-      "n": 6,
+      "n": 3,
       "semilla": 2,
       "zona": [
-       120,
-       300,
-       980,
-       1100
+       178,
+       480,
+       222,
+       910
       ],
       "vx": [
-       -10,
-       10
+       0,
+       0
       ],
       "vy": [
-       -90,
-       -50
+       -95,
+       -60
       ],
       "s": [
-       0.5,
-       1.2
+       0.45,
+       0.7
       ],
       "alpha": [
        0.4,
        0.8
       ],
       "ondula": [
-       20,
-       0.4
-      ]
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
      },
      "in": "esc",
      "fx_in": "fade",
      "dur_in": 1.0,
-     "z": 2
+     "z": -0.5
     },
     {
      "particulas": {
       "a": "humo_toxico",
-      "n": 14,
+      "n": 3,
       "semilla": 3,
       "zona": [
-       120,
-       300,
-       980,
-       1100
+       858,
+       240,
+       902,
+       670
       ],
       "vx": [
-       -10,
-       10
+       0,
+       0
       ],
       "vy": [
-       -90,
-       -50
+       -95,
+       -60
       ],
       "s": [
-       0.5,
-       1.2
+       0.45,
+       0.7
       ],
       "alpha": [
        0.4,
        0.8
       ],
       "ondula": [
-       20,
-       0.4
-      ]
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 3,
+      "semilla": 4,
+      "zona": [
+       538,
+       670,
+       582,
+       1010
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.4,
+       0.8
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "esc",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 4,
+      "semilla": 7,
+      "zona": [
+       178,
+       480,
+       222,
+       910
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.6,
+       0.95
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
      },
      "in": "b3:gases",
      "fx_in": "fade",
      "dur_in": 1.0,
-     "z": 2
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 4,
+      "semilla": 8,
+      "zona": [
+       858,
+       240,
+       902,
+       670
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.6,
+       0.95
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "b3:gases",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
+    },
+    {
+     "particulas": {
+      "a": "humo_toxico",
+      "n": 4,
+      "semilla": 9,
+      "zona": [
+       538,
+       670,
+       582,
+       1010
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -95,
+       -60
+      ],
+      "s": [
+       0.45,
+       0.7
+      ],
+      "alpha": [
+       0.6,
+       0.95
+      ],
+      "ondula": [
+       18,
+       0.3
+      ],
+      "desvanece": true,
+      "crece": 2.2,
+      "continuo": true
+     },
+     "in": "b3:gases",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": -0.5
     },
     {
      "a": "batiscafo_pensando",
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5,
@@ -948,9 +1233,9 @@
     },
     {
      "a": "rayo_luz",
-     "x": 247.2,
+     "x": 243.60000000000002,
      "y": 718.0,
-     "r": 55.9,
+     "r": 55.5,
      "s": 0.75,
      "alpha": 0.55,
      "z": -1,
@@ -959,6 +1244,13 @@
       "fuerza": 0.25
      },
      "fase": 0,
+     "sigue": {
+      "id": "bati",
+      "punto": [
+       428,
+       250
+      ]
+     },
      "keys": [
       {
        "at": "b4:bacterias",
@@ -1146,7 +1438,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -1160,23 +1453,31 @@
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5
     },
     {
      "a": "rayo_luz",
-     "x": 247.2,
+     "x": 243.60000000000002,
      "y": 718.0,
-     "r": 40.0,
-     "s": 0.47,
+     "r": 39.6,
+     "s": 0.48,
      "alpha": 0.55,
      "z": -1,
      "idle": {
       "fx": "latido",
       "fuerza": 0.25
      },
-     "fase": 0
+     "fase": 0,
+     "sigue": {
+      "id": "bati",
+      "punto": [
+       428,
+       250
+      ]
+     }
     },
     {
      "a": "calamar_vampiro",
@@ -1327,7 +1628,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -1341,6 +1643,7 @@
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5,
@@ -1359,17 +1662,24 @@
     },
     {
      "a": "rayo_luz",
-     "x": 247.2,
+     "x": 243.60000000000002,
      "y": 718.0,
-     "r": 40.0,
-     "s": 0.47,
+     "r": 39.6,
+     "s": 0.48,
      "alpha": 0.55,
      "z": -1,
      "idle": {
       "fx": "latido",
       "fuerza": 0.25
      },
-     "fase": 0
+     "fase": 0,
+     "sigue": {
+      "id": "bati",
+      "punto": [
+       428,
+       250
+      ]
+     }
     },
     {
      "a": "calamar_vampiro",
@@ -1450,6 +1760,7 @@
      "in": "b8:nube",
      "z": 3,
      "sfx": "none",
+     "suelta": true,
      "keys": [
       {
        "at": "b8:nube",
@@ -1616,7 +1927,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -1630,27 +1942,34 @@
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5
     },
     {
      "a": "halo_celeste",
-     "x": 819.0,
-     "y": 747.0,
      "s": 0.35,
      "alpha": 0.9,
      "in": "b9:rape",
      "fx_in": "fade",
      "z": 4,
      "idle": "latido",
-     "fase": 0
+     "fase": 0,
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       640,
+       70
+      ]
+     }
     },
     {
      "a": "rape_hembra",
      "x": 500,
      "y": 1000,
      "s": 1.1,
+     "id": "rape",
      "alpha": 0,
      "idle": "float",
      "fase": 0,
@@ -1681,16 +2000,32 @@
     },
     {
      "a": "rape_macho_0",
-     "x": 960,
-     "y": 560,
+     "x": 542.0,
+     "y": 1242.0,
      "s": 0.8,
      "in": "b10:difícil",
      "fx_in": "fade",
      "z": 6,
-     "idle": "bob",
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       388.1818181818182,
+       520
+      ]
+     },
+     "idle": {
+      "fx": "bob",
+      "to": "b10:muerde-0.35"
+     },
      "keys": [
       {
        "at": "b10:difícil",
+       "dur": 0.001,
+       "x": 960,
+       "y": 560
+      },
+      {
+       "at": "b10:difícil+0.01",
        "dur": 1.6,
        "x": 760,
        "y": 640,
@@ -1863,7 +2198,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -1877,6 +2213,7 @@
      "x": 150,
      "y": 700,
      "s": 0.45,
+     "id": "bati",
      "idle": "float",
      "fase": 0,
      "z": 5,
@@ -1894,19 +2231,25 @@
     },
     {
      "a": "halo_celeste",
-     "x": 819.0,
-     "y": 747.0,
      "s": 0.35,
      "alpha": 0.9,
      "z": 4,
      "idle": "latido",
-     "fase": 0
+     "fase": 0,
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       640,
+       70
+      ]
+     }
     },
     {
      "a": "rape_hembra",
      "x": 500,
      "y": 1000,
      "s": 1.1,
+     "id": "rape",
      "idle": "float",
      "fase": 0,
      "z": 2,
@@ -1924,6 +2267,13 @@
      "y": 1242.0,
      "s": 0.8,
      "z": 6,
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       388.1818181818182,
+       520
+      ]
+     },
      "swaps": [
       {
        "at": "b11:funden",
@@ -2058,7 +2408,8 @@
       "ondula": [
        10,
        0.2
-      ]
+      ],
+      "continuo": true
      },
      "z": 13
     },
@@ -2113,12 +2464,29 @@
     },
     {
      "a": "rape_hembra_feliz",
+     "id": "rape",
      "x": 800,
      "y": 1000,
      "s": 0.5,
      "in": "b12:cuál+0.24",
      "fx_in": "pop",
      "idle": "float"
+    },
+    {
+     "a": "halo_celeste",
+     "s": 0.16,
+     "alpha": 0.9,
+     "in": "b12:cuál+0.24",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "latido",
+     "sigue": {
+      "id": "rape",
+      "punto": [
+       640,
+       70
+      ]
+     }
     },
     {
      "a": "batiscafo_pensando",

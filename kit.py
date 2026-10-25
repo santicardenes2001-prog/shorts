@@ -2445,7 +2445,7 @@ def fondo_lecho():
     """Fondo marino con fumarolas (chimeneas que largan gases), tapetes de bacterias y gusanos de tubo."""
     body, defs = fondo_abismo()
     s = [body]
-    for x, h, w in [(200, 520, 110), (880, 640, 130), (560, 300, 80)]:   # chimeneas
+    for x, h, w in [(200, 400, 110), (880, 640, 130), (560, 300, 80)]:   # chimeneas
         s.append(ln(f"M {x - w} 1300 L {x - w * .6:.0f} {1300 - h} Q {x} {1280 - h} {x + w * .6:.0f} {1300 - h} L {x + w} 1300 Z",
                     SW, INK, "#2A2624"))
         for k in range(4):
