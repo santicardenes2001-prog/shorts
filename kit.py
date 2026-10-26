@@ -97,6 +97,10 @@ def eye(cx, cy, kind, look, side):
                              f"L {cx+40*math.cos(a+.2):.0f} {cy-6+44*math.sin(a+.2):.0f}", 3, P["rojo"])
                           for a in (0.3, 1.2, 2.3, 3.4, 4.4, 5.6))
                 + f'<circle cx="{cx}" cy="{cy-6}" r="9" fill="{INK}"/>')
+    if kind == "hueco":       # cuenca vacía
+        return (f'<ellipse cx="{cx}" cy="{cy}" rx="40" ry="46" fill="#3A0E14" stroke="{INK}" stroke-width="7"/>'
+                f'<ellipse cx="{cx}" cy="{cy+8}" rx="26" ry="28" fill="#1A0508"/>'
+                + ln(f"M {cx-6} {cy+44} Q {cx-8} {cy+70} {cx-2} {cy+86}", 9, "#C0142C"))
     raise ValueError(kind)
 
 
@@ -754,7 +758,7 @@ def gota_sudor(x, y, k=1.0):
             + ln("M -7 30 Q -7 22 -2 16", 4, "#fff") + '</g>')
 
 
-def preso(eyes="wide", brows="miedo", mouth_kind="wavy", arm_kind="down", sudor=False):
+def preso(eyes="wide", brows="miedo", mouth_kind="wavy", arm_kind="down", sudor=False, tobillos=False):
     """Prisionero: túnica de arpillera rota, descalzo, pelo revuelto (lienzo 520x820 como Vos)."""
     s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
     front, back = arms(arm_kind, P["arpillera"])
@@ -770,6 +774,8 @@ def preso(eyes="wide", brows="miedo", mouth_kind="wavy", arm_kind="down", sudor=
     s.append(ln("M 292 628 L 300 636 M 312 626 L 318 636", 3))
     s.append(ln("M 224 462 Q 260 494 296 462", 6))
     s.append(stroke_path("M 156 590 Q 260 610 364 590", P["madera2"], 12))
+    if tobillos:              # tobillos atados
+        s.append(stroke_path("M 198 752 Q 260 766 322 752", "#C79A5B", 12))
     if arm_kind == "atado":   # sogas que lo atan al poste
         for y in (530, 580):
             s.append(stroke_path(f"M 140 {y} Q 260 {y+22} 380 {y}", "#C79A5B", 14))
@@ -791,8 +797,8 @@ def build_preso():
     for name, kw in PRESO_VARIANTS.items():
         add(name, 520, 820, preso(**kw), anchor=(0.5, 1.0))
     # colgado: lienzo más alto con la soga hacia arriba; ancla en los pies
-    for name, kw in [("preso_colgado", dict(sudor=True)),
-                     ("preso_colgado_grito", dict(eyes="pain", brows="dolor", mouth_kind="scream"))]:
+    for name, kw in [("preso_colgado", dict(sudor=True, tobillos=True)),
+                     ("preso_colgado_grito", dict(eyes="pain", brows="dolor", mouth_kind="scream", tobillos=True))]:
         hgt = 820 + CUERDA
         body = (stroke_path(f"M 260 30 L 260 {-CUERDA}", "#C79A5B", 14)
                 + preso(arm_kind="colgado", **kw))
@@ -884,17 +890,39 @@ def polea():
 
 
 def garra(roja=False):
-    """Garra de gato: mango de madera y cuatro uñas de hierro curvas (lienzo 560x340)."""
-    met, met2 = ("#FF6A2B", "#FFB347") if roja else (P["hierro"], "#C3CAD6")
-    s = [f'<rect x="20" y="148" width="210" height="44" rx="20" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>',
-         ln("M 50 160 Q 120 154 200 162", 4, P["madera2"]) + ln("M 60 180 Q 130 176 210 182", 4, P["madera2"]),
-         f'<rect x="214" y="138" width="40" height="64" rx="8" fill="{met}" stroke="{INK}" stroke-width="{SW}"/>']
-    claw = "M 250 156 Q 410 120 480 176 Q 500 196 492 228 Q 470 196 430 186 Q 360 174 250 186 Z"
-    for ang in (-30, -10, 10, 30):
-        s.append(f'<g transform="rotate({ang} 250 170)">' + ln(claw, 6, INK, met)
-                 + ln("M 300 160 Q 400 140 460 176", 5, met2) + '</g>')
-    s.append(f'<circle cx="262" cy="170" r="34" fill="{met}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(f'<circle cx="262" cy="170" r="10" fill="{INK}"/>')
+    """Garra de gato (de costado): mango largo de madera y cuatro uñas de hierro del tamaño
+    de un dedo, curvas como las de un gato (lienzo 600x340, ancla en la palma)."""
+    met, met2, met3 = ("#FF6A2B", "#FFC27A", "#D9471A") if roja else (P["hierro"], "#C3CAD6", P["hierro2"])
+    s = [f'<rect x="4" y="148" width="320" height="38" rx="18" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>',
+         ln("M 30 160 Q 150 154 300 162", 4, P["madera2"]) + ln("M 40 176 Q 170 172 310 176", 4, P["madera2"]),
+         f'<rect x="300" y="138" width="44" height="58" rx="8" fill="{met3}" stroke="{INK}" stroke-width="{SW}"/>']
+    claw = "M 0 -13 C 90 -32, 172 -20, 192 40 L 184 84 C 172 34, 120 8, 0 13 Z"
+    for i, y in enumerate((104, 140, 176, 212)):
+        fill = met3 if i < 2 else met
+        s.append(f'<g transform="translate({352 + i * 12} {y}) scale({0.9 + 0.035 * i})">' + ln(claw, 6, INK, fill)
+                 + ln("M 30 -10 Q 120 -20 166 18", 5, met2, extra='opacity=".8"') + '</g>')
+    s.append(ln("M 330 100 Q 370 76 404 110 L 410 228 Q 374 256 330 230 Z", SW, INK, met))
+    s.append(f'<circle cx="368" cy="166" r="11" fill="{met3}" stroke="{INK}" stroke-width="4"/>')
+    return "".join(s)
+
+
+GARRA_PUNTAS = [166, 202, 238, 274]   # x de las 4 puntas en garra_frente (separadas como las heridas)
+
+
+def garra_frente(roja=False):
+    """Garra vista desde atrás del verdugo: mango en diagonal y las 4 uñas abiertas
+    hacia abajo (lienzo 440x460, ancla en la línea de las puntas)."""
+    met, met2, met3 = ("#FF6A2B", "#FFC27A", "#D9471A") if roja else (P["hierro"], "#C3CAD6", P["hierro2"])
+    s = [stroke_path("M 10 10 L 200 236", P["madera"], 34),
+         ln("M 30 40 L 170 206", 4, P["madera2"])]
+    for tx in GARRA_PUNTAS:
+        bx = 220 + (tx - 220) * .75
+        d = (f"M {bx-15} 270 C {bx-16} 340, {tx-14} 380, {tx} 432 C {tx+6} 392, {bx+18} 340, {bx+15} 270 Z")
+        s.append(ln(d, 6, INK, met))
+        s.append(ln(f"M {bx-5} 286 C {bx-6} 340, {tx-6} 380, {tx} 420", 4, met2, extra='opacity=".8"'))
+    s.append(f'<ellipse cx="220" cy="262" rx="88" ry="34" fill="{met3}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="188" y="214" width="56" height="44" rx="10" fill="{met}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 150 256 Q 220 244 290 256", 5, met2, extra='opacity=".7"'))
     return "".join(s)
 
 
@@ -958,6 +986,181 @@ def costillas_burbuja():
 def diente():
     return ln("M 12 10 Q 30 0 48 10 Q 54 30 44 46 L 40 66 Q 34 70 32 50 L 28 50 Q 26 70 20 66 L 16 46 Q 6 30 12 10 Z",
               5, INK, "#fff")
+
+
+# ---------------------------------------------------------------- preso de espaldas (garra de gato)
+SANGRE, SANGRE2, CARNE = "#C0142C", "#6E0B18", "#D9505C"
+HERIDAS_X = [206, 242, 278, 314]    # cuatro surcos, separados como las uñas de garra_frente
+HERIDA_Y0, HERIDA_LARGO = 480, 210
+ESP_PIES = 886      # alto del preso de espaldas (torso más largo que el resto)
+
+
+def surcos(frac):
+    """Los 4 surcos de la garra, de largo frac (0-1)."""
+    out = []
+    for i, x in enumerate(HERIDAS_X):
+        y1 = HERIDA_Y0 + HERIDA_LARGO * frac
+        w = 4 if i % 2 else -4
+        out.append(stroke_path(f"M {x} {HERIDA_Y0} Q {x+w} {(HERIDA_Y0+y1)/2:.0f} {x+w/2:.0f} {y1:.0f}", SANGRE, 11, SANGRE2, 17))
+        if frac >= 1:
+            out.append(ln(f"M {x+w/2:.0f} {y1:.0f} L {x+w/2:.0f} {y1+26+8*i:.0f}", 6, SANGRE))
+            out.append(f'<circle cx="{x+w/2:.0f}" cy="{y1+30+8*i:.0f}" r="6" fill="{SANGRE}"/>')
+    return "".join(out)
+
+
+def espalda_desgarrada():
+    """Carne arrancada entre los surcos con las costillas a la vista (caricatura)."""
+    rnd = random.Random(9)
+    pts = []
+    cx, cy = 260, 590
+    for i in range(22):
+        a = i * 2 * math.pi / 22
+        rx, ry = 96 * rnd.uniform(.88, 1.06), 92 * rnd.uniform(.86, 1.08)
+        pts.append(f"{cx + rx*math.cos(a):.0f} {cy + ry*math.sin(a):.0f}")
+    hole = "M " + " L ".join(pts) + " Z"
+    s = [f'<clipPath id="hueco"><path d="{hole}"/></clipPath>', ln(hole, 0, "none", SANGRE2),
+         '<g clip-path="url(#hueco)">']
+    for y in range(490, 700, 16):
+        s.append(ln(f"M 150 {y} Q 260 {y+14} 370 {y}", 6, CARNE, extra='opacity=".75"'))
+    for y in (512, 548, 584, 620, 656):
+        s.append(stroke_path(f"M 254 {y} Q 222 {y-8} 176 {y+14}", P["hueso"], 13, INK, 21))
+        s.append(stroke_path(f"M 266 {y} Q 298 {y-8} 344 {y+14}", P["hueso"], 13, INK, 21))
+    for y in range(494, 690, 26):
+        s.append(f'<rect x="248" y="{y}" width="24" height="18" rx="6" fill="{P["hueso"]}" stroke="{INK}" stroke-width="4"/>')
+    s.append('</g>')
+    s.append(ln(hole, 7, SANGRE2))
+    # jirones de piel en el borde
+    for i in range(0, 22, 3):
+        a = i * 2 * math.pi / 22
+        x, y = cx + 94 * math.cos(a), cy + 90 * math.sin(a)
+        dx, dy = -math.cos(a) * 22, -math.sin(a) * 22
+        s.append(ln(f"M {x-8:.0f} {y:.0f} L {x+dx:.0f} {y+dy:.0f} L {x+8:.0f} {y:.0f} Z", 4, INK, "#F2B28E"))
+    for x, l in [(214, 50), (252, 74), (300, 60), (330, 36)]:
+        s.append(ln(f"M {x} 676 L {x} {676+l}", 7, SANGRE) + f'<circle cx="{x}" cy="{680+l}" r="7" fill="{SANGRE}"/>')
+    return "".join(s)
+
+
+def preso_espalda(herida=0.0, desgarrada=False):
+    """Preso colgado de las muñecas, visto de espaldas y con la espalda al aire."""
+    s = []
+    # brazos (detrás de la cabeza) y manos atadas arriba
+    for d, h in [("M 172 494 Q 112 300 240 34", (244, 30)), ("M 348 494 Q 408 300 280 34", (276, 30))]:
+        s.append(stroke_path(d, P["piel"], 30))
+        s.append(f'<circle cx="{h[0]}" cy="{h[1]}" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append("".join(ln(f"M 226 {y} L 294 {y+8}", 9, P["madera2"]) for y in (14, 34)))
+    # piernas, pies (talones) y tobillos atados
+    for x in (212, 266):
+        s.append(f'<rect x="{x}" y="770" width="42" height="104" rx="20" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (233, 287):
+        s.append(f'<ellipse cx="{x}" cy="880" rx="24" ry="16" fill="{P["piel2"]}" stroke="{INK}" stroke-width="6"/>')
+    s.append(stroke_path("M 200 840 Q 260 854 320 840", "#C79A5B", 12))
+    # pantalón de arpillera
+    s.append(ln("M 164 706 L 356 706 L 362 796 L 338 778 L 316 802 L 292 780 L 270 804 L 250 780 L 228 802 L 206 778 L 184 800 L 158 782 Z",
+                SW, INK, P["arpillera"]))
+    s.append(stroke_path("M 160 714 Q 260 728 360 714", P["madera2"], 12))
+    # espalda desnuda
+    s.append(f'<circle cx="160" cy="496" r="34" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="360" cy="496" r="34" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 140 520 Q 140 458 210 450 L 310 450 Q 380 458 380 520 L 358 714 Q 260 728 162 714 Z", SW, INK, P["piel"]))
+    s.append(ln("M 190 500 Q 210 560 248 572 M 330 500 Q 310 560 272 572", 6, P["piel2"]))
+    s.append(ln("M 260 470 L 260 690", 5, P["piel2"]))
+    if desgarrada:
+        s.append(espalda_desgarrada())
+    if herida > 0:
+        s.append(surcos(herida))
+    # cabeza de atrás: orejas, nuca y pelo revuelto
+    for x in (92, 428):
+        s.append(f'<circle cx="{x}" cy="296" r="30" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="226" y="380" width="68" height="84" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="260" cy="270" r="172" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    hair = ("M 92 318 C 50 200, 120 70, 260 64 C 400 70, 470 200, 428 318 L 404 360 L 384 340 L 360 384 L 330 356 "
+            "L 300 396 L 272 362 L 246 398 L 218 360 L 190 392 L 162 354 L 138 372 L 118 340 Z")
+    s.append(ln(hair, SW, INK, "#5A4433"))
+    s.append(ln("M 150 160 Q 200 120 240 140 M 290 110 Q 330 130 340 180 M 200 260 Q 240 240 270 270 "
+                "M 300 300 Q 340 280 370 300", 6, "#3E2E22"))
+    return "".join(s)
+
+
+def trozo_carne(seed):
+    rnd = random.Random(seed)
+    pts = []
+    for i in range(9):
+        a = i * 2 * math.pi / 9
+        r = 40 * rnd.uniform(.7, 1.15)
+        pts.append(f"{60 + r*math.cos(a):.0f} {50 + r*.8*math.sin(a):.0f}")
+    d = "M " + " L ".join(pts) + " Z"
+    return (ln(d, 6, INK, CARNE) + ln("M 36 44 Q 60 30 84 48", 7, "#F6C9C9")
+            + ln("M 40 62 Q 60 70 80 60", 5, SANGRE2))
+
+
+def gota_sangre():
+    return f'<g transform="translate(20 4)">{ln(SUDOR, 5, INK, SANGRE)}' + ln("M -7 30 Q -7 22 -2 16", 4, "#FF8A8A") + '</g>'
+
+
+def ojo_volador():
+    """Globo ocular con el nervio colgando (lienzo 220x130, ancla en el centro del ojo)."""
+    return (stroke_path("M 10 64 Q 40 30 70 70 Q 90 96 112 66", "#FF8FA8", 12, INK, 20)
+            + f'<circle cx="160" cy="64" r="54" fill="#fff" stroke="{INK}" stroke-width="7"/>'
+            + "".join(ln(f"M {160+50*math.cos(a):.0f} {64+50*math.sin(a):.0f} L {160+28*math.cos(a+.25):.0f} {64+28*math.sin(a+.25):.0f}", 3, SANGRE)
+                      for a in (2.0, 2.6, 3.2, 3.8, 4.4, 1.4))
+            + f'<circle cx="176" cy="64" r="24" fill="#5C9BD6" stroke="{INK}" stroke-width="5"/>'
+            f'<circle cx="180" cy="64" r="11" fill="{INK}"/><circle cx="172" cy="56" r="5" fill="#fff"/>')
+
+
+def explosion(k):
+    """Estallido de caricatura; k=0..3 crece y se deshace."""
+    rnd = random.Random(30 + k)
+    R = [150, 250, 300, 280][k]
+    out = []
+    for (r, col) in [(R, "#E8432E"), (R * .72, "#FF8A2B"), (R * .45, "#FFD23F"), (R * .2, "#FFF6D6")]:
+        n = 14
+        pts = []
+        for i in range(2 * n):
+            a = i * math.pi / n + k * .2
+            rr = r * (1 if i % 2 == 0 else .62) * rnd.uniform(.88, 1.08)
+            pts.append(f"{320 + rr*math.cos(a):.0f} {320 + rr*math.sin(a):.0f}")
+        out.append(ln("M " + " L ".join(pts) + " Z", 7 if r == R else 0, INK, col))
+    if k >= 2:   # humo que se abre
+        for i in range(8):
+            a = i * math.pi / 4 + .3
+            out.append(f'<circle cx="{320 + R*.9*math.cos(a):.0f}" cy="{320 + R*.9*math.sin(a):.0f}" r="{30 + 10*k}" '
+                       f'fill="#8B8794" stroke="{INK}" stroke-width="6" opacity="{.9 if k == 2 else .7}"/>')
+    return "".join(out)
+
+
+def craneo_trozo(seed):
+    rnd = random.Random(seed)
+    pts = [f"{40 + 34*math.cos(a)*rnd.uniform(.6, 1.1):.0f} {36 + 28*math.sin(a)*rnd.uniform(.6, 1.1):.0f}"
+           for a in [i * 2 * math.pi / 6 for i in range(6)]]
+    d = "M " + " L ".join(pts) + " Z"
+    return ln(d, 6, INK, P["hueso"]) + ln("M 22 30 L 40 40 L 52 28", 4, "#D9C7A6") + ln(d, 0, "none", "none")
+
+
+def mechon():
+    return ln("M 10 70 L 20 20 L 34 50 L 44 6 L 56 46 L 72 14 L 76 66 Q 44 84 10 70 Z", 6, INK, "#5A4433")
+
+
+def salpicadura(seed):
+    rnd = random.Random(seed)
+    out = []
+    pts = []
+    for i in range(16):
+        a = i * 2 * math.pi / 16
+        r = 60 * (1 if i % 2 else rnd.uniform(.55, .8))
+        pts.append(f"{100 + r*math.cos(a):.0f} {100 + r*math.sin(a):.0f}")
+    out.append(ln("M " + " L ".join(pts) + " Z", 5, SANGRE2, SANGRE))
+    for i in range(6):
+        a = rnd.uniform(0, 2 * math.pi)
+        r = rnd.uniform(70, 92)
+        out.append(f'<circle cx="{100 + r*math.cos(a):.0f}" cy="{100 + r*math.sin(a):.0f}" r="{rnd.uniform(5, 10):.0f}" fill="{SANGRE}"/>')
+    return "".join(out)
+
+
+def viga():
+    return (f'<rect x="0" y="20" width="520" height="60" rx="10" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>'
+            + textura_madera(0, 24, 520, 76, 2, 12)
+            + f'<circle cx="260" cy="96" r="22" fill="none" stroke="{INK}" stroke-width="14"/>'
+            + f'<circle cx="260" cy="96" r="22" fill="none" stroke="{P["hierro"]}" stroke-width="6"/>')
 
 
 # Aplastacabezas en tres capas que encajan (lienzo base 700x900):
@@ -1062,8 +1265,8 @@ def build_torturas():
     add("piramide", 380, 560, piramide(), anchor=(0.5, 1.0))
     META["piramide_punta"] = [190, 24]
     add("polea", 360, 320, polea(), anchor=(128 / 360, 170 / 320))
-    add("garra", 560, 340, garra(), anchor=(0.25, 0.5))
-    add("garra_roja", 560, 340, garra(True), anchor=(0.25, 0.5))
+    add("garra", 640, 340, garra(), anchor=(368 / 640, 166 / 340))
+    add("garra_roja", 640, 340, garra(True), anchor=(368 / 640, 166 / 340))
     body, defs = resplandor("#FF7A1A")
     add("resplandor", 400, 400, body, defs)
     for f in (0, 1):
@@ -1077,6 +1280,27 @@ def build_torturas():
     for f in range(3):
         add(f"aplasta_tornillo_{f}", 400, 380, aplasta_tornillo(f), anchor=(0.5, 366 / 380))
     add("aplasta_icono", 700, 900, aplasta_icono(), anchor=(0.5, 1.0))
+    add("garra_frente", 440, 460, garra_frente(), anchor=(220 / 440, 432 / 460))
+    add("garra_frente_roja", 440, 460, garra_frente(True), anchor=(220 / 440, 432 / 460))
+    META["garra_puntas"] = GARRA_PUNTAS
+    hgt = 820 + CUERDA
+    esp = [("espalda", {})] + [(f"espalda_surcos_{i}", dict(herida=i / 4)) for i in range(1, 5)] \
+        + [("espalda_desgarrada", dict(herida=1, desgarrada=True))]
+    for name, kw in esp:
+        body = stroke_path(f"M 260 30 L 260 {-CUERDA}", "#C79A5B", 14) + preso_espalda(**kw)
+        add(name, 520, hgt + 80, f'<g transform="translate(0 {CUERDA})">{body}</g>', anchor=(0.5, (CUERDA + ESP_PIES) / (hgt + 80)))
+    META["espalda_heridas"] = {"x": HERIDAS_X, "y0": HERIDA_Y0, "largo": HERIDA_LARGO, "pies": ESP_PIES}
+    for i in range(3):
+        add(f"carne_{i}", 120, 100, trozo_carne(i + 4))
+        add(f"craneo_trozo_{i}", 80, 72, craneo_trozo(i + 8))
+        add(f"salpicadura_{i}", 200, 200, salpicadura(i + 2))
+    add("gota_sangre", 40, 60, gota_sangre())
+    add("ojo_volador", 220, 130, ojo_volador(), anchor=(160 / 220, 64 / 130))
+    add("cabeza_sin_ojos", 520, 470, cabeza_preso("hueco", "alto", "broken"), anchor=(0.5, 442 / 470))
+    for k in range(4):
+        add(f"explosion_{k}", 640, 640, explosion(k))
+    add("mechon", 86, 90, mechon())
+    add("viga", 520, 130, viga(), anchor=(0.5, 96 / 130))
     META["aplasta"] = APLASTA
     body, defs = fondo_mazmorra()
     add("fondo_mazmorra", W, H, body, defs)
