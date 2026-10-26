@@ -1328,34 +1328,23 @@ def tenedor():
     return "".join(s)
 
 
-def tenedor_clavado():
-    """Tenedor con las púas de arriba metidas en la garganta: la punta queda adentro,
-    con la herida en el borde y la sangre que baja por la barra y el pecho."""
-    base = tenedor()
-    out = [f'<clipPath id="tc"><rect x="0" y="22" width="120" height="150"/></clipPath>', f'<g clip-path="url(#tc)">{base}</g>']
+def tenedor_hundido():
+    """Tenedor al final: las púas de abajo hundidas en el pecho (con las heridas) y sangre
+    que baja desde el mentón por la barra. Las de arriba quedan tapadas por la cabeza."""
+    out = [f'<clipPath id="th"><rect x="0" y="0" width="120" height="140"/></clipPath>',
+           f'<g clip-path="url(#th)">{tenedor()}</g>']
     for x in (34, 86):
-        out.append(f'<ellipse cx="{x}" cy="22" rx="14" ry="7" fill="{SANGRE2}" stroke="{INK}" stroke-width="3"/>')
-        for dx, l in ((-5, 120), (3, 150), (8, 96)):
-            out.append(ln(f"M {x+dx} 26 Q {x+dx-3} {26 + l/2} {x+dx} {26 + l}", 6, SANGRE))
-            out.append(f'<circle cx="{x+dx}" cy="{30 + l}" r="5" fill="{SANGRE}"/>')
-    return "".join(out)
-
-
-def heridas_cuello():
-    """Garganta perforada (justo debajo del mentón), sangre por el cuello y por la boca."""
-    out = []
-    for x in (234, 286):
-        out.append(f'<ellipse cx="{x}" cy="458" rx="15" ry="8" fill="{SANGRE2}" stroke="{INK}" stroke-width="4"/>')
-        for dx, l in ((-6, 130), (5, 150)):
-            out.append(ln(f"M {x+dx} 462 Q {x+dx-4} {462 + l/2} {x+dx} {462 + l}", 9, SANGRE))
-    out.append(ln("M 290 410 Q 300 430 296 452", 8, SANGRE))
+        out.append(f'<ellipse cx="{x}" cy="140" rx="13" ry="6" fill="{SANGRE2}" stroke="{INK}" stroke-width="3"/>')
+        out.append(ln(f"M {x} 146 L {x + (-2 if x < 60 else 2)} 182", 6, SANGRE) + f'<circle cx="{x + (-2 if x < 60 else 2)}" cy="186" r="5" fill="{SANGRE}"/>')
+    for x, l in ((40, 100), (60, 130), (80, 90)):
+        out.append(ln(f"M {x} 4 Q {x-3} {4 + l/2} {x} {4 + l}", 6, SANGRE))
     return "".join(out)
 
 
 def preso_dos_sogas():
-    """Preso colgado de dos sogas con los brazos en Y. Sin cabeza ni cuello: la cabeza
-    (con su cuello) va en otra capa por detrás, así puede bajar sin despegarse.
-    Coordenadas como Vos (mentón en y=330); el lienzo agrega 60 px a cada lado."""
+    """Preso colgado de dos sogas con los brazos en Y y sin cabeza (va en otra capa, por
+    delante del tenedor). Mismas proporciones que el resto (mentón en y=442); el lienzo
+    agrega 60 px a cada lado para las manos."""
     s = []
     for x0, (hx, hy), ctrl in [(186, (10, 40), (40, 380)), (334, (510, 40), (480, 380))]:
         s.append(stroke_path(f"M {x0} 500 Q {ctrl[0]} {ctrl[1]} {hx} {hy}", P["piel"], 28))
@@ -1372,17 +1361,10 @@ def preso_dos_sogas():
     s.append(stroke_path("M 156 590 Q 260 610 364 590", P["madera2"], 12))
     for x in (186, 334):
         s.append(f'<circle cx="{x}" cy="500" r="30" fill="{P["arpillera"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    # correa del tenedor (abrocha el cuello, que está en la capa de atrás)
-    s.append(f'<rect x="218" y="398" width="84" height="26" rx="8" fill="{CUERO}" stroke="{INK}" stroke-width="5"/>')
-    s.append(f'<rect x="250" y="396" width="20" height="30" rx="4" fill="{P["amarillo"]}" stroke="{INK}" stroke-width="4"/>')
+    # cuello corto (queda casi todo detrás de la cabeza) y la correa del tenedor
+    s.insert(0, f'<rect x="232" y="380" width="56" height="90" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="214" y="452" width="92" height="20" rx="8" fill="{CUERO}" stroke="{INK}" stroke-width="5"/>')
     return "".join(s)
-
-
-def cabeza_con_cuello(eyes, brows, mouth_kind, extra=""):
-    """Cabeza del preso con un cuello largo que baja hasta el torso (lienzo 520x620, mentón en 442)."""
-    neck = (f'<rect x="228" y="400" width="64" height="210" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
-            + ln("M 246 560 L 246 600 M 274 560 L 274 600", 5, P["piel2"]))
-    return neck + cabeza_preso(eyes, brows, mouth_kind, extra)
 
 
 def prohibido():
@@ -1680,18 +1662,19 @@ def comentario():
 
 def build_torturas3():
     add("tenedor", 120, 170, tenedor(), anchor=(0.5, 2 / 170))
-    hgt = 960 + CUERDA
-    body = "".join(stroke_path(f"M {x} 20 L {x} {-140 - CUERDA}", SOGA, 14) for x in (10, 510)) + preso_dos_sogas()
-    add("preso_cuello", 640, hgt, f'<g transform="translate(60 {140 + CUERDA})">{body}</g>', anchor=(0.5, (140 + CUERDA + 806) / hgt))
-    META["preso_cuello"] = {"pies": 806, "menton": 330}
-    for name, (e, b, m, extra) in {"cuello_cansado": ("tired", "sad", "flat", ""),
-                                   "cuello_dormido": ("closed", "sad", "o", ""),
-                                   "cuello_sudor": ("wide", "miedo", "wavy", gota_sudor(410, 190)),
-                                   "cuello_grito": ("pain", "dolor", "scream", ""),
-                                   "cuello_clavado": ("bulge", "alto", "scream", "")}.items():
-        add(name, 520, 620, cabeza_con_cuello(e, b, m, extra) + (heridas_cuello() if name == "cuello_clavado" else ""),
-            anchor=(0.5, 442 / 620))
-    add("tenedor_clavado", 120, 170, tenedor_clavado(), anchor=(0.5, 2 / 170))
+    hgt = 860 + CUERDA
+    body = "".join(stroke_path(f"M {x} 20 L {x} {-40 - CUERDA}", SOGA, 14) for x in (10, 510)) + preso_dos_sogas()
+    add("preso_sogas", 640, hgt, f'<g transform="translate(60 {40 + CUERDA})">{body}</g>', anchor=(0.5, (40 + CUERDA + 806) / hgt))
+    META["preso_sogas"] = {"pies": 806, "menton": 442}
+    sangre_menton = (ln("M 296 404 Q 304 424 300 444", 8, SANGRE)
+                     + "".join(ln(f"M {x} 436 L {x} 452", 7, SANGRE) for x in (238, 282)))
+    add("cabeza_rendido", 520, 470, cabeza_preso("tired", "sad", "o", sangre_menton), anchor=(0.5, 442 / 470))
+    for name, (e, b, m, extra) in {"cabeza_cansado": ("tired", "sad", "flat", ""),
+                                   "cabeza_dormido": ("closed", "sad", "o", ""),
+                                   "cabeza_sudor": ("wide", "miedo", "wavy", gota_sudor(410, 190))}.items():
+        add(name, 520, 470, cabeza_preso(e, b, m, extra), anchor=(0.5, 442 / 470))
+    add("cabeza_pinchazo", 520, 470, cabeza_preso("wide", "alto", "o", gota_sudor(410, 190)), anchor=(0.5, 442 / 470))
+    add("tenedor_hundido", 120, 200, tenedor_hundido(), anchor=(0.5, 2 / 200))
     add("pantalla_roja", W, H, f'<rect width="{W}" height="{H}" fill="{SANGRE}"/>')
     add("potro_sangre", 700, 1100, potro_sangre())
     add("prohibido", 220, 220, prohibido())
