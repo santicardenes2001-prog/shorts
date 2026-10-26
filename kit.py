@@ -2316,6 +2316,705 @@ def cortina_burbujas():
     return "".join(s)
 
 
+# ---------------------------------------------------------------- personas reales (short "3 memes")
+# Caricaturas de figuras públicas: rasgos que las identifican (forma de cara, pelo, barba, anteojos,
+# ropa) en el mismo estilo plano del kit. Busto de 520x620 con ancla abajo; cabeza centrada en x=260.
+def ojo_c(cx, cy, kind="open", iris="#5B3A29", w=24, h=11, look=(0, 0), piel=None, uid="o"):
+    """Ojo de caricatura realista (almendra con iris), más chico que los de Vos."""
+    lx, ly = look
+    if kind == "closed":
+        return ln(f"M {cx - w} {cy} Q {cx} {cy + h * .9} {cx + w} {cy}", 6)
+    if kind == "happy":
+        return ln(f"M {cx - w} {cy + h * .4} Q {cx} {cy - h * 1.3} {cx + w} {cy + h * .4}", 6)
+    if kind == "wide":
+        w, h = w * 1.05, h * 1.6
+    alm = f"M {cx - w} {cy} Q {cx} {cy - h * 2} {cx + w} {cy} Q {cx} {cy + h * 1.5} {cx - w} {cy} Z"
+    r = h * (.78 if kind == "wide" else .95)
+    px, py = cx + lx * w * .4, cy - h * .1 + ly * h * .3
+    s = (f'<clipPath id="{uid}"><path d="{alm}"/></clipPath><path d="{alm}" fill="#fff"/>'
+         f'<g clip-path="url(#{uid})"><circle cx="{px}" cy="{py}" r="{r}" fill="{iris}"/>'
+         f'<circle cx="{px}" cy="{py}" r="{r * .5}" fill="{INK}"/>'
+         f'<circle cx="{px - r * .35}" cy="{py - r * .4}" r="{r * .28}" fill="#fff"/>')
+    if kind == "tired":   # párpado caído (cansado / triste)
+        s += f'<rect x="{cx - w - 2}" y="{cy - h * 2}" width="{2 * w + 4}" height="{h * 1.6}" fill="{piel}"/>'
+    s += "</g>" + f'<path d="{alm}" fill="none" stroke="{INK}" stroke-width="4.5"/>'
+    top = cy - h * (.6 if kind == "tired" else 1.0)
+    s += ln(f"M {cx - w - 2} {cy + 1} Q {cx} {top - h * .9} {cx + w + 2} {cy + 1}", 6.5)
+    return s
+
+
+def boca_c(kind, cx, cy, w=30, labio="#B5544F", dientes=True, uid="b"):
+    if kind == "sonrisa":
+        return ln(f"M {cx - w} {cy - 4} Q {cx} {cy + w * .55} {cx + w} {cy - 4}", 6.5)
+    if kind == "sonrisa_ladeada":
+        return ln(f"M {cx - w} {cy + 2} Q {cx + w * .1} {cy + w * .45} {cx + w * 1.05} {cy - w * .3}", 6.5)
+    if kind == "risa":
+        d = f"M {cx - w} {cy - 6} Q {cx} {cy + w * 1.1} {cx + w} {cy - 6} Z"
+        s = (f'<clipPath id="{uid}"><path d="{d}"/></clipPath><path d="{d}" fill="{P["boca"]}"/>'
+             f'<g clip-path="url(#{uid})">')
+        if dientes:
+            s += f'<rect x="{cx - w}" y="{cy - 8}" width="{2 * w}" height="{w * .32}" fill="#fff"/>'
+        s += f'<ellipse cx="{cx}" cy="{cy + w * .75}" rx="{w * .55}" ry="{w * .3}" fill="{P["lengua"]}"/></g>'
+        return s + ln(d, 6)
+    if kind == "serio":
+        return ln(f"M {cx - w * .8} {cy} Q {cx} {cy + 3} {cx + w * .8} {cy}", 6.5)
+    if kind == "triste":
+        return ln(f"M {cx - w * .8} {cy + 8} Q {cx} {cy - 10} {cx + w * .8} {cy + 8}", 6.5)
+    if kind == "o":
+        return f'<ellipse cx="{cx}" cy="{cy + 6}" rx="{w * .45}" ry="{w * .6}" fill="{P["boca"]}" stroke="{INK}" stroke-width="6"/>'
+    raise ValueError(kind)
+
+
+CEJAS_C = {   # desplazamiento (dy interno, dy externo) de cada ceja según la emoción
+    "neutral": (0, 0), "arriba": (-16, -12), "triste": (-12, 6), "enojo": (8, -6), "duda": (0, 0),
+}
+
+
+def cejas_c(xl, xr, y, w, kind, color, grosor):
+    di, de = CEJAS_C[kind]
+    izq = f"M {xl - w} {y + de} Q {xl} {y - 10 + (di + de) / 2} {xl + w} {y + di}"
+    der = f"M {xr - w} {y + di} Q {xr} {y - 10 + (di + de) / 2} {xr + w} {y + de}"
+    if kind == "duda":   # una sola ceja levantada
+        der = f"M {xr - w} {y - 10} Q {xr} {y - 30} {xr + w} {y - 18}"
+    return ln(izq, grosor, color) + ln(der, grosor, color)
+
+
+EXPR = {   # ojos, cejas, boca
+    "contento": ("open", "neutral", "sonrisa"),
+    "risa": ("happy", "neutral", "risa"),
+    "serio": ("open", "neutral", "serio"),
+    "sorpresa": ("wide", "arriba", "o"),
+    "triste": ("tired", "triste", "triste"),
+    "preocupado": ("open", "triste", "serio"),
+    "picaro": ("open", "duda", "sonrisa_ladeada"),
+}
+
+
+def torso_c(ropa, piel, con_cuello=True):
+    """Hombros y ropa del busto (debajo de la cabeza). con_cuello=False: sin el cuello de piel."""
+    hombros = "M 24 620 C 34 520 104 484 188 470 L 332 470 C 416 484 486 520 496 620 Z"
+    cuello = (f'<path d="M 214 404 L 214 482 Q 260 506 306 482 L 306 404 Z" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>'
+              if con_cuello else "")
+    if ropa == "traje":          # traje azul, camisa blanca, corbata roja (y pin de bandera)
+        return (cuello + ln(hombros, SW, INK, "#26324F")
+                + ln("M 200 468 L 260 586 L 320 468 Z", 5, INK, "#FFFFFF")
+                + ln("M 246 492 L 274 492 L 270 512 L 250 512 Z", 5, INK, "#C8312F")
+                + ln("M 250 512 L 240 600 L 260 620 L 280 600 L 270 512 Z", 5, INK, "#C8312F")
+                + ln("M 200 468 L 236 520 L 222 532 L 260 600", 5, INK) + ln("M 320 468 L 284 520 L 298 532 L 260 600", 5, INK)
+                + ln("M 214 470 L 238 506 L 256 488 Z", 4, INK, "#FFFFFF") + ln("M 306 470 L 282 506 L 264 488 Z", 4, INK, "#FFFFFF")
+                + f'<rect x="354" y="530" width="30" height="20" rx="3" fill="#fff" stroke="{INK}" stroke-width="3"/>'
+                + '<rect x="354" y="530" width="13" height="10" fill="#3A5BA8"/>'
+                + "".join(f'<rect x="367" y="{532 + i * 6}" width="17" height="3" fill="#D8343A"/>' for i in range(3)))
+    if ropa == "blanco":         # traje blanco de fiesta con cadena de oro
+        cadena = "".join(f'<circle cx="{260 + 64 * math.sin(a)}" cy="{486 + 62 * (1 - math.cos(a))}" r="7" fill="#F2C230" stroke="{INK}" stroke-width="3"/>'
+                         for a in [i * .21 - 1.26 for i in range(13)])
+        return (cuello + ln(hombros, SW, INK, "#F4F1EA")
+                + ln("M 206 468 L 260 560 L 314 468 Z", 5, INK, "#FFFFFF")
+                + ln("M 206 468 L 240 530 L 226 540 L 252 600", 5, INK) + ln("M 314 468 L 280 530 L 294 540 L 268 600", 5, INK)
+                + cadena + f'<circle cx="260" cy="572" r="16" fill="#F2C230" stroke="{INK}" stroke-width="4"/>'
+                + ln("M 252 566 L 268 578 M 268 566 L 252 578", 3, "#C99A12"))
+    if ropa == "sueter":         # suéter oscuro con cuello de camisa celeste
+        return (cuello + ln(hombros, SW, INK, "#2E3445")
+                + ln("M 206 470 Q 260 530 314 470", 6, INK, "#3A4256")
+                + ln("M 212 470 L 236 500 L 256 486 Z", 4, INK, "#D7E4F2") + ln("M 308 470 L 284 500 L 264 486 Z", 4, INK, "#D7E4F2")
+                + ln("M 120 560 Q 160 590 170 620", 4, "#252A38") + ln("M 400 560 Q 360 590 350 620", 4, "#252A38"))
+    if ropa in ("preso_naranja", "preso_caqui"):
+        col, col2 = ("#F08A2C", "#D9701A") if ropa == "preso_naranja" else ("#C9B48A", "#AE9970")
+        return (cuello + ln(hombros, SW, INK, col)
+                + ln("M 206 470 L 260 540 L 314 470", 6, INK) + ln("M 206 470 L 232 512 L 252 494", 5, INK, col2)
+                + ln("M 314 470 L 288 512 L 268 494", 5, INK, col2)
+                + f'<rect x="350" y="540" width="70" height="24" rx="4" fill="#fff" stroke="{INK}" stroke-width="3"/>'
+                + "".join(ln(f"M {356 + i * 9} 546 L {356 + i * 9} 558", 3) for i in range(7)))
+    raise ValueError(ropa)
+
+
+FOTOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "recursos", "fotos")
+
+
+def foto(nombre, x, y, ancho):
+    """Imagen de recursos/fotos (generada con foto_recurso.py) dentro del SVG. Devuelve (svg, alto)."""
+    import base64
+    from PIL import Image
+    ruta = os.path.join(FOTOS, nombre + ".png")
+    w, h = Image.open(ruta).size
+    alto = ancho * h / w
+    b64 = base64.b64encode(open(ruta, "rb").read()).decode()
+    return (f'<image x="{x}" y="{y}" width="{ancho}" height="{alto:.1f}" preserveAspectRatio="none" '
+            f'href="data:image/png;base64,{b64}"/>'), alto
+
+
+def color_piel(nombre, zona=(.35, .55, .65, .75)):
+    """Color medio de la piel de una cara recortada (para dibujar el cuello del mismo tono)."""
+    from PIL import Image
+    im = Image.open(os.path.join(FOTOS, nombre + ".png")).convert("RGB")
+    w, h = im.size
+    r, g, b = [int(c) for c in im.crop((int(w * zona[0]), int(h * zona[2]), int(w * zona[1]), int(h * zona[3])))
+               .resize((1, 1), Image.BOX).getpixel((0, 0))]
+    return f"#{r:02X}{g:02X}{b:02X}"
+
+
+def pelo_epstein(x0, ancho, costura):
+    """Completa la parte de arriba de la cabeza (la foto está cortada en la frente): pelo canoso con
+    volumen, peinado hacia atrás. x0/ancho = la foto en el lienzo; costura = y donde empieza la foto real."""
+    x1, cx = x0 + ancho, x0 + ancho / 2
+    y = costura
+    forma = (f"M {x0 + 4} {y + 70} C {x0 - 14} {y - 10} {x0 + 20} {y - 96} {cx - 40} {y - 118} "
+             f"C {cx + 30} {y - 134} {x1 + 6} {y - 104} {x1 - 2} {y - 20} L {x1 - 8} {y + 70} "
+             f"C {x1 - 20} {y + 30} {x1 - 50} {y + 12} {cx + 50} {y + 10} "
+             f"C {cx + 10} {y + 2} {cx - 40} {y + 4} {cx - 80} {y + 14} C {x0 + 40} {y + 26} {x0 + 18} {y + 44} {x0 + 4} {y + 70} Z")
+    s = [ln(forma, 6, INK, "#D6D3CE")]
+    for i, (a, b, c) in enumerate([(-80, -90, .2), (-60, -60, .35), (-40, -30, .5), (-30, 0, .62), (10, -100, .3),
+                                   (20, -70, .45), (40, -40, .6), (60, -10, .72), (70, 20, .85)]):
+        xa = x0 + ancho * c - 60
+        s.append(ln(f"M {xa:.0f} {y + b + 70:.0f} C {xa + 30:.0f} {y + b + 10:.0f} {xa + 90:.0f} {y + b - 20:.0f} "
+                    f"{xa + 150:.0f} {y + b - 10:.0f}", 4, "#AEA9A2" if i % 2 else "#F1EFEC"))
+    s.append(f'<clipPath id="pe"><path d="{forma}"/></clipPath>')
+    return "".join(s)
+
+
+PERSONAS = {   # cara (recursos/fotos), ancho en el lienzo, dónde queda el mentón (fracción del alto de la foto)
+    "kirk": ("kirk_cara", 300, .985), "kirk_chica": ("kirk_cara_chica", 300, .985),
+    "kirk_habla": ("kirk_habla_cara", 290, .985), "diddy": ("diddy_cara", 300, .9), "epstein": ("epstein_cara", 300, .985),
+}
+PERSONA_W, PERSONA_H, MENTON = 520, 660, 494   # lienzo del busto y altura del mentón (justo arriba del cuello)
+
+
+def persona(quien, ropa):
+    """Busto (520x660, ancla abajo): cuello dibujado, la cara de la foto y la ropa dibujada encima del
+    borde de abajo de la foto (así el corte del cuello queda tapado por el cuello de la ropa)."""
+    cara, ancho, menton = PERSONAS[quien]
+    piel = color_piel(cara)
+    x0 = 260 - ancho / 2
+    _, alto = foto(cara, 0, 0, ancho)
+    top = MENTON - alto * menton
+    img, _ = foto(cara, x0, top, ancho)
+    cuello = (f'<path d="M 222 {MENTON - 70} L 222 540 L 298 540 L 298 {MENTON - 70} Z" fill="{piel}"/>'
+              + ln(f"M 222 {MENTON - 40} L 222 530", SW) + ln(f"M 298 {MENTON - 40} L 298 530", SW)
+              + ln(f"M 236 {MENTON + 6} Q 260 {MENTON + 20} 284 {MENTON + 6}", 4, INK, extra='opacity=".25"'))
+    return cuello + img + f'<g transform="translate(0 40)">{torso_c(ropa, piel, False)}</g>'
+
+
+# ---------------------------------------------------------------- memes: Vos con el celular, estudiantes y objetos
+def accesorio_celular():
+    """Vos sostiene el celular con las dos manos frente al pecho (la pantalla le ilumina la cara)."""
+    piel = P["piel"]
+    s = [stroke_path("M 182 505 Q 160 590 226 600", piel, 28), stroke_path("M 338 505 Q 360 590 294 600", piel, 28)]
+    s.append(f'<circle cx="186" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="334" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="212" y="500" width="96" height="160" rx="16" fill="#1E1E24" stroke="{INK}" stroke-width="6"/>'
+             f'<rect x="222" y="512" width="76" height="136" rx="8" fill="#9ADCFF"/>'
+             f'<rect x="230" y="524" width="60" height="40" rx="5" fill="#fff" opacity=".8"/>'
+             f'<rect x="230" y="572" width="60" height="8" rx="4" fill="#fff" opacity=".6"/>'
+             f'<rect x="230" y="588" width="44" height="8" rx="4" fill="#fff" opacity=".6"/>')
+    s.append(f'<circle cx="226" cy="604" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="294" cy="604" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+    return "".join(s)
+
+
+def vos_celu(eyes="open", brows="neutral", mouth_kind="smile", look=(0, .6)):
+    """Vos mirando el celular (sin brazos de abajo: los dos sostienen el teléfono)."""
+    s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
+    for x in (205, 269):
+        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="{P["pantalon"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (220, 300):
+        s.append(f'<ellipse cx="{x}" cy="794" rx="40" ry="21" fill="{INK}"/>')
+    s.append(f'<rect x="158" y="452" width="204" height="228" rx="72" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 224 462 Q 260 494 296 462", 6))
+    s.append(head(eyes, brows, mouth_kind, look))
+    s.append(accesorio_celular())
+    return "".join(s)
+
+
+VOS_CELU = {   # cara de Vos según la reacción
+    "contento": dict(), "risa": dict(eyes="happy", brows="happy", mouth_kind="open_smile"),
+    "sorpresa": dict(eyes="wide", brows="up", mouth_kind="o"), "miedo": dict(eyes="wide", brows="sad", mouth_kind="nervio"),
+    "triste": dict(eyes="open", brows="sad", mouth_kind="flat", look=(0, .8)), "serio": dict(mouth_kind="flat"),
+    "pensando": dict(brows="asco", mouth_kind="flat", look=(.6, -.6)),
+}
+
+
+def estudiante(remera, piel, pelo, mano=False):
+    """Estudiante genérico (mismo cuerpo que Vos, otros colores); mano=True levanta la mano."""
+    s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
+    for x in (205, 269):
+        s.append(f'<rect x="{x}" y="640" width="46" height="150" rx="20" fill="#3A3F55" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (220, 300):
+        s.append(f'<ellipse cx="{x}" cy="794" rx="40" ry="21" fill="{INK}"/>')
+    s.append(f'<rect x="158" y="452" width="204" height="228" rx="72" fill="{remera}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 196 470 L 196 600 M 324 470 L 324 600", 9, "#2B2730"))   # tiras de la mochila
+    brazo = lambda d, h: (stroke_path(d, piel, 28) + f'<circle cx="{h[0]}" cy="{h[1]}" r="25" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(brazo("M 182 505 Q 150 575 148 652", (148, 655)))
+    s.append(brazo("M 338 505 Q 420 440 430 330", (430, 326)) if mano else brazo("M 338 505 Q 370 575 372 652", (372, 655)))
+    s.append(f'<circle cx="186" cy="500" r="30" fill="{remera}" stroke="{INK}" stroke-width="{SW}"/>'
+             f'<circle cx="334" cy="500" r="30" fill="{remera}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(head("open", "neutral", "smile", (0, 0), "", HAIR, pelo, piel))
+    return "".join(s)
+
+
+def mesa_debate(banner=True):
+    """Mesa con mantel azul y un cartel blanco al frente (el texto se pone con el motor). 760x330, ancla abajo.
+    banner=False: el mismo mantel sin el cartel."""
+    s = [ln("M 20 120 L 740 120 L 740 150 L 20 150 Z", SW, INK, "#2F4C8F")]
+    s.append(ln("M 34 150 L 726 150 L 712 320 L 48 320 Z", SW, INK, "#3A5DAE"))
+    if banner:
+        s.append(ln("M 120 172 L 640 172 L 632 292 L 128 292 Z", 6, INK, "#FFFFFF"))
+    s.append(ln("M 34 150 Q 120 170 200 150 Q 300 172 380 150 Q 460 172 560 150 Q 640 170 726 150", 4, "#26407A"))
+    s.append(f'<rect x="560" y="70" width="70" height="52" rx="8" fill="#E9E4D8" stroke="{INK}" stroke-width="5"/>'
+             + ln("M 630 84 Q 656 92 630 108", 6))   # taza
+    s.append(f'<rect x="120" y="96" width="120" height="26" rx="4" fill="#F7F2E6" stroke="{INK}" stroke-width="4"/>')
+    return "".join(s)
+
+
+def carpa():
+    """Gazebo plegable azul detrás de la mesa (900x620, ancla abajo)."""
+    s = [ln("M 60 180 L 450 40 L 840 180 Z", SW, INK, "#2F4C8F"),
+         ln("M 60 180 L 840 180 L 840 230 Q 795 260 750 230 Q 705 260 660 230 Q 615 260 570 230 Q 525 260 480 230 "
+            "Q 435 260 390 230 Q 345 260 300 230 Q 255 260 210 230 Q 165 260 120 230 Q 90 250 60 230 Z", SW, INK, "#3A5DAE")]
+    for x in (80, 820):
+        s.append(f'<rect x="{x - 9}" y="230" width="18" height="390" fill="#C9CED8" stroke="{INK}" stroke-width="5"/>')
+    s.append(ln("M 450 40 L 450 180", 4, "#26407A") + ln("M 250 112 L 300 180 M 650 112 L 600 180", 4, "#26407A"))
+    return "".join(s)
+
+
+def microfono():
+    """Micrófono de mano (120x300, ancla abajo)."""
+    s = [f'<rect x="44" y="110" width="32" height="180" rx="14" fill="#2B2B33" stroke="{INK}" stroke-width="6"/>',
+         f'<rect x="38" y="100" width="44" height="30" rx="8" fill="#55555F" stroke="{INK}" stroke-width="5"/>',
+         f'<circle cx="60" cy="62" r="46" fill="#9AA0AE" stroke="{INK}" stroke-width="6"/>']
+    for k in range(-2, 3):
+        s.append(ln(f"M {60 + k * 16} 22 L {60 + k * 16} 102", 3, "#6E7484"))
+    s.append(ln("M 20 62 L 100 62 M 26 40 L 94 40 M 26 84 L 94 84", 3, "#6E7484"))
+    return "".join(s)
+
+
+def celular_marco(w=520, h=1000):
+    """Marco de celular con la pantalla hueca (lo que va 'adentro' se pone por debajo)."""
+    r = 70
+    hueco = f"M {28} {64} L {w - 28} 64 L {w - 28} {h - 64} L 28 {h - 64} Z"
+    marco = (f"M {r} 0 L {w - r} 0 Q {w} 0 {w} {r} L {w} {h - r} Q {w} {h} {w - r} {h} L {r} {h} Q 0 {h} 0 {h - r} "
+             f"L 0 {r} Q 0 0 {r} 0 Z")
+    return (f'<path d="{marco} {hueco}" fill="#17171D" fill-rule="evenodd" stroke="{INK}" stroke-width="{SW}"/>'
+            f'<rect x="{w / 2 - 60}" y="22" width="120" height="22" rx="11" fill="#2E2E38"/>'
+            f'<rect x="{w / 2 - 70}" y="{h - 42}" width="140" height="10" rx="5" fill="#55555F"/>'
+            + ln(f"M 28 64 L {w - 28} 64 L {w - 28} {h - 64} L 28 {h - 64} Z", 4, "#000"))
+
+
+def pantalla_feed():
+    """Pantalla de una red social (370x720) para poner detrás del marco del celular: barra con avatar
+    arriba, fondo claro para la foto y botones de corazón, comentario y compartir abajo."""
+    s = [f'<rect width="370" height="720" fill="#F3F1FA"/>',
+         f'<rect width="370" height="96" fill="#FFFFFF"/>' + ln("M 0 96 L 370 96", 3, "#DDD8EA"),
+         f'<circle cx="52" cy="58" r="24" fill="#C9B8FF" stroke="{INK}" stroke-width="3"/>',
+         f'<rect x="90" y="44" width="140" height="14" rx="7" fill="#8A8499"/><rect x="90" y="66" width="90" height="10" rx="5" fill="#C4BFD1"/>',
+         f'<rect y="600" width="370" height="120" fill="#FFFFFF"/>' + ln("M 0 600 L 370 600", 3, "#DDD8EA"),
+         f'<g transform="translate(30 618) scale(.34)">{corazon()}</g>',
+         ln("M 120 626 L 170 626 L 170 656 L 140 656 L 128 668 L 128 656 L 120 656 Z", 5, INK, "#FFFFFF"),
+         ln("M 210 660 L 250 630 L 250 646 Q 280 646 290 668 Q 270 656 250 658 L 250 676 Z", 5, INK, "#FFFFFF"),
+         f'<rect x="30" y="684" width="200" height="12" rx="6" fill="#C4BFD1"/>']
+    return "".join(s)
+
+
+def video_card(nombre_foto):
+    """Miniatura de video (480x330): foto + botón de play + barra de progreso."""
+    img, alto = foto(nombre_foto, 20, 20, 440)
+    s = [f'<rect x="8" y="8" width="464" height="314" rx="22" fill="#fff" stroke="{INK}" stroke-width="{SW}"/>',
+         f'<clipPath id="vc"><rect x="20" y="20" width="440" height="250" rx="14"/></clipPath>',
+         f'<g clip-path="url(#vc)">{img}</g>',
+         f'<circle cx="240" cy="145" r="44" fill="#000" opacity=".55"/>', ln("M 224 120 L 266 145 L 224 170 Z", 0, "none", "#fff"),
+         f'<rect x="20" y="282" width="440" height="12" rx="6" fill="#DDD"/><rect x="20" y="282" width="300" height="12" rx="6" fill="#FF3B3B"/>',
+         f'<circle cx="320" cy="288" r="12" fill="#FF3B3B" stroke="#fff" stroke-width="3"/>']
+    return "".join(s)
+
+
+def emoji_risa():
+    """Carita llorando de risa (200x200)."""
+    return (f'<circle cx="100" cy="100" r="86" fill="#FFCC33" stroke="{INK}" stroke-width="{SW}"/>'
+            + ln("M 52 82 Q 70 60 88 82", 8) + ln("M 112 82 Q 130 60 148 82", 8)
+            + '<path d="M 50 112 Q 100 186 150 112 Z" fill="#7A2735"/>'
+            + '<path d="M 58 116 L 142 116 L 138 128 L 62 128 Z" fill="#fff"/>' + ln("M 50 112 Q 100 186 150 112 Z", 6)
+            + ln("M 36 92 Q 16 118 30 140 Q 46 130 40 100 Z", 4, INK, "#6FC8FF")
+            + ln("M 164 92 Q 184 118 170 140 Q 154 130 160 100 Z", 4, INK, "#6FC8FF"))
+
+
+def calavera_emoji():
+    """💀 (200x200): la reacción de 'me morí de risa'."""
+    return (ln("M 30 98 Q 30 20 100 20 Q 170 20 170 98 Q 170 136 146 146 L 146 178 L 54 178 L 54 146 Q 30 136 30 98 Z", SW, INK, "#F1EFEA")
+            + f'<ellipse cx="72" cy="98" rx="22" ry="25" fill="{INK}"/><ellipse cx="128" cy="98" rx="22" ry="25" fill="{INK}"/>'
+            + ln("M 100 120 L 90 142 L 110 142 Z", 4, INK, INK) + "".join(ln(f"M {x} 160 L {x} 178", 5) for x in (78, 100, 122)))
+
+
+def vela():
+    """Vela blanca (90x240, ancla abajo); la llama va aparte para que titile."""
+    return (f'<ellipse cx="45" cy="232" rx="40" ry="8" fill="#000" opacity=".2"/>'
+            + ln("M 18 70 L 18 228 Q 45 238 72 228 L 72 70 Z", 6, INK, "#F6F1E4")
+            + ln("M 18 70 Q 45 82 72 70 Q 45 58 18 70 Z", 5, INK, "#FFFDF6")
+            + ln("M 62 74 Q 66 110 60 130", 6, "#FFFDF6") + ln("M 45 68 L 45 50", 4))
+
+
+def llama_vela():
+    """Llamita de vela (60x90, ancla abajo)."""
+    return (ln("M 30 86 C 6 70 14 40 30 4 C 46 40 54 70 30 86 Z", 4, "#E07A10", "#FFB627")
+            + ln("M 30 80 C 20 70 22 52 30 36 C 38 52 40 70 30 80 Z", 0, "none", "#FFF2B0"))
+
+
+def flores():
+    """Ramo de flores apoyado (300x240, ancla abajo)."""
+    s = [ln("M 90 236 L 150 120 M 150 236 L 150 110 M 210 236 L 150 120", 6, "#3F8A3A")]
+    for (x, y, c) in [(110, 96, "#FFFFFF"), (150, 70, "#FF8FA8"), (192, 96, "#FFFFFF"), (130, 130, "#FFD23F"), (176, 128, "#FF8FA8")]:
+        for a in range(0, 360, 60):
+            s.append(f'<circle cx="{x + 16 * math.cos(math.radians(a)):.0f}" cy="{y + 16 * math.sin(math.radians(a)):.0f}" r="14" '
+                     f'fill="{c}" stroke="{INK}" stroke-width="3.5"/>')
+        s.append(f'<circle cx="{x}" cy="{y}" r="9" fill="#F2B233" stroke="{INK}" stroke-width="3"/>')
+    s.append(ln("M 60 190 L 240 190 L 210 236 L 90 236 Z", 5, INK, "#E9E1F2"))
+    return "".join(s)
+
+
+def retrato(nombre_foto, luto=True):
+    """Portarretrato (360x440) con la foto; luto=True agrega la cinta negra en la esquina."""
+    img, alto = foto(nombre_foto, 40, 40, 280)
+    s = [f'<rect x="8" y="8" width="344" height="424" rx="10" fill="#3A2A1E" stroke="{INK}" stroke-width="{SW}"/>',
+         f'<rect x="28" y="28" width="304" height="384" rx="4" fill="#C9A15A"/>',
+         f'<clipPath id="rt"><rect x="40" y="40" width="280" height="360"/></clipPath><g clip-path="url(#rt)">{img}</g>',
+         ln("M 40 40 L 320 40 L 320 400 L 40 400 Z", 4)]
+    if luto:
+        s.append(ln("M 250 8 L 352 110 L 352 60 L 300 8 Z", 4, INK, "#141414"))
+    return "".join(s)
+
+
+def disco_oro():
+    """Disco de oro enmarcado (240x300)."""
+    return (f'<rect x="8" y="8" width="224" height="284" rx="10" fill="#1B1B22" stroke="{INK}" stroke-width="{SW}"/>'
+            f'<circle cx="120" cy="124" r="88" fill="#F2C230" stroke="{INK}" stroke-width="5"/>'
+            + "".join(f'<circle cx="120" cy="124" r="{r}" fill="none" stroke="#C99A12" stroke-width="2"/>' for r in (74, 62, 50))
+            + f'<circle cx="120" cy="124" r="24" fill="#FFF2B0" stroke="{INK}" stroke-width="4"/>'
+            + f'<rect x="56" y="234" width="128" height="30" rx="4" fill="#F2C230"/>'
+            + ln("M 70 80 Q 90 60 116 56", 6, "#fff", extra='opacity=".6"'))
+
+
+def bola_disco():
+    """Bola de espejos (220x260, ancla arriba con su cable)."""
+    s = [ln("M 110 0 L 110 50", 5), f'<circle cx="110" cy="150" r="100" fill="#B8C4D6" stroke="{INK}" stroke-width="{SW}"/>']
+    s.append('<clipPath id="bd"><circle cx="110" cy="150" r="96"/></clipPath><g clip-path="url(#bd)">')
+    rnd = random.Random(8)
+    for y in range(50, 260, 22):
+        for x in range(0, 230, 22):
+            c = rnd.choice(["#E8EEF6", "#9FAFC6", "#C9D4E4", "#FFFFFF", "#7F8FA8"])
+            s.append(f'<rect x="{x + (11 if (y // 22) % 2 else 0)}" y="{y}" width="20" height="20" fill="{c}"/>')
+    s.append("</g>" + f'<circle cx="110" cy="150" r="100" fill="none" stroke="{INK}" stroke-width="{SW}"/>')
+    return "".join(s)
+
+
+def siluetas_fiesta(k=0):
+    """Gente bailando a contraluz (900x520, ancla abajo); k=0/1 cambia la pose (loop de baile)."""
+    s = []
+    poses = [(110, 1), (290, -1), (470, 1), (650, -1), (820, 1)]
+    for i, (x, d) in enumerate(poses):
+        d = d if k == 0 else -d
+        c = "#3A2459" if i % 2 else "#2A1A45"
+        s.append(f'<circle cx="{x}" cy="{230 + (i % 2) * 30}" r="46" fill="{c}"/>')
+        s.append(f'<path d="M {x - 60} 520 Q {x - 66} {330 + (i % 2) * 30} {x} {300 + (i % 2) * 30} Q {x + 66} {330 + (i % 2) * 30} {x + 60} 520 Z" fill="{c}"/>')
+        s.append(stroke_path(f"M {x - 40} {340 + (i % 2) * 30} Q {x - 90 * d} {250} {x - 70 * d} {150 + (i % 2) * 20}", c, 26, c))
+        s.append(stroke_path(f"M {x + 40} {340 + (i % 2) * 30} Q {x + 80} {390} {x + 60 * d} {300}", c, 26, c))
+    return "".join(s)
+
+
+def aceite_bebe():
+    """Botella de aceite para bebés (genérica, sin marca): 120x260, ancla abajo."""
+    return (ln("M 30 70 L 30 250 Q 60 262 90 250 L 90 70 Q 60 56 30 70 Z", 6, INK, "#F7B8C4")
+            + ln("M 30 70 Q 60 56 90 70 L 90 120 Q 60 108 30 120 Z", 0, "none", "#FAD1D9")
+            + f'<rect x="40" y="26" width="40" height="40" rx="8" fill="#FFFFFF" stroke="{INK}" stroke-width="5"/>'
+            + f'<rect x="48" y="8" width="24" height="22" rx="6" fill="#FFFFFF" stroke="{INK}" stroke-width="4"/>'
+            + f'<rect x="36" y="140" width="48" height="70" rx="6" fill="#FFFFFF" stroke="{INK}" stroke-width="4"/>'
+            + ln("M 46 160 L 74 160 M 46 176 L 74 176 M 46 192 L 66 192", 4, "#7FB5E8")
+            + ln("M 78 86 Q 82 160 78 236", 5, "#fff", extra='opacity=".6"'))
+
+
+def caja_evidencia():
+    """Caja de cartón de evidencia (300x220, ancla abajo)."""
+    return (ln("M 20 60 L 280 60 L 280 216 L 20 216 Z", SW, INK, "#C99A5B")
+            + ln("M 10 40 L 290 40 L 290 76 L 10 76 Z", SW, INK, "#DDB074")
+            + f'<rect x="90" y="110" width="120" height="50" rx="6" fill="#FFFFFF" stroke="{INK}" stroke-width="4"/>'
+            + ln("M 104 128 L 196 128 M 104 144 L 170 144", 4, "#B33A3A"))
+
+
+def luz_sirena(color):
+    """Resplandor de sirena para toda la pantalla (se alterna rojo/azul con un loop)."""
+    lado = 0 if color == "rojo" else W
+    c = "#FF2A2A" if color == "rojo" else "#2A6BFF"
+    return (f'<rect width="{W}" height="{H}" fill="url(#sir)"/>',
+            f'<radialGradient id="sir" cx="{lado / W}" cy="0.35" r="0.85"><stop offset="0" stop-color="{c}" stop-opacity=".8"/>'
+            f'<stop offset=".6" stop-color="{c}" stop-opacity=".25"/><stop offset="1" stop-color="{c}" stop-opacity="0"/></radialGradient>')
+
+
+def esposas():
+    """Esposas (300x170)."""
+    s = []
+    for cx in (80, 220):
+        s.append(f'<circle cx="{cx}" cy="96" r="58" fill="none" stroke="{INK}" stroke-width="30"/>'
+                 f'<circle cx="{cx}" cy="96" r="58" fill="none" stroke="#C9CED8" stroke-width="18"/>'
+                 + ln(f"M {cx - 30} 50 Q {cx - 10} 40 {cx + 20} 44", 5, "#fff", extra='opacity=".7"'))
+    s.append(ln("M 134 70 Q 150 54 166 70", 12, INK) + ln("M 134 70 Q 150 54 166 70", 6, "#C9CED8"))
+    return "".join(s)
+
+
+def rejas():
+    """Rejas de celda que cubren toda la pantalla (1080x1920, transparentes entre barrotes)."""
+    s = []
+    for y in (120, 1640):
+        s.append(f'<rect x="-10" y="{y}" width="{W + 20}" height="48" fill="#4A4F5C" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in range(60, W, 140):
+        s.append(f'<rect x="{x - 18}" y="-10" width="36" height="{H + 20}" fill="#5E6474" stroke="{INK}" stroke-width="{SW}"/>'
+                 f'<rect x="{x - 10}" y="-10" width="8" height="{H + 20}" fill="#8A91A3"/>')
+    return "".join(s)
+
+
+def fajo():
+    """Fajo de billetes (240x150)."""
+    s = []
+    for i in range(3):
+        y = 60 - i * 16
+        s.append(f'<rect x="{14 + i * 4}" y="{y}" width="200" height="80" rx="6" fill="#7CC27A" stroke="{INK}" stroke-width="5"/>')
+    s.append(f'<circle cx="122" cy="68" r="22" fill="#A8DDA4" stroke="{INK}" stroke-width="4"/>'
+             f'<rect x="96" y="28" width="52" height="80" fill="#F2E7C9" stroke="{INK}" stroke-width="4"/>')
+    return "".join(s)
+
+
+def avion():
+    """Avión privado blanco (520x220), mirando a la derecha."""
+    return (ln("M 30 120 Q 60 86 160 84 L 420 84 Q 500 92 510 116 Q 500 140 420 146 L 160 146 Q 60 144 30 120 Z", SW, INK, "#F5F6F8")
+            + ln("M 220 140 L 330 210 L 370 210 L 300 140 Z", 6, INK, "#DCE0E8")
+            + ln("M 230 90 L 320 20 L 356 20 L 300 90 Z", 6, INK, "#DCE0E8")
+            + ln("M 40 116 L 20 50 L 60 50 L 96 92 Z", 6, INK, "#2F4C8F")
+            + "".join(f'<rect x="{x}" y="100" width="22" height="18" rx="7" fill="#2F4C8F"/>' for x in range(170, 400, 40))
+            + ln("M 440 96 Q 480 100 496 112 L 452 112 Z", 0, "none", "#2F4C8F"))
+
+
+def silueta_vip(k=0):
+    """Persona famosa anónima: silueta de traje con un '?' (220x420, ancla abajo)."""
+    c = ["#2B2F3E", "#3A2F45", "#2F3A45"][k % 3]
+    return (f'<circle cx="110" cy="96" r="62" fill="{c}"/>'
+            f'<path d="M 10 420 Q 14 210 110 180 Q 206 210 210 420 Z" fill="{c}"/>'
+            f'<path d="M 90 186 L 110 260 L 130 186 Z" fill="#E8E8EE"/><path d="M 104 200 L 116 200 L 112 270 L 108 270 Z" fill="#B33A3A"/>')
+
+
+def camara_seguridad(rota=False):
+    """Cámara de seguridad en un soporte de pared (300x200); rota=True: con una X roja."""
+    s = [ln("M 20 40 L 20 160", 10), ln("M 20 100 L 80 100", 10),
+         ln("M 80 70 L 240 50 L 260 110 L 96 134 Z", SW, INK, "#E8E9EE"),
+         ln("M 240 50 L 286 62 L 300 116 L 260 110 Z", SW, INK, "#2B2B33"),
+         f'<circle cx="276" cy="88" r="11" fill="#5A9BD8"/>']
+    if rota:
+        s.append(ln("M 120 40 L 220 150 M 220 40 L 120 150", 16, "#E53935"))
+    else:
+        s.append(f'<circle cx="104" cy="88" r="7" fill="#E53935"/>')
+    return "".join(s)
+
+
+def monitor_estatica(k=0):
+    """Monitor de vigilancia con estática (300x260); k cambia el ruido (loop)."""
+    rnd = random.Random(40 + k)
+    s = [f'<rect x="8" y="8" width="284" height="210" rx="16" fill="#2B2B33" stroke="{INK}" stroke-width="{SW}"/>',
+         '<clipPath id="me"><rect x="26" y="26" width="248" height="174" rx="6"/></clipPath><g clip-path="url(#me)">',
+         '<rect x="26" y="26" width="248" height="174" fill="#777"/>']
+    for _ in range(260):
+        g = rnd.randint(30, 240)
+        s.append(f'<rect x="{rnd.randint(26, 270)}" y="{rnd.randint(26, 196)}" width="{rnd.randint(4, 18)}" height="{rnd.randint(2, 6)}" '
+                 f'fill="rgb({g},{g},{g})"/>')
+    for y in range(26, 200, 8):
+        s.append(f'<rect x="26" y="{y}" width="248" height="2" fill="#000" opacity=".18"/>')
+    s.append("</g>" + ln("M 130 218 L 120 250 L 180 250 L 170 218", 6, INK, "#2B2B33"))
+    return "".join(s)
+
+
+def guardia_dormido():
+    """Guardia de cárcel dormido sentado en el escritorio (620x560, ancla abajo)."""
+    piel = "#E9B58F"
+    s = [f'<rect x="20" y="360" width="580" height="40" rx="8" fill="#7A5236" stroke="{INK}" stroke-width="{SW}"/>',
+         f'<rect x="50" y="400" width="30" height="160" fill="#5E3E28" stroke="{INK}" stroke-width="5"/>'
+         f'<rect x="540" y="400" width="30" height="160" fill="#5E3E28" stroke="{INK}" stroke-width="5"/>']
+    s.append(f'<rect x="200" y="240" width="220" height="140" rx="60" fill="#3E5272" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="300" cy="330" rx="120" ry="34" fill="#3E5272" stroke="{INK}" stroke-width="{SW}"/>')   # brazos cruzados
+    s.append(f'<circle cx="300" cy="250" r="86" fill="{piel}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 252 250 Q 268 260 284 250", 6) + ln("M 316 250 Q 332 260 348 250", 6) + ln("M 286 290 Q 300 300 314 290", 6))
+    s.append(ln("M 206 214 Q 300 150 394 214 L 394 230 L 206 230 Z", SW, INK, "#2F3E5C")
+             + ln("M 194 230 L 406 230 Q 420 246 400 252 L 200 252 Q 180 246 194 230 Z", SW, INK, "#24324A")
+             + f'<rect x="286" y="182" width="28" height="24" rx="4" fill="#F2C230" stroke="{INK}" stroke-width="3"/>')
+    s.append(f'<rect x="440" y="300" width="110" height="62" rx="6" fill="#F5F0E6" stroke="{INK}" stroke-width="4"/>'
+             + ln("M 456 320 L 530 320 M 456 336 L 512 336", 4, "#7F8FA8"))
+    return "".join(s)
+
+
+def taza():
+    """Taza blanca (260x240) para el meme estampado (el texto va con el motor)."""
+    return (ln("M 30 30 L 200 30 L 190 220 Q 115 236 40 220 Z", SW, INK, "#FFFFFF")
+            + ln("M 198 70 Q 260 74 254 128 Q 248 176 192 170", 14, INK) + ln("M 198 70 Q 260 74 254 128 Q 248 176 192 170", 6, "#fff")
+            + f'<ellipse cx="115" cy="30" rx="85" ry="14" fill="#5B3A29" stroke="{INK}" stroke-width="6"/>')
+
+
+def remera():
+    """Remera negra (420x420) para el meme estampado."""
+    return ln("M 120 20 Q 210 70 300 20 L 410 80 L 370 170 L 320 150 L 320 410 L 100 410 L 100 150 L 50 170 L 10 80 Z",
+              SW, INK, "#24242C") + ln("M 150 30 Q 210 80 270 30", 5, "#3A3A46")
+
+
+def cortina_feed():
+    """Transición de los memes: un panel de 'feed' (tarjetas, corazones y caritas) que cruza la pantalla."""
+    rnd = random.Random(33)
+    s = [f'<rect x="0" y="0" width="1500" height="2100" rx="60" fill="#5B3FD9" stroke="{INK}" stroke-width="10"/>',
+         '<rect x="40" y="0" width="1420" height="2100" fill="#6A4FF0" opacity=".5"/>']
+    for col in range(3):
+        y = -60 + col * 140
+        while y < 2100:
+            x, h = 80 + col * 470, rnd.choice([300, 360, 420])
+            s.append(f'<rect x="{x}" y="{y}" width="400" height="{h}" rx="28" fill="#FFFFFF" stroke="{INK}" stroke-width="6"/>'
+                     f'<rect x="{x + 18}" y="{y + 18}" width="364" height="{h - 110}" rx="16" '
+                     f'fill="{rnd.choice(["#9ADCFF", "#FFD23F", "#FF8FA8", "#8BD06A", "#C9B8FF"])}"/>'
+                     f'<rect x="{x + 18}" y="{y + h - 72}" width="230" height="16" rx="8" fill="#D8D4E8"/>'
+                     f'<rect x="{x + 18}" y="{y + h - 44}" width="150" height="16" rx="8" fill="#D8D4E8"/>')
+            if rnd.random() < .6:
+                s.append(f'<g transform="translate({x + 300} {y + h - 60}) scale(.32)">{emoji_risa() if rnd.random() < .5 else corazon()}</g>')
+            y += h + 40
+    return "".join(s)
+
+
+# ---------------------------------------------------------------- memes: fondos
+def fondo_internet():
+    """'Internet': violeta a azul con luces desenfocadas, grilla de puntos y siluetas de íconos."""
+    rnd = random.Random(71)
+    s = [f'<rect width="{W}" height="{H}" fill="url(#inet)"/>']
+    for _ in range(14):
+        s.append(f'<circle cx="{rnd.uniform(0, W):.0f}" cy="{rnd.uniform(0, H):.0f}" r="{rnd.uniform(60, 200):.0f}" '
+                 f'fill="{rnd.choice(["#7A5CFF", "#3FA9F5", "#FF5DA2"])}" opacity="{rnd.uniform(.06, .14):.2f}"/>')
+    for y in range(40, H, 60):
+        for x in range(30, W, 60):
+            s.append(f'<circle cx="{x}" cy="{y}" r="2" fill="#fff" opacity=".07"/>')
+    iconos = ["M 0 -30 C 30 -60 60 -10 0 30 C -60 -10 -30 -60 0 -30 Z", "M -24 -30 L 30 0 L -24 30 Z",
+              "M -40 -28 L 40 -28 L 40 18 L 0 18 L -20 36 L -20 18 L -40 18 Z"]
+    for i in range(10):
+        x, y = rnd.uniform(60, W - 60), rnd.uniform(200, H - 200)
+        s.append(f'<path transform="translate({x:.0f} {y:.0f}) scale({rnd.uniform(1, 1.8):.2f}) rotate({rnd.uniform(-20, 20):.0f})" '
+                 f'd="{iconos[i % 3]}" fill="none" stroke="#fff" stroke-width="5" opacity=".08"/>')
+    defs = ('<linearGradient id="inet" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#2A1B5C"/>'
+            '<stop offset=".55" stop-color="#1A2470"/><stop offset="1" stop-color="#0E1640"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_campus(noche=False):
+    """Campus universitario: edificio de ladrillo con columnas, árboles, césped; noche=True: oscuro con ventanas prendidas."""
+    cielo = ("#0E1A3A", "#24315C") if noche else ("#8FD3FF", "#D6F0FF")
+    s = [f'<rect width="{W}" height="{H}" fill="url(#cc)"/>']
+    if noche:
+        rnd = random.Random(5)
+        s += [f'<circle cx="{rnd.uniform(0, W):.0f}" cy="{rnd.uniform(0, 700):.0f}" r="2" fill="#fff" opacity="{rnd.uniform(.3, .8):.2f}"/>'
+              for _ in range(60)]
+        s.append('<circle cx="900" cy="640" r="56" fill="#F4F1DC" opacity=".9"/>')
+    lad, lad2, col = ("#5A2E28", "#4A2520", "#8A8FA0") if noche else ("#B5523B", "#9C4330", "#F4F1EA")
+    s.append(ln("M 100 1250 L 100 760 L 980 760 L 980 1250 Z", SW, INK, lad))
+    for y in range(800, 1250, 40):
+        s.append(ln(f"M 100 {y} L 980 {y}", 2, lad2))
+    s.append(ln("M 330 760 L 540 600 L 750 760 Z", SW, INK, col))   # frontón
+    s.append(ln("M 300 760 L 780 760 L 780 790 L 300 790 Z", SW, INK, col))
+    for x in range(330, 760, 70):
+        s.append(f'<rect x="{x}" y="790" width="34" height="420" fill="{col}" stroke="{INK}" stroke-width="5"/>')
+    ventana = "#FFD86B" if noche else "#5B7FA6"
+    for x in (150, 220, 860, 930):
+        for y in (840, 980, 1120):
+            s.append(f'<rect x="{x - 25}" y="{y}" width="50" height="80" rx="20" fill="{ventana}" stroke="{INK}" stroke-width="5"/>')
+    s.append(ln("M 300 1210 L 780 1210 L 800 1250 L 280 1250 Z", SW, INK, col))
+    arbol, arbol2 = ("#1F3A2A", "#16301F") if noche else ("#5DB85A", "#3F9A44")
+    for x, y, r in [(40, 1080, 170), (1040, 1060, 180), (170, 1170, 120), (920, 1170, 130)]:
+        s.append(f'<rect x="{x - 14}" y="{y}" width="28" height="200" fill="#6B4A2F" stroke="{INK}" stroke-width="5"/>')
+        s.append(f'<circle cx="{x}" cy="{y - r * .3:.0f}" r="{r}" fill="{arbol}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(f'<circle cx="{x - r * .3:.0f}" cy="{y - r * .5:.0f}" r="{r * .45:.0f}" fill="{arbol2}"/>')
+    pasto = ("#1E3324", "#253D2B") if noche else ("#7CC56B", "#6AB35A")
+    s.append(f'<rect x="0" y="1250" width="{W}" height="{H - 1250}" fill="{pasto[0]}"/>')
+    s.append(ln("M 0 1250 L 1080 1250", SW))
+    s.append(f'<path d="M 420 1250 L 660 1250 L 860 1920 L 220 1920 Z" fill="{"#3B3A44" if noche else "#E2D6BC"}"/>')
+    if noche:
+        s.append(f'<rect width="{W}" height="{H}" fill="#0A1030" opacity=".35"/>')
+    defs = (f'<linearGradient id="cc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{cielo[0]}"/>'
+            f'<stop offset="1" stop-color="{cielo[1]}"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_mansion():
+    """Fiesta en una mansión de noche: paredes violetas, ventanal con la ciudad, neones y piso brillante."""
+    rnd = random.Random(9)
+    s = [f'<rect width="{W}" height="{H}" fill="url(#mv)"/>']
+    s.append(ln("M 190 380 L 890 380 L 890 1120 L 190 1120 Z", SW, INK, "#0D1033"))
+    for _ in range(26):   # ciudad
+        x, w, h = rnd.uniform(190, 860), rnd.uniform(40, 90), rnd.uniform(180, 520)
+        s.append(f'<rect x="{x:.0f}" y="{1120 - h:.0f}" width="{w:.0f}" height="{h:.0f}" fill="#1A1F4A"/>')
+        for _ in range(int(h / 60)):
+            s.append(f'<rect x="{x + rnd.uniform(6, w - 14):.0f}" y="{1120 - h + rnd.uniform(10, h - 20):.0f}" width="8" height="10" fill="#FFD86B" opacity=".7"/>')
+    s.append(ln("M 540 380 L 540 1120 M 190 750 L 890 750", 10, "#2A2552"))
+    s.append(ln("M 190 380 L 890 380 L 890 1120 L 190 1120 Z", 16, "#2A2552"))
+    s.append(ln("M 60 300 L 1020 300", 12, "#FF4FD8", extra='opacity=".9"') + ln("M 60 300 L 1020 300", 30, "#FF4FD8", extra='opacity=".18"'))
+    s.append(ln("M 60 1200 L 1020 1200", 10, "#3FD0FF", extra='opacity=".9"') + ln("M 60 1200 L 1020 1200", 26, "#3FD0FF", extra='opacity=".18"'))
+    s.append(f'<rect x="0" y="1250" width="{W}" height="{H - 1250}" fill="url(#piso)"/>' + ln("M 0 1250 L 1080 1250", SW))
+    for x in range(-200, 1300, 160):
+        s.append(ln(f"M 540 1250 L {x} 1920", 3, "#3A2E62"))
+    s.append('<ellipse cx="540" cy="1500" rx="420" ry="90" fill="#FF4FD8" opacity=".1"/>')
+    defs = ('<linearGradient id="mv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B1650"/>'
+            '<stop offset="1" stop-color="#4A2470"/></linearGradient>'
+            '<linearGradient id="piso" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22163E"/>'
+            '<stop offset="1" stop-color="#120B24"/></linearGradient>')
+    return "".join(s), defs
+
+
+def fondo_celda():
+    """Celda: paredes de bloques de hormigón, ventanita alta con rejas, cucheta, inodoro de acero."""
+    s = [f'<rect width="{W}" height="{H}" fill="#7C8796"/>']
+    for y in range(0, 1300, 70):
+        off = 0 if (y // 70) % 2 else 70
+        s.append(ln(f"M 0 {y} L {W} {y}", 3, "#6A7484"))
+        for x in range(off, W, 140):
+            s.append(ln(f"M {x} {y} L {x} {y + 70}", 3, "#6A7484"))
+    s.append(f'<rect x="420" y="190" width="240" height="150" fill="#24315C" stroke="{INK}" stroke-width="{SW}"/>'
+             '<circle cx="610" cy="230" r="26" fill="#F4F1DC" opacity=".9"/>')
+    for x in range(450, 660, 45):
+        s.append(f'<rect x="{x - 7}" y="190" width="14" height="150" fill="#4A4F5C" stroke="{INK}" stroke-width="4"/>')
+    s.append('<path d="M 420 340 L 660 340 L 760 1250 L 320 1250 Z" fill="#DDE6F2" opacity=".08"/>')
+    s.append(ln("M 40 900 L 330 900 L 330 960 L 40 960 Z", SW, INK, "#5A6272")
+             + f'<rect x="40" y="860" width="290" height="40" rx="10" fill="#C9D2E0" stroke="{INK}" stroke-width="5"/>'
+             + ln("M 40 960 L 40 1250 M 330 960 L 330 1250", 10, "#5A6272"))   # cama
+    s.append(ln("M 860 1080 L 1000 1080 L 980 1200 Q 930 1230 880 1200 Z", SW, INK, "#B8C0CC")
+             + f'<rect x="900" y="980" width="100" height="100" rx="10" fill="#B8C0CC" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="0" y="1250" width="{W}" height="{H - 1250}" fill="#5A6170"/>' + ln("M 0 1250 L 1080 1250", SW))
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#cv)"/>')
+    defs = ('<radialGradient id="cv" cx="0.5" cy="0.45" r="0.75"><stop offset=".55" stop-color="#000" stop-opacity="0"/>'
+            '<stop offset="1" stop-color="#000" stop-opacity=".5"/></radialGradient>')
+    return "".join(s), defs
+
+
+def fondo_isla():
+    """Isla privada al atardecer: cielo naranja y rosa, mar, palmeras y una mansión blanca."""
+    s = [f'<rect width="{W}" height="{H}" fill="url(#ia)"/>',
+         '<circle cx="540" cy="1080" r="150" fill="#FFE08A" opacity=".95"/>',
+         f'<rect x="0" y="1080" width="{W}" height="{H - 1080}" fill="url(#im)"/>']
+    for y in range(1100, 1300, 28):
+        s.append(ln(f"M {300 + (y % 3) * 40} {y} L {780 - (y % 3) * 40} {y}", 4, "#FFE08A", extra='opacity=".45"'))
+    s.append(ln("M 80 1300 Q 540 1150 1000 1300 L 1000 1360 L 80 1360 Z", SW, INK, "#F2D49B"))
+    s.append(ln("M 380 1210 L 380 1120 L 700 1120 L 700 1210 Z", SW, INK, "#FFFFFF")
+             + ln("M 360 1124 L 540 1060 L 720 1124 Z", SW, INK, "#D8DCE6")
+             + "".join(f'<rect x="{x}" y="1140" width="36" height="46" fill="#5B7FA6" stroke="{INK}" stroke-width="4"/>'
+                       for x in (410, 480, 564, 634)))
+    for x, h, d in [(200, 380, 1), (880, 420, -1), (300, 300, -1)]:
+        s.append(ln(f"M {x} 1300 Q {x + 30 * d} {1300 - h / 2} {x + 10 * d} {1300 - h}", 16, INK)
+                 + ln(f"M {x} 1300 Q {x + 30 * d} {1300 - h / 2} {x + 10 * d} {1300 - h}", 10, "#8A5A3A"))
+        top = (x + 10 * d, 1300 - h)
+        for a in (-150, -110, -70, -30, 10, 200):
+            r = math.radians(a)
+            ex, ey = top[0] + 150 * math.cos(r), top[1] + 90 * math.sin(r) + 40
+            s.append(ln(f"M {top[0]} {top[1]} Q {(top[0] + ex) / 2} {top[1] - 40} {ex:.0f} {ey:.0f}", 22, INK)
+                     + ln(f"M {top[0]} {top[1]} Q {(top[0] + ex) / 2} {top[1] - 40} {ex:.0f} {ey:.0f}", 14, "#2F7A43"))
+    defs = ('<linearGradient id="ia" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5A3A8A"/>'
+            '<stop offset=".35" stop-color="#E86A8A"/><stop offset=".55" stop-color="#FF9F5A"/></linearGradient>'
+            '<linearGradient id="im" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8806A"/>'
+            '<stop offset=".25" stop-color="#3A5EA8"/><stop offset="1" stop-color="#1F2F6B"/></linearGradient>')
+    return "".join(s), defs
+
+
 # ---------------------------------------------------------------- fondos (1080x1920)
 W, H = 1080, 1920
 
@@ -2807,6 +3506,61 @@ def fondo_cabeza():
     return "".join(s), defs
 
 
+def build_memes():
+    """Recursos del short "3 personas que ahora son memes"."""
+    for quien, ropas in [("kirk", ["traje"]), ("kirk_chica", ["traje"]), ("kirk_habla", ["traje"]),
+                         ("diddy", ["blanco", "preso_caqui"]), ("epstein", ["sueter", "preso_naranja"])]:
+        for ropa in ropas:
+            add(f"{quien}_{ropa}", PERSONA_W, PERSONA_H, persona(quien, ropa), anchor=(0.5, 1.0))
+    for cara, kw in VOS_CELU.items():
+        add(f"vos_celu_{cara}", 520, 820, vos_celu(**kw), anchor=(0.5, 1.0))
+        add(f"vos_celu_{cara}__blink", 520, 820, vos_celu(**dict(kw, eyes="closed")), anchor=(0.5, 1.0))
+    add("estudiante_a", 520, 820, estudiante("#46C281", "#F8C9A2", "#E3B24F"), anchor=(0.5, 1.0))
+    add("estudiante_b", 520, 820, estudiante("#FF8F6B", "#9B6A4A", "#2A1E1A", mano=True), anchor=(0.5, 1.0))
+    add("estudiante_c", 520, 820, estudiante("#7A5CFF", "#E9B58F", "#6B3A1E"), anchor=(0.5, 1.0))
+    add("mesa_debate", 760, 330, mesa_debate(), anchor=(0.5, 1.0))
+    add("mesa_sin_cartel", 760, 330, mesa_debate(False), anchor=(0.5, 1.0))
+    add("carpa", 900, 620, carpa(), anchor=(0.5, 1.0))
+    add("microfono", 120, 300, microfono(), anchor=(0.5, 1.0))
+    add("celular_marco", 520, 1000, celular_marco())
+    add("pantalla_feed", 370, 720, pantalla_feed())
+    add("video_kirk", 480, 330, video_card("kirk_video"))
+    add("emoji_risa", 200, 200, emoji_risa())
+    add("calavera_emoji", 200, 200, calavera_emoji())
+    add("vela", 90, 240, vela(), anchor=(0.5, 1.0))
+    add("llama_vela", 60, 90, llama_vela(), anchor=(0.5, 1.0))
+    add("flores", 300, 240, flores(), anchor=(0.5, 1.0))
+    add("retrato_kirk", 360, 440, retrato("kirk_retrato"))
+    add("disco_oro", 240, 300, disco_oro())
+    add("bola_disco", 220, 260, bola_disco(), anchor=(0.5, 0.0))
+    add("siluetas_fiesta_0", 900, 520, siluetas_fiesta(0), anchor=(0.5, 1.0))
+    add("siluetas_fiesta_1", 900, 520, siluetas_fiesta(1), anchor=(0.5, 1.0))
+    add("aceite_bebe", 120, 260, aceite_bebe(), anchor=(0.5, 1.0))
+    add("caja_evidencia", 300, 220, caja_evidencia(), anchor=(0.5, 1.0))
+    for c in ("rojo", "azul"):
+        body, defs = luz_sirena(c)
+        add(f"capa_sirena_{c}", W, H, body, defs)
+    add("esposas", 300, 170, esposas())
+    add("capa_rejas", W, H, rejas())
+    add("fajo", 240, 150, fajo())
+    add("avion", 520, 220, avion())
+    for k in range(3):
+        add(f"silueta_vip_{k}", 220, 420, silueta_vip(k), anchor=(0.5, 1.0))
+        add(f"monitor_estatica_{k}", 300, 260, monitor_estatica(k))
+    add("camara_seguridad", 300, 200, camara_seguridad())
+    add("camara_seguridad_rota", 300, 200, camara_seguridad(True))
+    add("guardia_dormido", 620, 560, guardia_dormido(), anchor=(0.5, 1.0))
+    add("taza", 260, 240, taza(), anchor=(0.5, 1.0))
+    add("remera", 420, 420, remera())
+    add("cortina_feed", 1500, 2100, cortina_feed())
+    add("capa_negra", W, H, f'<rect width="{W}" height="{H}" fill="#05060A"/>')
+    for name, fn in [("fondo_internet", fondo_internet), ("fondo_campus", fondo_campus),
+                     ("fondo_campus_noche", lambda: fondo_campus(True)), ("fondo_mansion", fondo_mansion),
+                     ("fondo_celda", fondo_celda), ("fondo_isla", fondo_isla)]:
+        body, defs = fn()
+        add(name, W, H, body, defs)
+
+
 # ---------------------------------------------------------------- armado
 def build():
     build_vos()
@@ -3038,6 +3792,7 @@ def build():
     add("dormitorio_noche", W, H, dormitorio(True))
     add("blanco", W, H, f'<rect width="{W}" height="{H}" fill="#fff"/>')
 
+    build_memes()
     os.makedirs(os.path.join(OUT, "svg"), exist_ok=True)
     os.makedirs(os.path.join(OUT, "png"), exist_ok=True)
     # capas de primer plano desenfocadas (profundidad de campo): nombre -> radio en px

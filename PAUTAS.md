@@ -68,12 +68,19 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   cuadro (`loops` con ventana de tiempo) con su sonido propio.
 - Un efecto pedido por el usuario va `"destacado": true` (no se baja bajo la voz) y con su hueco
   (`"pausas"` en la voz).
+- Los sonidos que cuentan algo (sirena del allanamiento, rejas que se cierran) también van `"destacado"`
+  con volumen moderado (~-20 dB contra la voz): mezclados con el resto quedan 25 dB abajo y no se oyen.
 
 ## Personajes
 - "Vos" es el personaje de la cuenta: aparece en cada video, con variante temática (astronauta,
   explorador) y con objetos según la escena (binoculares, linterna de noche, tapándose la nariz). Su cara tiene que corresponder a la emoción de la narración (**miedo** ante algo
   terrible, **asco** ante algo asqueroso; no confundirlas).
 - Los objetos y animales llevan cara simple y reaccionan.
+- **Personas reales: tienen que ser ellas.** Un dibujo de memoria no se parece: se usan fotos de
+  referencia (que pasa el usuario) recortadas con `foto_recurso.py` (contorno marcado sobre la grilla,
+  fondo por color, borde oscuro del kit) y pegadas sobre un cuerpo dibujado (`persona()` en `kit.py`).
+  No posterizar (se pierde el parecido). Si la foto corta la cabeza, completarla con `extender_arriba` +
+  `pelo` (textura de la misma foto). Para el meme de la cara chiquita: `achicar`.
 
 ## Contenido fuerte
 - El usuario quiere mostrar los resultados (cuerpo podrido, partido en dos, sin piel) en estilo
@@ -105,6 +112,8 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
   size/zoom) y lo que el zoom agrandaría sobre el encabezado se desvanece antes de acercar.
 
 ## Proceso
+- "Pulcro con las animaciones": revisar cada escena en hoja de fotogramas y corregir todo lo que se vea
+  chico, vacío, tapado o a destiempo (una acción que dura menos de ~1 s antes de un corte no se ve).
 1. Leer `PAUTAS.md` y las `NOTAS.md` de los proyectos anteriores.
 2. Guion → plan corto de escenas → dibujos nuevos en `kit.py` (mirar la hoja con zoom).
 3. `armar_escenas.py` del proyecto usando `comun.py` (partir de `proyectos/plantas/armar_escenas.py`).
@@ -139,3 +148,7 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - 2026-10-25 · océano · "Te pedí que corrijas eso": las burbujas de gas seguían apareciendo a mitad de
   camino, despegadas de las chimeneas → chorro visible desde la boca, parejo y sin huecos. Solo el último
   video (no tocar los anteriores si no lo pide).
+
+- 2026-10-26 · memes · "Necesito que sus caras se reconozcan" / "no se parecen, quiero que sean ellos" →
+  caras de fotos de referencia recortadas (`foto_recurso.py`) sobre cuerpos dibujados. "Sé pulcro con las
+  animaciones" → revisión por fotogramas de cada escena y cada corte. A Kirk, hacerlo reír.

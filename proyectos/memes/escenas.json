@@ -1,0 +1,3275 @@
+{
+ "cola": 3.4,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 76
+ },
+ "estilos": {
+  "titulo": {
+   "size": 84,
+   "color": "#FFFFFF",
+   "stroke": 12
+  },
+  "num": {
+   "size": 96,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "circle": true,
+   "pad": [
+    22,
+    14
+   ]
+  },
+  "cartel": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFFFFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rojo": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#FF5D5D",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_amarillo": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_celeste": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#9ADCFF",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_verde": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#8BD06A",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_violeta": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5CFF",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_marron": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#7A5236",
+   "stroke": 9,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_rosa": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F7A08C",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_naranja": {
+   "size": 80,
+   "color": "#24201F",
+   "box": "#F0A060",
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "cartel_negro": {
+   "size": 80,
+   "color": "#FFFFFF",
+   "box": "#2B2730",
+   "stroke": 0,
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "censura": {
+   "size": 104,
+   "color": "#FFFFFF",
+   "box": "#14121A",
+   "stroke": 0,
+   "radius": 10
+  },
+  "pregunta": {
+   "size": 150,
+   "color": "#FFD23F",
+   "stroke": 12
+  },
+  "boton": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#E53935",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "boton_hecho": {
+   "size": 70,
+   "color": "#FFFFFF",
+   "box": "#8A8F9E",
+   "stroke": 0,
+   "radius": 20,
+   "pad": [
+    44,
+    22
+   ],
+   "sombra": 6,
+   "box_stroke": 5
+  },
+  "titulo_meme": {
+   "size": 96,
+   "color": "#FFFFFF",
+   "stroke": 14,
+   "stroke_color": "#1B1035"
+  },
+  "banner": {
+   "size": 62,
+   "color": "#C8312F",
+   "stroke": 0
+  },
+  "meme": {
+   "size": 92,
+   "color": "#FFFFFF",
+   "stroke": 16,
+   "stroke_color": "#000000"
+  },
+  "chat": {
+   "size": 54,
+   "color": "#24201F",
+   "box": "#FFFFFF",
+   "radius": 30,
+   "pad": [
+    30,
+    18
+   ],
+   "sombra": 6,
+   "box_stroke": 4
+  },
+  "chat_verde": {
+   "size": 54,
+   "color": "#24201F",
+   "box": "#C9F7B4",
+   "radius": 30,
+   "pad": [
+    30,
+    18
+   ],
+   "sombra": 6,
+   "box_stroke": 4
+  },
+  "risa": {
+   "size": 70,
+   "color": "#FFD23F",
+   "stroke": 10
+  },
+  "taza": {
+   "size": 30,
+   "color": "#24201F",
+   "stroke": 0
+  },
+  "remera": {
+   "size": 34,
+   "color": "#FFFFFF",
+   "stroke": 0
+  }
+ },
+ "narracion": [
+  {
+   "texto": "¡Te muestro 3 personas que ahora son memes…"
+  },
+  {
+   "texto": "y la historia detrás de cada meme no es ningún chiste!"
+  },
+  {
+   "texto": "Charlie Kirk (el de la cara chiquita):"
+  },
+  {
+   "texto": "Era un activista político de Estados Unidos famoso por armar mesas de debate en universidades y desafiar a cualquier estudiante a discutir con él."
+  },
+  {
+   "texto": "Internet empezó a editar sus fotos con la cara diminuta, y el chiste se volvió un clásico."
+  },
+  {
+   "texto": "En 2025 fue asesinado durante uno de esos debates, y desde entonces sus videos están en todos lados."
+  },
+  {
+   "texto": "P. Diddy (el del aceite para bebés):"
+  },
+  {
+   "texto": "Fue uno de los productores de rap más poderosos del mundo, famoso por sus fiestas llenas de celebridades."
+  },
+  {
+   "texto": "En 2024 allanaron sus mansiones y, según la fiscalía, encontraron más de 1000 botellas de aceite para bebés: los memes explotaron."
+  },
+  {
+   "texto": "En 2025 lo condenaron a más de cuatro años de prisión."
+  },
+  {
+   "texto": "Jeffrey Epstein (el que \"no se suicidó\"):"
+  },
+  {
+   "texto": "Era un millonario con amigos famosos y poderosos, acusado de tráfico sexual de menores."
+  },
+  {
+   "texto": "En 2019 apareció muerto en su celda antes del juicio; la versión oficial dijo suicidio, pero las cámaras fallaron y los guardias se quedaron dormidos."
+  },
+  {
+   "texto": "Así nació el meme \"Epstein no se suicidó\", que hoy aparece en cualquier conversación."
+  },
+  {
+   "texto": "¿Cuál de estos memes conocías? Contanos en los comentarios."
+  }
+ ],
+ "persistentes": [
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b2",
+   "out": "e5",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Charlie Kirk",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b2+0.15",
+   "out": "e5",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b6",
+   "out": "e7",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "P. Diddy",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b6+0.15",
+   "out": "e7",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "num"
+   },
+   "x": 130,
+   "y": 250,
+   "in": "b10",
+   "out": "e10",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "Jeffrey Epstein",
+    "estilo": "titulo",
+    "size": 80
+   },
+   "x": 600,
+   "y": 250,
+   "in": "b10+0.15",
+   "out": "e10",
+   "fx_in": "slide_left",
+   "fx_out": "fade"
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e1-0.40",
+   "out": "e1+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e1-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e2-0.40",
+   "out": "e2+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e2-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e3-0.40",
+   "out": "e3+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e3-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e4-0.40",
+   "out": "e4+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e4-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e5-0.40",
+   "out": "e5+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e5-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e7-0.40",
+   "out": "e7+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e7-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e9-0.40",
+   "out": "e9+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e9-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  },
+  {
+   "a": "cortina_feed",
+   "x": 1830,
+   "y": 960,
+   "z": 60,
+   "in": "e10-0.40",
+   "out": "e10+0.40",
+   "sfx": "whoosh",
+   "vol": 0.8,
+   "keys": [
+    {
+     "at": "e10-0.40",
+     "dur": 0.8,
+     "x": -750,
+     "ease": "linear"
+    }
+   ]
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0,
+    1
+   ],
+   "fondo": "fondo_internet",
+   "ambiente": "internet",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1050
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.06,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b1:chiste",
+     "s": "golpe",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.35,
+     "z": 14,
+     "keys": [
+      {
+       "at": "b1:historia",
+       "dur": 1.2,
+       "alpha": 0.95
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "3 PERSONAS QUE\nAHORA SON MEMES",
+      "estilo": "titulo_meme"
+     },
+     "x": 540,
+     "y": 330,
+     "in": "b0:3",
+     "fx_in": "pop",
+     "idle": "breathe",
+     "out": "b1:historia",
+     "fx_out": "suave",
+     "z": 45
+    },
+    {
+     "a": "kirk_chica_traje",
+     "x": 195,
+     "y": 1330,
+     "s": 0.68,
+     "in": "b0:personas",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0
+    },
+    {
+     "a": "diddy_blanco",
+     "x": 540,
+     "y": 1330,
+     "s": 0.72,
+     "in": "b0:personas+0.12",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 2
+    },
+    {
+     "a": "epstein_sueter",
+     "x": 885,
+     "y": 1330,
+     "s": 0.68,
+     "in": "b0:personas+0.24",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 4
+    },
+    {
+     "a": "emoji_risa",
+     "x": 150,
+     "y": 760,
+     "s": 0.62,
+     "r": -7.336990441427042,
+     "in": "b0:memes+0.00",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.2653753517757114,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "calavera_emoji",
+     "x": 930,
+     "y": 740,
+     "s": 0.58,
+     "r": 11.646454728467472,
+     "in": "b0:memes+0.09",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 2.8443212192827594,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 540,
+     "y": 640,
+     "s": 0.68,
+     "r": 2.9567868439011527,
+     "in": "b0:memes+0.18",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 5.452910401111948,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "corazon",
+     "x": 330,
+     "y": 600,
+     "s": 0.3,
+     "r": -6.7380875988157864,
+     "in": "b0:memes+0.27",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 1.4059857662801782,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "corazon",
+     "x": 760,
+     "y": 580,
+     "s": 0.312,
+     "r": 1.147268797613087,
+     "in": "b0:memes+0.36",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.2977870021620332,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "corazon",
+     "x": 100,
+     "y": 1000,
+     "s": 0.276,
+     "r": 3.893907935236534,
+     "in": "b0:memes+0.45",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 0.9036985441411436,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 985,
+     "y": 980,
+     "s": 0.44,
+     "r": 10.305268600012308,
+     "in": "b0:memes+0.54",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.139087262299808,
+     "out": "b1:no",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "texto": {
+      "t": "NO ES NINGÚN CHISTE",
+      "estilo": "cartel_negro",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b1:no",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "kirk_intro",
+   "beats": [
+    2
+   ],
+   "fondo": "fondo_internet",
+   "ambiente": "internet",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1050
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.35,
+     "z": 14
+    },
+    {
+     "a": "kirk_traje",
+     "x": 540,
+     "y": 1330,
+     "s": 0.9,
+     "in": "b2:charlie",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0,
+     "swaps": [
+      {
+       "at": "b2:cara",
+       "a": "kirk_chica_traje",
+       "fx": "punch"
+      }
+     ],
+     "fx_out": "fade"
+    },
+    {
+     "texto": {
+      "t": "(EL DE LA CARA CHIQUITA)",
+      "estilo": "cartel",
+      "size": 62
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b2:el",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    },
+    {
+     "a": "emoji_risa",
+     "x": 860,
+     "y": 800,
+     "s": 0.5,
+     "r": 3.441247456911654,
+     "in": "b2:cara+0.25",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 4.450721935564376,
+     "out": "esc>-0.3",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 210,
+     "y": 860,
+     "s": 0.46,
+     "r": 9.529747374634699,
+     "in": "b2:cara+0.34",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 4.655751404614302,
+     "out": "esc>-0.3",
+     "fx_out": "pop",
+     "z": 8
+    }
+   ]
+  },
+  {
+   "nombre": "kirk_debate",
+   "beats": [
+    3
+   ],
+   "fondo": "fondo_campus",
+   "ambiente": "bosque",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1100
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.05,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "texto": {
+      "t": "ACTIVISTA POLÍTICO",
+      "estilo": "cartel_celeste",
+      "size": 72
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:activista",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b3:mesas"
+    },
+    {
+     "a": "carpa",
+     "x": 540,
+     "y": 1275,
+     "s": 1.15,
+     "in": "b3:mesas",
+     "fx_in": "drop",
+     "sfx": "none",
+     "z": -3
+    },
+    {
+     "a": "kirk_habla_traje",
+     "x": 540,
+     "y": 1160,
+     "s": 0.9,
+     "in": "b3:mesas+0.15",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0,
+     "z": -1
+    },
+    {
+     "a": "mesa_debate",
+     "x": 540,
+     "y": 1335,
+     "s": 1.2,
+     "in": "b3:mesas",
+     "fx_in": "jump",
+     "z": 1
+    },
+    {
+     "texto": {
+      "t": "PROVE ME WRONG",
+      "estilo": "banner",
+      "size": 64
+     },
+     "x": 540,
+     "y": 1217,
+     "in": "b3:debate",
+     "fx_in": "pop",
+     "z": 2
+    },
+    {
+     "a": "microfono",
+     "x": 250,
+     "y": 1085,
+     "s": 0.6,
+     "r": -8,
+     "in": "b3:debate",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "DEBATES EN UNIVERSIDADES",
+      "estilo": "cartel",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:debate",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b3:desafiar"
+    },
+    {
+     "a": "estudiante_b",
+     "x": 150,
+     "y": 1345,
+     "s": 0.42,
+     "in": "b3:estudiante",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "z": 3
+    },
+    {
+     "a": "vos_celu_contento",
+     "x": 940,
+     "y": 1345,
+     "s": 0.42,
+     "in": "b3:cualquier",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "blink": true,
+     "z": 3
+    },
+    {
+     "texto": {
+      "t": "«DEMOSTRÁ QUE ME EQUIVOCO»",
+      "estilo": "cartel_amarillo",
+      "size": 54
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b3:desafiar",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "kirk_meme",
+   "beats": [
+    4
+   ],
+   "fondo": "fondo_internet",
+   "ambiente": "internet",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1000
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b4:editar",
+     "s": "obturador"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.35,
+     "z": 14
+    },
+    {
+     "a": "pantalla_feed",
+     "x": 370,
+     "y": 900,
+     "s": 0.98,
+     "z": 2,
+     "sfx": "none"
+    },
+    {
+     "a": "kirk_traje",
+     "x": 370,
+     "y": 1176,
+     "s": 0.62,
+     "in": "b4:fotos-0.3",
+     "fx_in": "pop",
+     "z": 3,
+     "swaps": [
+      {
+       "at": "b4:diminuta",
+       "a": "kirk_chica_traje",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "celular_marco",
+     "x": 370,
+     "y": 900,
+     "s": 0.8,
+     "in": "esc",
+     "fx_in": "slide_up",
+     "sfx": "whoosh",
+     "z": 5
+    },
+    {
+     "texto": {
+      "t": "EDITAN SUS FOTOS",
+      "estilo": "cartel",
+      "size": 70
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b4:editar",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b4:chiste"
+    },
+    {
+     "particulas": {
+      "a": [
+       "emoji_risa",
+       "corazon",
+       "calavera_emoji"
+      ],
+      "n": 12,
+      "semilla": 4,
+      "zona": [
+       478,
+       640,
+       530,
+       1150
+      ],
+      "vx": [
+       0,
+       0
+      ],
+      "vy": [
+       -140,
+       -110
+      ],
+      "s": [
+       0.18,
+       0.26
+      ],
+      "ondula": [
+       18,
+       0.5
+      ],
+      "desvanece": true
+     },
+     "in": "b4:chiste",
+     "fx_in": "fade",
+     "z": 6
+    },
+    {
+     "a": "kirk_traje",
+     "x": 830,
+     "y": 1330,
+     "s": 0.68,
+     "in": "b4:diminuta+0.25",
+     "fx_in": "slide_left",
+     "fase": 1,
+     "idle": [
+      "float",
+      {
+       "fx": "shake",
+       "fuerza": 0.35,
+       "from": "b4:chiste-0.2"
+      },
+      {
+       "fx": "chew",
+       "fuerza": 3,
+       "from": "b4:chiste-0.2"
+      }
+     ],
+     "z": 7,
+     "fx_out": "fade"
+    },
+    {
+     "texto": {
+      "t": "JA",
+      "estilo": "risa",
+      "size": 66
+     },
+     "x": 670,
+     "y": 830,
+     "r": -12,
+     "in": "b4:chiste-0.10",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "out": "esc>-0.3",
+     "fx_out": "pop",
+     "z": 22
+    },
+    {
+     "texto": {
+      "t": "JA",
+      "estilo": "risa",
+      "size": 60
+     },
+     "x": 790,
+     "y": 710,
+     "r": 8,
+     "in": "b4:chiste+0.12",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "out": "esc>-0.3",
+     "fx_out": "pop",
+     "z": 22
+    },
+    {
+     "texto": {
+      "t": "JA",
+      "estilo": "risa",
+      "size": 54
+     },
+     "x": 910,
+     "y": 810,
+     "r": -6,
+     "in": "b4:chiste+0.34",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "out": "esc>-0.3",
+     "fx_out": "pop",
+     "z": 22
+    },
+    {
+     "texto": {
+      "t": "¡UN CLÁSICO!",
+      "estilo": "cartel_amarillo",
+      "size": 76
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b4:clásico",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "kirk_homenaje",
+   "beats": [
+    5
+   ],
+   "fondo": "fondo_campus",
+   "ambiente": "bosque",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.04,
+      "x": 540,
+      "y": 1100
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.0,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "fondo_campus_noche",
+     "alpha": 0,
+     "z": -10,
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b5:asesinado",
+       "dur": 1.4,
+       "alpha": 1,
+       "ease": "inout"
+      }
+     ]
+    },
+    {
+     "a": "capa_vineta",
+     "alpha": 0.2,
+     "z": 14,
+     "keys": [
+      {
+       "at": "b5:asesinado",
+       "dur": 1.4,
+       "alpha": 0.9
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "2025",
+      "estilo": "cartel_negro",
+      "size": 110
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:2025",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b5:asesinado"
+    },
+    {
+     "a": "carpa",
+     "x": 540,
+     "y": 1275,
+     "s": 1.15,
+     "z": -3
+    },
+    {
+     "a": "mesa_sin_cartel",
+     "x": 540,
+     "y": 1335,
+     "s": 1.2,
+     "z": 1
+    },
+    {
+     "a": "retrato_kirk",
+     "x": 540,
+     "y": 915,
+     "s": 0.72,
+     "in": "b5:asesinado",
+     "fx_in": "fade",
+     "dur_in": 1.0,
+     "z": 2,
+     "sfx": "none"
+    },
+    {
+     "a": "vela",
+     "id": "vela0",
+     "x": 360,
+     "y": 1090,
+     "s": 0.55,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 3,
+     "sfx": "none"
+    },
+    {
+     "a": "halo_amarillo",
+     "s": 0.25,
+     "alpha": 0.7,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 2,
+     "sfx": "none",
+     "idle": {
+      "fx": "latido",
+      "vel": 2.4,
+      "fuerza": 0.5
+     },
+     "fase": 0,
+     "sigue": {
+      "id": "vela0",
+      "punto": [
+       45,
+       40
+      ]
+     }
+    },
+    {
+     "a": "llama_vela",
+     "s": 0.5,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 4,
+     "sfx": "none",
+     "fase": 0.0,
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 0.5
+     },
+     "sigue": {
+      "id": "vela0",
+      "punto": [
+       45,
+       52
+      ]
+     }
+    },
+    {
+     "a": "vela",
+     "id": "vela1",
+     "x": 440,
+     "y": 1096,
+     "s": 0.55,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 3,
+     "sfx": "none"
+    },
+    {
+     "a": "halo_amarillo",
+     "s": 0.25,
+     "alpha": 0.7,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 2,
+     "sfx": "none",
+     "idle": {
+      "fx": "latido",
+      "vel": 2.4,
+      "fuerza": 0.5
+     },
+     "fase": 1,
+     "sigue": {
+      "id": "vela1",
+      "punto": [
+       45,
+       40
+      ]
+     }
+    },
+    {
+     "a": "llama_vela",
+     "s": 0.5,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 4,
+     "sfx": "none",
+     "fase": 1.3,
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 0.5
+     },
+     "sigue": {
+      "id": "vela1",
+      "punto": [
+       45,
+       52
+      ]
+     }
+    },
+    {
+     "a": "vela",
+     "id": "vela2",
+     "x": 640,
+     "y": 1090,
+     "s": 0.55,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 3,
+     "sfx": "none"
+    },
+    {
+     "a": "halo_amarillo",
+     "s": 0.25,
+     "alpha": 0.7,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 2,
+     "sfx": "none",
+     "idle": {
+      "fx": "latido",
+      "vel": 2.4,
+      "fuerza": 0.5
+     },
+     "fase": 2,
+     "sigue": {
+      "id": "vela2",
+      "punto": [
+       45,
+       40
+      ]
+     }
+    },
+    {
+     "a": "llama_vela",
+     "s": 0.5,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 4,
+     "sfx": "none",
+     "fase": 2.6,
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 0.5
+     },
+     "sigue": {
+      "id": "vela2",
+      "punto": [
+       45,
+       52
+      ]
+     }
+    },
+    {
+     "a": "vela",
+     "id": "vela3",
+     "x": 720,
+     "y": 1096,
+     "s": 0.55,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 3,
+     "sfx": "none"
+    },
+    {
+     "a": "halo_amarillo",
+     "s": 0.25,
+     "alpha": 0.7,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 2,
+     "sfx": "none",
+     "idle": {
+      "fx": "latido",
+      "vel": 2.4,
+      "fuerza": 0.5
+     },
+     "fase": 3,
+     "sigue": {
+      "id": "vela3",
+      "punto": [
+       45,
+       40
+      ]
+     }
+    },
+    {
+     "a": "llama_vela",
+     "s": 0.5,
+     "in": "b5:durante",
+     "fx_in": "fade",
+     "z": 4,
+     "sfx": "none",
+     "fase": 3.9000000000000004,
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 0.5
+     },
+     "sigue": {
+      "id": "vela3",
+      "punto": [
+       45,
+       52
+      ]
+     }
+    },
+    {
+     "a": "flores",
+     "x": 540,
+     "y": 1099,
+     "s": 0.62,
+     "in": "b5:debates",
+     "fx_in": "fade",
+     "z": 4,
+     "sfx": "none"
+    },
+    {
+     "texto": {
+      "t": "FUE ASESINADO",
+      "estilo": "cartel_negro",
+      "size": 78
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:asesinado",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b5:videos"
+    },
+    {
+     "a": "vos_celu_triste",
+     "x": 940,
+     "y": 1345,
+     "s": 0.42,
+     "in": "b5:debates",
+     "fx_in": "fade",
+     "z": 5,
+     "blink": true,
+     "idle": "breathe"
+    },
+    {
+     "a": "video_kirk",
+     "x": 240,
+     "y": 690,
+     "s": 0.64,
+     "r": -5,
+     "in": "b5:videos+0.00",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 0
+    },
+    {
+     "a": "video_kirk",
+     "x": 830,
+     "y": 650,
+     "s": 0.64,
+     "r": 6,
+     "in": "b5:videos+0.20",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 1
+    },
+    {
+     "a": "video_kirk",
+     "x": 540,
+     "y": 880,
+     "s": 0.64,
+     "r": -2,
+     "in": "b5:videos+0.40",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 2
+    },
+    {
+     "a": "video_kirk",
+     "x": 210,
+     "y": 1060,
+     "s": 0.64,
+     "r": 4,
+     "in": "b5:videos+0.60",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 3
+    },
+    {
+     "a": "video_kirk",
+     "x": 860,
+     "y": 1040,
+     "s": 0.64,
+     "r": -6,
+     "in": "b5:videos+0.80",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 4
+    },
+    {
+     "a": "video_kirk",
+     "x": 540,
+     "y": 1230,
+     "s": 0.64,
+     "r": 3,
+     "in": "b5:videos+1.00",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 5
+    },
+    {
+     "a": "video_kirk",
+     "x": 250,
+     "y": 1340,
+     "s": 0.64,
+     "r": -3,
+     "in": "b5:videos+1.20",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 6
+    },
+    {
+     "a": "video_kirk",
+     "x": 830,
+     "y": 1330,
+     "s": 0.64,
+     "r": 5,
+     "in": "b5:videos+1.40",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "z": 10,
+     "idle": "float",
+     "fase": 7
+    },
+    {
+     "texto": {
+      "t": "EN TODOS LADOS",
+      "estilo": "cartel_amarillo",
+      "size": 78
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:todos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "diddy",
+   "beats": [
+    6,
+    7,
+    8
+   ],
+   "fondo": "fondo_mansion",
+   "ambiente": "fiesta",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "b8:allanaron",
+      "zoom": 1.05,
+      "ease": "linear"
+     },
+     {
+      "at": "b8:allanaron",
+      "dur": 0.6,
+      "zoom": 1.0
+     }
+    ],
+    "temblor": [
+     {
+      "from": "b8:allanaron",
+      "to": "b8:allanaron+0.5",
+      "fuerza": 0.6
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b8:allanaron",
+     "s": "sirena",
+     "vol": 0.45,
+     "destacado": true
+    },
+    {
+     "at": "b8:1000",
+     "s": "glup",
+     "vol": 0.6
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.4,
+     "z": 14
+    },
+    {
+     "a": "rayo_luz",
+     "x": 40,
+     "y": 320,
+     "r": 62,
+     "s": 2.4,
+     "alpha": 0.45,
+     "z": -6,
+     "in": "b7:fiestas",
+     "fx_in": "fade",
+     "sfx": "none",
+     "idle": {
+      "fx": "sway",
+      "fuerza": 6
+     },
+     "out": "b8:allanaron",
+     "fx_out": "fade"
+    },
+    {
+     "a": "rayo_luz",
+     "x": 1040,
+     "y": 320,
+     "r": 118,
+     "s": 2.4,
+     "alpha": 0.45,
+     "z": -6,
+     "in": "b7:fiestas",
+     "fx_in": "fade",
+     "sfx": "none",
+     "idle": {
+      "fx": "sway",
+      "fuerza": 6
+     },
+     "fase": 2,
+     "out": "b8:allanaron",
+     "fx_out": "fade"
+    },
+    {
+     "a": "capa_sirena_rojo",
+     "alpha": 0,
+     "z": 12,
+     "sfx": "none",
+     "loops": [
+      {
+       "frames": [
+        "capa_sirena_rojo",
+        "capa_sirena_azul"
+       ],
+       "fps": 4,
+       "from": "b8:allanaron",
+       "to": "fin"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b8:allanaron",
+       "dur": 0.3,
+       "alpha": 0.95
+      }
+     ]
+    },
+    {
+     "a": "siluetas_fiesta_0",
+     "x": 540,
+     "y": 1345,
+     "s": 1.15,
+     "z": -4,
+     "in": "b7:fiestas",
+     "fx_in": "jump",
+     "loops": [
+      {
+       "frames": [
+        "siluetas_fiesta_0",
+        "siluetas_fiesta_1"
+       ],
+       "fps": 2.5,
+       "from": "b7:fiestas",
+       "to": "fin"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b8:allanaron",
+       "dur": 0.5,
+       "alpha": 0,
+       "y": 1500
+      }
+     ]
+    },
+    {
+     "a": "bola_disco",
+     "x": 920,
+     "y": 296,
+     "s": 0.55,
+     "in": "b7:fiestas",
+     "fx_in": "drop",
+     "idle": "sway",
+     "z": -5,
+     "out": "b8:allanaron",
+     "fx_out": "fade"
+    },
+    {
+     "a": "disco_oro",
+     "x": 160,
+     "y": 760,
+     "s": 0.55,
+     "r": -4,
+     "in": "b7:productores",
+     "fx_in": "pop",
+     "z": -5
+    },
+    {
+     "a": "disco_oro",
+     "x": 920,
+     "y": 760,
+     "s": 0.55,
+     "r": 4,
+     "in": "b7:productores+0.15",
+     "fx_in": "pop",
+     "z": -5
+    },
+    {
+     "a": "diddy_blanco",
+     "x": 540,
+     "y": 1330,
+     "s": 0.85,
+     "in": "b6:diddy",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0,
+     "keys": [
+      {
+       "at": "b8:allanaron",
+       "dur": 0.6,
+       "x": 300,
+       "s": 0.7,
+       "ease": "inout"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "(EL DEL ACEITE PARA BEBÉS)",
+      "estilo": "cartel",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b6:el",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b7"
+    },
+    {
+     "texto": {
+      "t": "PRODUCTOR DE RAP",
+      "estilo": "cartel_amarillo",
+      "size": 74
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:productores",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b7:poderosos"
+    },
+    {
+     "texto": {
+      "t": "DE LOS MÁS PODEROSOS",
+      "estilo": "cartel_amarillo",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:poderosos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b7:famoso"
+    },
+    {
+     "texto": {
+      "t": "FIESTAS CON CELEBRIDADES",
+      "estilo": "cartel_violeta",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b7:fiestas",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8"
+    },
+    {
+     "texto": {
+      "t": "2024",
+      "estilo": "cartel_negro",
+      "size": 110
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:2024",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8:según"
+    },
+    {
+     "texto": {
+      "t": "SEGÚN LA FISCALÍA…",
+      "estilo": "cartel_celeste",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:según",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8:1000"
+    },
+    {
+     "a": "caja_evidencia",
+     "x": 850,
+     "y": 1345,
+     "s": 0.85,
+     "in": "b8:allanaron+0.4",
+     "fx_in": "jump",
+     "z": 2
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 700,
+     "y": 1338,
+     "s": 0.55,
+     "r": -8,
+     "in": "b8:1000+0.00",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.0
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 760,
+     "y": 1342,
+     "s": 0.55,
+     "r": -5,
+     "in": "b8:1000+0.06",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.01
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 820,
+     "y": 1338,
+     "s": 0.55,
+     "r": -2,
+     "in": "b8:1000+0.12",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.02
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 880,
+     "y": 1342,
+     "s": 0.55,
+     "r": 1,
+     "in": "b8:1000+0.18",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.03
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 940,
+     "y": 1338,
+     "s": 0.55,
+     "r": 4,
+     "in": "b8:1000+0.24",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.04
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 1000,
+     "y": 1340,
+     "s": 0.55,
+     "r": 7,
+     "in": "b8:1000+0.30",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.05
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 730,
+     "y": 1250,
+     "s": 0.55,
+     "r": -7,
+     "in": "b8:1000+0.36",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.06
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 790,
+     "y": 1254,
+     "s": 0.55,
+     "r": -4,
+     "in": "b8:1000+0.42",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.07
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 850,
+     "y": 1250,
+     "s": 0.55,
+     "r": -1,
+     "in": "b8:1000+0.48",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.08
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 910,
+     "y": 1254,
+     "s": 0.55,
+     "r": 2,
+     "in": "b8:1000+0.54",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.09
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 970,
+     "y": 1250,
+     "s": 0.55,
+     "r": 5,
+     "in": "b8:1000+0.60",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.1
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 760,
+     "y": 1162,
+     "s": 0.55,
+     "r": 8,
+     "in": "b8:1000+0.66",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.11
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 820,
+     "y": 1166,
+     "s": 0.55,
+     "r": -6,
+     "in": "b8:1000+0.72",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.12
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 880,
+     "y": 1162,
+     "s": 0.55,
+     "r": -3,
+     "in": "b8:1000+0.78",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.13
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 940,
+     "y": 1166,
+     "s": 0.55,
+     "r": 0,
+     "in": "b8:1000+0.84",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.14
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 790,
+     "y": 1074,
+     "s": 0.55,
+     "r": 3,
+     "in": "b8:1000+0.90",
+     "fx_in": "pop",
+     "sfx": "pop",
+     "vol": 0.4,
+     "z": 3.15
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 850,
+     "y": 1078,
+     "s": 0.55,
+     "r": 6,
+     "in": "b8:1000+0.96",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.16
+    },
+    {
+     "a": "aceite_bebe",
+     "x": 910,
+     "y": 1074,
+     "s": 0.55,
+     "r": -8,
+     "in": "b8:1000+1.02",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.4,
+     "z": 3.17
+    },
+    {
+     "texto": {
+      "t": "+1000 BOTELLAS",
+      "estilo": "cartel_rosa",
+      "size": 90
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:1000",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b8:memes"
+    },
+    {
+     "a": "emoji_risa",
+     "x": 160,
+     "y": 740,
+     "s": 0.66,
+     "r": -4.932682584671454,
+     "in": "b8:memes+0.00",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 0.9050950435470115,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 520,
+     "y": 650,
+     "s": 0.6,
+     "r": -11.971783973308803,
+     "in": "b8:memes+0.09",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.215292025840135,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "calavera_emoji",
+     "x": 930,
+     "y": 690,
+     "s": 0.66,
+     "r": 2.3180641652939435,
+     "in": "b8:memes+0.18",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 5.458224378858613,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 380,
+     "y": 860,
+     "s": 0.54,
+     "r": -12.950121563624423,
+     "in": "b8:memes+0.27",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 2.6018741019743152,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 700,
+     "y": 840,
+     "s": 0.58,
+     "r": -7.2614359964433,
+     "in": "b8:memes+0.36",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.3062835227483145,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 110,
+     "y": 1010,
+     "s": 0.48,
+     "r": 9.151859490817067,
+     "in": "b8:memes+0.45",
+     "fx_in": "pop",
+     "sfx": "none",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 0.7428117668978735,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "emoji_risa",
+     "x": 985,
+     "y": 950,
+     "s": 0.46,
+     "r": 3.6575256404886396,
+     "in": "b8:memes+0.54",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "idle": "float",
+     "fase": 3.497981426762444,
+     "out": "esc>-0.2",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "texto": {
+      "t": "¡LOS MEMES EXPLOTARON!",
+      "estilo": "cartel_amarillo",
+      "size": 64
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b8:memes",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "diddy_preso",
+   "beats": [
+    9
+   ],
+   "fondo": "fondo_celda",
+   "ambiente": "carcel",
+   "flash": true,
+   "transicion": "salto de tiempo (flash)",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.06
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.0,
+      "ease": "linear"
+     }
+    ],
+    "temblor": [
+     {
+      "from": "b9:condenaron",
+      "to": "b9:condenaron+0.45",
+      "fuerza": 1
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b9:condenaron",
+     "s": "rejas",
+     "vol": 0.45,
+     "destacado": true
+    }
+   ],
+   "elementos": [
+    {
+     "a": "diddy_preso_caqui",
+     "x": 540,
+     "y": 1330,
+     "s": 0.85,
+     "idle": "breathe"
+    },
+    {
+     "texto": {
+      "t": "2025",
+      "estilo": "cartel_negro",
+      "size": 110
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b9:2025",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b9:condenaron"
+    },
+    {
+     "a": "capa_rejas",
+     "x": 540,
+     "y": -1000,
+     "z": 10,
+     "in": "b9:condenaron-0.3",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b9:condenaron-0.3",
+       "dur": 0.3,
+       "y": 960,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "+4 AÑOS DE PRISIÓN",
+      "estilo": "cartel_rojo",
+      "size": 76
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b9:cuatro",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "epstein_isla",
+   "beats": [
+    10,
+    11
+   ],
+   "fondo": "fondo_isla",
+   "ambiente": "internet",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1050
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.05,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b11:millonario+0.3",
+     "s": "zoom",
+     "vol": 0.6
+    },
+    {
+     "at": "b11:acusado",
+     "s": "golpe",
+     "vol": 0.7
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.3,
+     "z": 14,
+     "keys": [
+      {
+       "at": "b11:acusado",
+       "dur": 0.8,
+       "alpha": 0.95
+      }
+     ]
+    },
+    {
+     "a": "avion",
+     "x": -350,
+     "y": 640,
+     "s": 0.7,
+     "r": -6,
+     "in": "b11:millonario+0.3",
+     "sfx": "none",
+     "z": -2,
+     "keys": [
+      {
+       "at": "b11:millonario+0.3",
+       "dur": 2.4,
+       "x": 1450,
+       "y": 560,
+       "ease": "linear"
+      }
+     ]
+    },
+    {
+     "a": "epstein_sueter",
+     "x": 540,
+     "y": 1330,
+     "s": 0.85,
+     "in": "b10:jeffrey",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0
+    },
+    {
+     "texto": {
+      "t": "(EL QUE «NO SE SUICIDÓ»)",
+      "estilo": "cartel",
+      "size": 60
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b10:el",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11"
+    },
+    {
+     "a": "fajo",
+     "x": 170,
+     "y": 800,
+     "s": 0.55,
+     "r": -12,
+     "in": "b11:millonario+0.00",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0,
+     "out": "b11:amigos",
+     "fx_out": "pop",
+     "z": 3
+    },
+    {
+     "a": "fajo",
+     "x": 920,
+     "y": 780,
+     "s": 0.55,
+     "r": 10,
+     "in": "b11:millonario+0.10",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 1,
+     "out": "b11:amigos",
+     "fx_out": "pop",
+     "z": 3
+    },
+    {
+     "a": "fajo",
+     "x": 150,
+     "y": 1130,
+     "s": 0.55,
+     "r": 8,
+     "in": "b11:millonario+0.20",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 2,
+     "out": "b11:amigos",
+     "fx_out": "pop",
+     "z": 3
+    },
+    {
+     "a": "fajo",
+     "x": 940,
+     "y": 1120,
+     "s": 0.55,
+     "r": -9,
+     "in": "b11:millonario+0.30",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 3,
+     "out": "b11:amigos",
+     "fx_out": "pop",
+     "z": 3
+    },
+    {
+     "texto": {
+      "t": "MILLONARIO",
+      "estilo": "cartel_verde",
+      "size": 84
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b11:millonario",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:amigos"
+    },
+    {
+     "a": "silueta_vip_0",
+     "x": 180,
+     "y": 1345,
+     "s": 0.7,
+     "in": "b11:amigos+0.00",
+     "fx_in": "jump",
+     "z": -1,
+     "keys": [
+      {
+       "at": "b11:acusado",
+       "dur": 0.7,
+       "x": -120,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 80
+     },
+     "x": 180,
+     "y": 1045,
+     "in": "b11:amigos+0.20",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "out": "b11:acusado",
+     "fx_out": "pop",
+     "z": 4
+    },
+    {
+     "a": "silueta_vip_1",
+     "x": 880,
+     "y": 1345,
+     "s": 0.7,
+     "in": "b11:amigos+0.15",
+     "fx_in": "jump",
+     "z": -1,
+     "keys": [
+      {
+       "at": "b11:acusado",
+       "dur": 0.7,
+       "x": 1180,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 80
+     },
+     "x": 880,
+     "y": 1045,
+     "in": "b11:amigos+0.35",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "out": "b11:acusado",
+     "fx_out": "pop",
+     "z": 4
+    },
+    {
+     "texto": {
+      "t": "AMIGOS FAMOSOS Y PODEROSOS",
+      "estilo": "cartel_celeste",
+      "size": 56
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b11:amigos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b11:acusado"
+    },
+    {
+     "a": "esposas",
+     "x": 860,
+     "y": 860,
+     "s": 0.7,
+     "r": 12,
+     "in": "b11:acusado",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 5,
+     "idle": "float"
+    },
+    {
+     "texto": {
+      "t": "ACUSADO DE TRÁFICO\nSEXUAL DE MENORES",
+      "estilo": "cartel_rojo",
+      "size": 54
+     },
+     "x": 540,
+     "y": 480,
+     "in": "b11:acusado",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    }
+   ]
+  },
+  {
+   "nombre": "epstein_celda",
+   "beats": [
+    12
+   ],
+   "fondo": "fondo_celda",
+   "ambiente": "carcel",
+   "flash": true,
+   "transicion": "salto de tiempo (flash)",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.05,
+      "x": 540,
+      "y": 1000
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.0,
+      "ease": "linear"
+     }
+    ]
+   },
+   "sonidos": [
+    {
+     "at": "b12:cámaras",
+     "s": "estatica",
+     "vol": 0.7
+    },
+    {
+     "at": "b12:fallaron",
+     "s": "estatica",
+     "vol": 0.5
+    },
+    {
+     "at": "b12:dormidos",
+     "s": "ronquido",
+     "vol": 0.9
+    }
+   ],
+   "elementos": [
+    {
+     "a": "epstein_preso_naranja",
+     "x": 540,
+     "y": 1330,
+     "s": 0.8,
+     "idle": "breathe",
+     "keys": [
+      {
+       "at": "b12:muerto",
+       "dur": 1.0,
+       "alpha": 0
+      }
+     ],
+     "out": "b12:versión"
+    },
+    {
+     "a": "capa_negra",
+     "alpha": 0,
+     "z": 8,
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b12:muerto",
+       "dur": 0.8,
+       "alpha": 0.78
+      },
+      {
+       "at": "b12:versión",
+       "dur": 0.8,
+       "alpha": 0.35
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "2019",
+      "estilo": "cartel_negro",
+      "size": 110
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:2019",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:muerto"
+    },
+    {
+     "texto": {
+      "t": "APARECIÓ MUERTO",
+      "estilo": "cartel_negro",
+      "size": 76
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:muerto",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:juicio"
+    },
+    {
+     "texto": {
+      "t": "ANTES DEL JUICIO",
+      "estilo": "cartel_negro",
+      "size": 76
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:juicio",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:versión"
+    },
+    {
+     "texto": {
+      "t": "VERSIÓN OFICIAL:\nSUICIDIO",
+      "estilo": "cartel",
+      "size": 66
+     },
+     "x": 540,
+     "y": 480,
+     "in": "b12:versión",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:cámaras"
+    },
+    {
+     "a": "camara_seguridad",
+     "x": 220,
+     "y": 720,
+     "s": 0.8,
+     "in": "b12:cámaras",
+     "fx_in": "pop",
+     "z": 9,
+     "swaps": [
+      {
+       "at": "b12:fallaron",
+       "a": "camara_seguridad_rota",
+       "fx": "punch",
+       "sfx": "none"
+      }
+     ]
+    },
+    {
+     "a": "monitor_estatica_0",
+     "x": 830,
+     "y": 760,
+     "s": 0.8,
+     "in": "b12:cámaras+0.15",
+     "fx_in": "pop",
+     "z": 9,
+     "sfx": "none",
+     "loop": {
+      "frames": [
+       "monitor_estatica_0",
+       "monitor_estatica_1",
+       "monitor_estatica_2"
+      ],
+      "fps": 12
+     }
+    },
+    {
+     "texto": {
+      "t": "LAS CÁMARAS FALLARON",
+      "estilo": "cartel_rojo",
+      "size": 66
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:fallaron",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b12:guardias"
+    },
+    {
+     "a": "guardia_dormido",
+     "x": 580,
+     "y": 1345,
+     "s": 0.95,
+     "in": "b12:guardias",
+     "fx_in": "jump",
+     "z": 9,
+     "idle": {
+      "fx": "breathe",
+      "fuerza": 2.5
+     }
+    },
+    {
+     "a": "zzz",
+     "x": 720,
+     "y": 930,
+     "s": 0.5,
+     "in": "b12:dormidos",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "float",
+     "z": 10
+    },
+    {
+     "texto": {
+      "t": "GUARDIAS DORMIDOS",
+      "estilo": "cartel_amarillo",
+      "size": 72
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:dormidos",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20
+    },
+    {
+     "a": "vos_celu_pensando",
+     "x": 140,
+     "y": 1345,
+     "s": 0.42,
+     "in": "b12:pero",
+     "fx_in": "jump",
+     "blink": true,
+     "idle": "breathe",
+     "z": 11
+    }
+   ]
+  },
+  {
+   "nombre": "epstein_meme",
+   "beats": [
+    13
+   ],
+   "fondo": "fondo_internet",
+   "ambiente": "internet",
+   "camara": {
+    "keys": [
+     {
+      "at": "esc",
+      "dur": 0.001,
+      "zoom": 1.0,
+      "x": 540,
+      "y": 1000
+     },
+     {
+      "at": "esc+0.01",
+      "hasta": "esc>",
+      "zoom": 1.04,
+      "ease": "linear"
+     }
+    ]
+   },
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.35,
+     "z": 14
+    },
+    {
+     "a": "epstein_sueter",
+     "x": 540,
+     "y": 1300,
+     "s": 0.8,
+     "in": "b13:meme",
+     "fx_in": "pop",
+     "idle": "float",
+     "out": "b13:aparece",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "EPSTEIN",
+      "estilo": "meme"
+     },
+     "x": 540,
+     "y": 700,
+     "in": "b13:meme+0.2",
+     "fx_in": "pop",
+     "out": "b13:aparece",
+     "z": 6,
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "NO SE SUICIDÓ",
+      "estilo": "meme",
+      "size": 84
+     },
+     "x": 540,
+     "y": 1160,
+     "in": "b13:epstein",
+     "fx_in": "pop",
+     "out": "b13:aparece",
+     "z": 6,
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¿Viste el partido?",
+      "estilo": "chat"
+     },
+     "x": 320,
+     "y": 650,
+     "in": "b13:aparece+0.00",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "Sí, increíble",
+      "estilo": "chat_verde"
+     },
+     "x": 760,
+     "y": 770,
+     "in": "b13:aparece+0.35",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "¿Y qué comemos hoy?",
+      "estilo": "chat"
+     },
+     "x": 340,
+     "y": 890,
+     "in": "b13:aparece+0.70",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "Epstein no se suicidó",
+      "estilo": "chat_verde"
+     },
+     "x": 660,
+     "y": 1010,
+     "in": "b13:aparece+1.05",
+     "fx_in": "pop",
+     "sfx": "notificacion",
+     "vol": 0.5,
+     "z": 6
+    },
+    {
+     "a": "taza",
+     "x": 250,
+     "y": 1345,
+     "s": 0.9,
+     "in": "b13:cualquier",
+     "fx_in": "jump",
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "EPSTEIN\nNO SE\nSUICIDÓ",
+      "estilo": "taza"
+     },
+     "x": 238,
+     "y": 1222,
+     "in": "b13:cualquier",
+     "fx_in": "jump",
+     "sfx": "none",
+     "z": 7
+    },
+    {
+     "a": "remera",
+     "x": 800,
+     "y": 1210,
+     "s": 0.62,
+     "r": 6,
+     "in": "b13:cualquier+0.15",
+     "fx_in": "jump",
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "EPSTEIN\nNO SE\nSUICIDÓ",
+      "estilo": "remera"
+     },
+     "x": 802,
+     "y": 1240,
+     "r": 6,
+     "in": "b13:cualquier+0.15",
+     "fx_in": "jump",
+     "sfx": "none",
+     "z": 7
+    }
+   ]
+  },
+  {
+   "nombre": "cierre",
+   "beats": [
+    14
+   ],
+   "fondo": "fondo_internet",
+   "ambiente": {
+    "tipo": "internet",
+    "vol": 0.6
+   },
+   "sonidos": [
+    {
+     "at": "b14:contanos",
+     "s": "pop"
+    },
+    {
+     "at": "b14>+1.1",
+     "s": "click"
+    },
+    {
+     "at": "b14>+1.5",
+     "s": "ding"
+    }
+   ],
+   "elementos": [
+    {
+     "a": "capa_vineta",
+     "alpha": 0.3,
+     "z": 14
+    },
+    {
+     "texto": {
+      "t": "¿CUÁL CONOCÍAS?",
+      "estilo": "cartel_amarillo",
+      "size": 80
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b14:cuál",
+     "fx_in": "suave",
+     "fx_out": "suave",
+     "vol": 0.6,
+     "z": 20,
+     "out": "b14>"
+    },
+    {
+     "a": "kirk_traje",
+     "x": 195,
+     "y": 990,
+     "s": 0.6,
+     "in": "b14:cuál",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 0
+    },
+    {
+     "a": "diddy_blanco",
+     "x": 540,
+     "y": 990,
+     "s": 0.62,
+     "in": "b14:cuál+0.12",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 2
+    },
+    {
+     "a": "epstein_sueter",
+     "x": 885,
+     "y": 990,
+     "s": 0.6,
+     "in": "b14:cuál+0.24",
+     "fx_in": "pop",
+     "idle": "float",
+     "fase": 4
+    },
+    {
+     "a": "vos_celu_pensando",
+     "x": 540,
+     "y": 1345,
+     "s": 0.44,
+     "in": "b14",
+     "fx_in": "slide_up",
+     "blink": true,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b14>+1.2",
+       "a": "vos_celu_risa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta"
+     },
+     "x": 760,
+     "y": 1150,
+     "r": 12,
+     "in": "b14:conocías",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "out": "b14:contanos",
+     "fx_out": "pop"
+    },
+    {
+     "a": "globo_comentario_1",
+     "x": 790,
+     "y": 1180,
+     "s": 0.55,
+     "in": "b14:contanos",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 8,
+     "loops": [
+      {
+       "frames": [
+        "globo_comentario_1",
+        "globo_comentario_2",
+        "globo_comentario_3"
+       ],
+       "fps": 4,
+       "from": "b14:contanos",
+       "to": "fin"
+      }
+     ],
+     "idle": "bob"
+    },
+    {
+     "texto": {
+      "t": "SUSCRIBIRSE",
+      "estilo": "boton"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b14>+0.1",
+     "fx_in": "pop",
+     "out": "b14>+1.15",
+     "z": 20,
+     "keys": [
+      {
+       "at": "b14>+1.05",
+       "dur": 0.1,
+       "s": 0.92
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "SUSCRIPTO",
+      "estilo": "boton_hecho"
+     },
+     "x": 540,
+     "y": 380,
+     "in": "b14>+1.15",
+     "z": 20,
+     "sfx": "none",
+     "fx_in": "none",
+     "swaps": [],
+     "keys": [
+      {
+       "at": "b14>+1.15",
+       "dur": 0.25,
+       "s": 1.0,
+       "ease": "back"
+      }
+     ],
+     "s": 0.9
+    },
+    {
+     "a": "anillo",
+     "x": 660,
+     "y": 410,
+     "s": 0.2,
+     "z": 22,
+     "in": "b14>+1.1",
+     "out": "b14>+1.6",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b14>+1.1",
+       "dur": 0.5,
+       "s": 0.9,
+       "alpha": 0,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "cursor_mano",
+     "x": 960,
+     "y": 900,
+     "s": 0.8,
+     "z": 23,
+     "in": "b14>+0.4",
+     "fx_in": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b14>+0.4",
+       "dur": 0.6,
+       "x": 660,
+       "y": 410,
+       "ease": "out"
+      },
+      {
+       "at": "b14>+1.05",
+       "dur": 0.08,
+       "s": 0.7
+      },
+      {
+       "at": "b14>+1.15",
+       "dur": 0.1,
+       "s": 0.8
+      },
+      {
+       "at": "b14>+1.6",
+       "dur": 0.5,
+       "x": 980,
+       "y": 980,
+       "alpha": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "campana",
+     "x": 860,
+     "y": 370,
+     "s": 0.5,
+     "z": 21,
+     "in": "b14>+1.5",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "wiggle",
+      "fuerza": 2.2
+     }
+    }
+   ]
+  }
+ ],
+ "volumen_ambiente": 0.3,
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}

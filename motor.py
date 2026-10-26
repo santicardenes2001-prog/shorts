@@ -360,7 +360,7 @@ class Element:
         if s and s != "none":
             ev.append((self.tin, s, self.sp.get("vol", 1.0)))
         for sw in self.swaps:
-            if sw.get("fx") == "punch":
+            if sw.get("fx") == "punch" and sw.get("sfx") != "none":
                 ev.append((sw["t"], sw.get("sfx", "boing"), .7))
         for k in self.keys:
             if k.get("sfx"):
@@ -1213,6 +1213,65 @@ def synth(kind, ph=0.0):
         tt = np.arange(int(.04 * SR)) / SR
         sig = (np.sin(2 * np.pi * 3000 * tt) + .5 * _noise(len(tt), 8)) * np.exp(-tt * 180)
         return (sig / (np.abs(sig).max() + 1e-6) * .8).astype(np.float32)
+    if kind == "notificacion":
+        # aviso de celular: dos notas cortas que suben
+        partes = []
+        for f0, d in ((1318, .08), (1760, .14)):
+            tt = np.arange(int(d * SR)) / SR
+            partes.append((np.sin(2 * np.pi * f0 * tt) + .3 * np.sin(4 * np.pi * f0 * tt)) * np.exp(-tt * 18))
+        return (np.concatenate(partes) * .45).astype(np.float32)
+    if kind == "sirena":
+        # sirena de policía: sube y baja dos veces, con armónicos suaves
+        d = 1.3
+        t = np.arange(int(d * SR)) / SR
+        f = 1000 + 380 * np.sin(2 * np.pi * t / .65 - np.pi / 2)
+        fase = 2 * np.pi * np.cumsum(f) / SR
+        sig = np.sin(fase) + .35 * np.sin(2 * fase) + .15 * np.sin(3 * fase)
+        env = np.minimum(1, t / .08) * np.minimum(1, (d - t) / .2)
+        return (sig / 1.5 * env * .5).astype(np.float32)
+    if kind == "estatica":
+        # estática de monitor: ruido de banda media con chasquidos
+        d = .8
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        x = _noise(n, 11)
+        band = x - np.convolve(x, np.ones(12, dtype=np.float32) / 12, mode="same")
+        band = np.convolve(band, np.ones(3, dtype=np.float32) / 3, mode="same")
+        crack = (np.random.default_rng(12).random(n) > .9985) * np.random.default_rng(13).standard_normal(n) * 6
+        env = np.minimum(1, t / .03) * np.minimum(1, (d - t) / .25)
+        sig = (band / (np.abs(band).max() + 1e-6) * .6 + crack * .1) * env
+        return (sig * .5).astype(np.float32)
+    if kind == "ronquido":
+        # ronquido: inspiración grave que vibra (aleteo ~28 Hz) y una exhalación suave
+        d = 1.7
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        x = _noise(n, 14)
+        lp = np.convolve(np.convolve(x, np.ones(60, dtype=np.float32) / 60, mode="same"), np.ones(30, dtype=np.float32) / 30, mode="same")
+        lp /= np.abs(lp).max() + 1e-6
+        insp = (t < 1.0) * np.sin(np.pi * np.clip(t / 1.0, 0, 1)) ** 2 * (.55 + .45 * np.sin(2 * np.pi * 28 * t))
+        exh = (t >= 1.05) * np.sin(np.pi * np.clip((t - 1.05) / .6, 0, 1)) ** 2 * .35
+        tono = np.sin(2 * np.pi * 95 * t) * insp * .4
+        return ((lp * (insp + exh) + tono) * .8).astype(np.float32)
+    if kind == "rejas":
+        # puerta de rejas que se cierra: golpe metálico con resonancias inarmónicas
+        d = 1.4
+        t = np.arange(int(d * SR)) / SR
+        sig = sum(a * np.sin(2 * np.pi * f * t) * np.exp(-t * k)
+                  for f, a, k in ((180, 1, 4), (523, .6, 5), (1371, .45, 7), (2210, .3, 9), (3320, .2, 12)))
+        x = _noise(len(t), 15)
+        golpe = np.convolve(x, np.ones(8, dtype=np.float32) / 8, mode="same") * np.exp(-t * 60)
+        sig = sig + 1.5 * golpe
+        return (sig / (np.abs(sig).max() + 1e-6) * .8).astype(np.float32)
+    if kind == "obturador":
+        # foto: clic doble de obturador
+        partes = []
+        for k in (0, 1):
+            tt = np.arange(int(.05 * SR)) / SR
+            partes.append((_noise(len(tt), 16 + k) * np.exp(-tt * 120) + np.sin(2 * np.pi * 2200 * tt) * np.exp(-tt * 200)))
+            partes.append(np.zeros(int(.06 * SR)))
+        sig = np.concatenate(partes)
+        return (sig / (np.abs(sig).max() + 1e-6) * .6).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 
@@ -1288,6 +1347,40 @@ def ambiente(tipo, n, seed=0):
             moan = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * tt / 2.2) ** 2
             pegar((moan * .07).astype(np.float32), at)
             at += rnd.uniform(9, 14)
+    elif tipo == "fiesta":   # música de fiesta lejana: frases de bombo (120 bpm) con pausas, algún platillo
+        at = rnd.uniform(.2, .6)
+        while at < dur:
+            for j in range(int(rnd.choice([8, 8, 12, 16]))):
+                tt = np.arange(int(.18 * SR)) / SR
+                f = 48 + 70 * np.exp(-tt * 30)
+                bombo = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 16)
+                pegar((bombo * .32).astype(np.float32), at + j * .5)
+                if j % 2:
+                    th = np.arange(int(.04 * SR)) / SR
+                    hat = np.random.default_rng(int(at * 10) + j).standard_normal(len(th)) * np.exp(-th * 90)
+                    pegar((hat * .025).astype(np.float32), at + j * .5)
+            at += j * .5 + rnd.uniform(1.0, 2.0)
+    elif tipo == "carcel":   # cárcel: goteo espaciado y algún portazo metálico lejano
+        at = rnd.uniform(.5, 1.5)
+        while at < dur:
+            tt = np.arange(int(.12 * SR)) / SR
+            f = 1400 * np.exp(-tt * 25) + 700
+            gota = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt * 40)
+            pegar((gota * .1).astype(np.float32), at)
+            at += rnd.uniform(2.2, 4.0)
+        at = rnd.uniform(3, 6)
+        while at < dur:
+            tt = np.arange(int(1.0 * SR)) / SR
+            clank = sum(a * np.sin(2 * np.pi * f * tt) * np.exp(-tt * k) for f, a, k in ((150, 1, 5), (440, .5, 7), (1100, .25, 10)))
+            pegar((clank * .05).astype(np.float32), at)
+            at += rnd.uniform(6, 10)
+    elif tipo == "internet":   # algún aviso de celular suelto, muy bajo
+        at = rnd.uniform(1, 2.5)
+        while at < dur:
+            for f0, d0, off in ((1318, .07, 0), (1760, .1, .08)):
+                tt = np.arange(int(d0 * SR)) / SR
+                pegar((np.sin(2 * np.pi * f0 * tt) * np.exp(-tt * 20) * .05).astype(np.float32), at + off)
+            at += rnd.uniform(3, 6)
     elif tipo == "noche":   # grillos: ráfagas cortas con silencios, no un pitido continuo
         at = rnd.uniform(.2, .8)
         while at < dur:

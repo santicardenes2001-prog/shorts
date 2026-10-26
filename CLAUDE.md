@@ -2,7 +2,8 @@
 
 Shorts verticales (1080×1920, 30 fps) "explicados con muñequitos", en español rioplatense neutro.
 Herramientas: `kit.py` (dibujos SVG), `motor.py` (render), `procesar_voz.py`, `transcribir.py`,
-`hoja_kit.py`, `revisar.py` (revisor automático), `comun.py` (estilos y ayudantes compartidos).
+`hoja_kit.py`, `revisar.py` (revisor automático), `comun.py` (estilos y ayudantes compartidos),
+`foto_recurso.py` (fotos de personas reales → recursos del kit, en `recursos/fotos/`).
 Instrucciones originales del encargo: `PROMPT.md`.
 
 ## Memoria del taller (obligatorio)
