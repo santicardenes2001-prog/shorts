@@ -97,26 +97,33 @@ for i, (dx, dy) in enumerate([(-26, 0), (26, 0), (-26, 166), (26, 166)]):
     brillos.append({"a": "brillo", "x": round(x), "y": round(y), "s": .5, "z": 6, "in": f"b3:puntas+{i*0.1:.1f}",
                     "out": "b3:atada", "fx_in": "pop", "fx_out": "pop", "sfx": "ding" if i == 0 else "none",
                     "idle": {"fx": "spin", "vel": 90 if i % 2 else -90}})
-gotas1 = [vuelo("gota_sangre", 540 + dx, round(CH) + 10, dx * 2, 40, 1300, f"b4:clavaban+{0.05 + i*0.08:.2f}", 1.1, 0, 1.0)
-          for i, dx in enumerate([-20, 14, -6, 24])]
-e1 = {"nombre": "tenedor", "beats": [2, 3, 4], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
+gotas1 = [vuelo("gota_sangre", 540 + dx, round(CH) + 45, dx * 9, 30 + 15 * (i % 3), 1300, f"b4:clavaban+{0.02 + i*0.04:.2f}", .9, 0, 1.2)
+          for i, dx in enumerate([-30, 26, -14, 40, -44, 10, 34, -24])]
+gotas1 += [{"a": f"salpicadura_{i}", "x": x, "y": y, "s": .8, "r": i * 90, "z": 0, "in": f"b4:clavaban+{0.05 + i*0.05:.2f}",
+            "fx_in": "pop", "sfx": "none"} for i, (x, y) in enumerate([(330, round(CH) + 60), (760, round(CH) + 20), (420, round(CH) + 260)])]
+gotas1.append({"a": "pantalla_roja", "x": 540, "y": 960, "z": 30, "alpha": .5, "in": "b4:clavaban", "out": "b4:clavaban+0.45",
+               "fx_out": "fade", "dur_out": .4, "sfx": "none"})
+e1 = {"nombre": "tenedor", "beats": [2, 3, 4], "fondo": "fondo_mazmorra", "flash": True,
+      "camara": [{"at": "b4:clavaban", "dur": .1, "s": 1.7, "x": 540, "y": round(CH) + 40, "ease": "out"},
+                 {"at": "b4:clavaban+1.3", "dur": .5, "s": 1.0, "ease": "inout"}],
+      "elementos": [
     {"a": "tenedor", "x": BX, "y": BY, "s": BIG, "r": BR, "z": 4, "in": "b2:tenedor", "fx_in": "pop",
      "idle": {"fx": "float", "to": "b3:cuello"},
      "keys": [{"at": "b3:barra", "dur": .2, "s": BIG * 1.1, "ease": "out"}, {"at": "b3:barra+0.2", "dur": .3, "s": BIG},
-              {"at": "b3:cuello", "dur": .55, "x": 540, "y": round(CH - 4), "s": S1, "r": 0, "ease": "inout", "sfx": "whoosh"}]},
+              {"at": "b3:cuello", "dur": .55, "x": 540, "y": round(CH - 4), "s": S1, "r": 0, "ease": "inout", "sfx": "whoosh"}],
+     "swaps": [{"at": "b4:clavaban", "a": "tenedor_clavado", "sfx": "crack"}]},
     *brillos,
     {"a": "preso_cuello", "x": 540, "y": PIES, "s": S1, "z": 3, "in": "b3:atada", "fx_in": "slide_up",
-     "idle": {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban", "to": "b4:clavaban+1.2"},
+     "idle": {"fx": "shake", "fuerza": 1.6, "from": "b4:clavaban", "to": "b4:clavaban+1.5"},
      "keys": [{"at": "b4:colgaban", "dur": .3, "y": PIES - 30, "ease": "out"}, {"at": "b4:colgaban+0.3", "dur": .5, "y": PIES, "ease": "bounce"}]},
     {"a": "cuello_sudor", "x": 540, "y": round(CH), "s": S1, "z": 1, "in": "b3:atada", "fx_in": "slide_up", "blink": False,
-     "idle": {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban", "to": "b4:clavaban+1.2"},
+     "idle": {"fx": "shake", "fuerza": 1.6, "from": "b4:clavaban", "to": "b4:clavaban+1.5"},
      "swaps": [{"at": "b4:sueño", "a": "cuello_cansado", "fx": "punch", "sfx": "none"},
                {"at": "b4:bajar", "a": "cuello_dormido", "sfx": "none"},
-               {"at": "b4:clavaban", "a": "cuello_grito", "fx": "punch", "sfx": "none"}],
+               {"at": "b4:clavaban", "a": "cuello_clavado", "fx": "punch", "sfx": "none"}],
      "keys": [{"at": "b4:colgaban", "dur": .3, "y": round(CH) - 30, "ease": "out"}, {"at": "b4:colgaban+0.3", "dur": .5, "y": round(CH), "ease": "bounce"},
-              {"at": "b4:bajar", "dur": 1.1, "y": round(CH) + 16, "ease": "in"},
-              {"at": "b4:clavaban", "dur": .15, "y": round(CH) - 14, "ease": "out", "sfx": "golpe"},
-              {"at": "b4:clavaban+0.15", "dur": .4, "y": round(CH), "ease": "out"}]},
+              {"at": "b4:bajar", "dur": 1.1, "y": round(CH) + 12, "ease": "in"},
+              {"at": "b4:clavaban", "dur": .08, "y": round(CH) + 14, "ease": "in", "sfx": "golpe"}]},
     {"texto": {"t": "CORREA", "estilo": "etiqueta"}, "x": 840, "y": round(CH) + 70, "r": 5, "z": 8, "in": "b3:correa", "out": "b3:barbilla", "fx_in": "pop", "fx_out": "pop"},
     {"texto": {"t": "BARBILLA", "estilo": "etiqueta"}, "x": 840, "y": round(CH) - 40, "r": -4, "z": 8, "in": "b3:barbilla", "out": "b4:colgaban", "fx_in": "pop", "fx_out": "pop"},
     {"texto": {"t": "PECHO", "estilo": "etiqueta"}, "x": 830, "y": round(CH) + 200, "r": 4, "z": 8, "in": "b3:pecho", "out": "b4:colgaban", "fx_in": "pop", "fx_out": "pop"},
@@ -124,7 +131,7 @@ e1 = {"nombre": "tenedor", "beats": [2, 3, 4], "fondo": "fondo_mazmorra", "flash
     {"a": "cama_vacia", "x": 210, "y": 1300, "s": .4, "z": 3, "in": "b4:acostarse", "out": "b4:sueño", "fx_in": "pop", "fx_out": "pop"},
     {"a": "prohibido", "x": 210, "y": 1225, "s": .8, "z": 4, "in": "b4:acostarse+0.15", "out": "b4:sueño", "fx_in": "pop", "fx_out": "pop", "sfx": "boing"},
     {"a": "zzz", "x": 820, "y": round(CH) - 380, "s": .7, "z": 8, "in": "b4:sueño", "out": "b4:clavaban", "fx_in": "pop", "fx_out": "pop", "idle": "float"},
-    crack("b4:clavaban", 820, round(CH) - 330, 10, "¡AAAY!", 120, 1.6, "none"),
+    crack("b4:clavaban", 690, round(CH) - 170, 10, "¡AAAAY!", 100, 1.6, "none"),
     *gotas1,
     {"a": "vos_miedo", "x": 170, "y": 1330, "s": .5, "z": 2, "in": "b4:sueño", "fx_in": "slide_right", "blink": True, "idle": "breathe",
      "swaps": [{"at": "b4:clavaban", "a": "vos_grito", "fx": "punch"}]},
@@ -141,12 +148,20 @@ palancas = [kpos(54, 90), kpos(646, 1010)]
 giro = [("b7:girar", .8), ("b7:estiraban", .8), ("b7:desgarrar", .8), ("b7:dislocar", .8), ("b7:caderas", .8), ("b7:chasquidos", .8)]
 rod_keys = lambda sgn: [{"at": at, "dur": d, "r": sgn * 90 * (i + 1), "ease": "inout", **({"sfx": "cruje"} if sgn > 0 else {})}
                         for i, (at, d) in enumerate(giro)]
-e2 = {"nombre": "potro", "beats": [5, 6, 7], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
+hombros_y = kpos(0, 434)[1]
+caderas_y = kpos(0, 720)[1]
+e2 = {"nombre": "potro", "beats": [5, 6, 7], "fondo": "fondo_mazmorra", "flash": True,
+      "camara": [{"at": "b7:dislocar", "dur": .15, "s": 1.5, "x": 540, "y": hombros_y, "ease": "out"},
+                 {"at": "b7:caderas", "dur": .3, "y": caderas_y, "ease": "inout"},
+                 {"at": "b7:escuchaban", "dur": .5, "s": 1.0, "ease": "inout"}],
+      "elementos": [
+    {"a": "potro_sangre", "x": PX, "y": PY, "s": PS, "z": .5, "in": "b7:dislocar", "fx_in": "fade", "dur_in": .6, "sfx": "none"},
+    {"a": "pantalla_roja", "x": 540, "y": 960, "z": 30, "alpha": .4, "in": "b7:dislocar", "out": "b7:dislocar+0.35", "fx_out": "fade", "dur_out": .3, "sfx": "none"},
     {"a": "potro_mesa", "x": PX, "y": PY, "s": PS, "z": 0, "in": "b5:potro", "fx_in": "drop",
      "keys": [{"at": "b6:mesa", "dur": .15, "s": PS * 1.04, "ease": "out"}, {"at": "b6:mesa+0.15", "dur": .3, "s": PS, "ease": "out"}]},
     {"a": "potro_preso_0", "x": PX, "y": PY, "s": PS, "z": 1, "in": "b6:ataban", "fx_in": "drop",
-     "seq": {"frames": ["potro_preso_0", "potro_preso_1", "potro_preso_2", "potro_preso_3", "potro_preso_4"],
-             "at": "b7:estiraban", "dur": 3.0, "ease": "linear"},
+     "seq": {"frames": ["potro_preso_0", "potro_preso_1", "potro_preso_2", "potro_preso_2", "potro_preso_3", "potro_preso_4", "potro_preso_4"],
+             "at": "b7:estiraban", "dur": 3.4, "ease": "linear"},
      "idle": [{"fx": "shake", "fuerza": .5, "from": "b7:estiraban", "to": "b7:dislocar"}, {"fx": "shake", "fuerza": 1.3, "from": "b7:dislocar"}]},
     *[{"a": "rodillo", "x": x, "y": y, "s": PS * .9, "z": 2, "in": "b6:rodillos", "fx_in": "pop",
        "keys": [{"at": "b6:rodillos", "dur": .6, "r": (1 if i else -1) * 90, "ease": "out"}] + rod_keys(1 if i else -1)}
@@ -158,8 +173,8 @@ e2 = {"nombre": "potro", "beats": [5, 6, 7], "fondo": "fondo_mazmorra", "flash":
     {"texto": {"t": "¡GIRAR!", "estilo": "etiqueta"}, "x": 540, "y": 400, "r": 3, "z": 6, "in": "b7:girar", "out": "b7:estiraban", "fx_in": "pop", "fx_out": "pop"},
     {"texto": {"t": "¡ESTIRA!", "size": 70, "color": "#FFFFFF", "box": "#FF5D5D"}, "x": 540, "y": 400, "z": 6, "in": "b7:estiraban", "out": "b7:dislocar",
      "fx_in": "pop", "fx_out": "pop", "keys": [{"at": "b7:estiraban", "dur": 1.6, "sy": 1.3, "ease": "inout"}]},
-    crack("b7:hombros", *kpos(150, 400), -10),
-    crack("b7:caderas", *kpos(560, 700), 10),
+    crack("b7:hombros", 330, hombros_y - 150, -10),
+    crack("b7:caderas", 750, caderas_y - 60, 10),
     crack("b7:chasquidos", 300, 560, -8, "¡CHASK!", 110, .6),
     crack("b7:escuchaban", 780, 900, 8, "¡CRACK!", 110, .6),
     {"a": "vos_grito", "x": 120, "y": 1330, "s": .42, "z": 3, "in": "b7:dislocar", "fx_in": "jump", "idle": "shake"},
@@ -177,9 +192,12 @@ for g in golpes:
     verd_swaps.append({"at": f"{g}-0.25", "a": "verdugo_barra_arriba"})
     verd_swaps.append({"at": g, "a": "verdugo_barra_abajo", "fx": "punch", "sfx": "golpe"})
 verd_swaps.append({"at": "b10", "a": "verdugo_barra_arriba"})
-e3 = {"nombre": "rueda", "beats": [8, 9, 10], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
+e3 = {"nombre": "rueda", "beats": [8, 9, 10], "fondo": "fondo_mazmorra", "flash": True,
+      "camara": [{"at": "b9:huesos", "dur": .12, "s": 1.35, "x": RX, "y": RY - 80, "ease": "out"},
+                 {"at": "b9:huesos+0.9", "dur": .5, "s": 1.0, "ease": "inout"}],
+      "elementos": [
     {"a": "rueda", "x": RX, "y": RY, "s": RS, "z": 0, "in": "b8:rueda", "fx_in": "slide_left",
-     "keys": [{"at": "b8:rueda", "dur": .45, "r": -120, "ease": "out"}, {"at": "b9:gran", "dur": .4, "s": RS * 1.05, "ease": "out"}, {"at": "b9:gran+0.4", "dur": .3, "s": RS}]},
+     "keys": [{"at": "b8:rueda", "dur": .45, "r": -120, "ease": "out"}]},
     {"a": "rueda_preso_0", "x": RX, "y": RY, "s": RS, "z": 1, "in": "b9:ataban", "fx_in": "drop",
      "swaps": [{"at": "b9:brazos", "a": "rueda_preso_1", "fx": "punch", "sfx": "none"},
                {"at": "b9:piernas", "a": "rueda_preso_2", "fx": "punch", "sfx": "none"},

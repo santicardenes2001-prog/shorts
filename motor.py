@@ -613,7 +613,9 @@ class Project:
         self.scenes = []
         for i, sc in enumerate(doc["escenas"]):
             els = [Element(e, self.tl, i, j) for j, e in enumerate(sc.get("elementos", []))]
-            self.scenes.append(dict(sc, els=els))
+            # cámara: zoom de toda la escena; "s" es el zoom y (x, y) el punto que queda fijo en pantalla
+            cam = Element({"keys": sc["camara"], "x": W / 2, "y": H / 2, "s": 1.0}, self.tl, i) if sc.get("camara") else None
+            self.scenes.append(dict(sc, els=els, cam=cam))
         self.persist = [Element(dict(e, z=e.get("z", 50)), self.tl, None, j) for j, e in enumerate(doc.get("persistentes", []))]
         self.caps = Captions(self.words, doc.get("subtitulos", {})) if doc.get("subtitulos", {}).get("activos", True) else None
         for el in self.all_elements():
@@ -652,6 +654,12 @@ class Project:
         els = [e for e in sc["els"] + self.persist if e.active(t)]
         for el in sorted(els, key=lambda e: e.z):
             draw_element(frame, el, el.state(t))
+        if sc.get("cam"):
+            cs = sc["cam"].state(t)
+            z = max(cs["s"], 1.0)
+            if z > 1.001:
+                left, top = cs["x"] - cs["x"] / z, cs["y"] - cs["y"] / z
+                frame = frame.resize((W, H), Image.BICUBIC, box=(left, top, left + W / z, top + H / z))
         if sc.get("flash"):
             q = (t - self.tl.scene_start[si]) / .25
             if q < 1:

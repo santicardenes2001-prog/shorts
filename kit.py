@@ -1328,6 +1328,30 @@ def tenedor():
     return "".join(s)
 
 
+def tenedor_clavado():
+    """Tenedor con las púas de arriba metidas en la garganta: la punta queda adentro,
+    con la herida en el borde y la sangre que baja por la barra y el pecho."""
+    base = tenedor()
+    out = [f'<clipPath id="tc"><rect x="0" y="22" width="120" height="150"/></clipPath>', f'<g clip-path="url(#tc)">{base}</g>']
+    for x in (34, 86):
+        out.append(f'<ellipse cx="{x}" cy="22" rx="14" ry="7" fill="{SANGRE2}" stroke="{INK}" stroke-width="3"/>')
+        for dx, l in ((-5, 120), (3, 150), (8, 96)):
+            out.append(ln(f"M {x+dx} 26 Q {x+dx-3} {26 + l/2} {x+dx} {26 + l}", 6, SANGRE))
+            out.append(f'<circle cx="{x+dx}" cy="{30 + l}" r="5" fill="{SANGRE}"/>')
+    return "".join(out)
+
+
+def heridas_cuello():
+    """Garganta perforada (justo debajo del mentón), sangre por el cuello y por la boca."""
+    out = []
+    for x in (234, 286):
+        out.append(f'<ellipse cx="{x}" cy="458" rx="15" ry="8" fill="{SANGRE2}" stroke="{INK}" stroke-width="4"/>')
+        for dx, l in ((-6, 130), (5, 150)):
+            out.append(ln(f"M {x+dx} 462 Q {x+dx-4} {462 + l/2} {x+dx} {462 + l}", 9, SANGRE))
+    out.append(ln("M 290 410 Q 300 430 296 452", 8, SANGRE))
+    return "".join(out)
+
+
 def preso_dos_sogas():
     """Preso colgado de dos sogas con los brazos en Y. Sin cabeza ni cuello: la cabeza
     (con su cuello) va en otra capa por detrás, así puede bajar sin despegarse.
@@ -1372,6 +1396,15 @@ POTRO_ROD = [(350, 90), (350, 1010)]          # rodillos de arriba (muñecas) y 
 POTRO_PALANCAS = [(54, 90), (646, 1010)]      # palancas en cruz en la punta de cada rodillo
 
 
+def potro_sangre():
+    """Salpicaduras y chorreaduras en el tablón (capa aparte, aparece al dislocar)."""
+    out = []
+    for x, y, r in [(250, 340, 26), (450, 330, 22), (300, 720, 30), (410, 760, 24), (350, 880, 20)]:
+        out.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{SANGRE}" opacity=".85"/>')
+        out.append(ln(f"M {x} {y} L {x} {y + 3*r}", r * .5, SANGRE, extra='opacity=".85"'))
+    return "".join(out)
+
+
 def potro_mesa():
     s = []
     for x in (30, 610):
@@ -1412,13 +1445,14 @@ def preso_potro(k):
     for x in (318, 382):
         s.append(stroke_path(f"M {x - 4 if x < 350 else x + 4} {feet+16} L {x} {POTRO_ROD[1][1]-20}", SOGA, 12))
     # brazos estirados hacia arriba, por los costados de la cabeza
+    g = max(0, k - 2) * 26          # separación de la articulación (dislocada)
     for x0, xh in [(270, 222), (430, 478)]:
-        s.append(stroke_path(f"M {x0} {sh+12} Q {xh + (-16 if xh < 350 else 16)} {(sh+hand)/2:.0f} {xh} {hand}", P["piel"], 32))
+        s.append(stroke_path(f"M {x0 + (-6 if x0 < 350 else 6) * (g > 0)} {sh+12-g} Q {xh + (-16 if xh < 350 else 16)} {(sh+hand)/2:.0f} {xh} {hand}", P["piel"], 32))
         s.append(f'<circle cx="{xh}" cy="{hand}" r="22" fill="{P["piel"]}" stroke="{INK}" stroke-width="6"/>')
         s.append(ln(f"M {xh-28} {hand-8} L {xh+28} {hand} M {xh-28} {hand+6} L {xh+28} {hand+14}", 8, P["madera2"]))
     # piernas y pies
     for x0, xf in [(324, 330), (376, 370)]:
-        s.append(stroke_path(f"M {x0} {hp} L {xf} {feet}", P["piel"], 36))
+        s.append(stroke_path(f"M {x0} {hp+g} L {xf} {feet}", P["piel"], 36))
     for xf in (322, 378):
         s.append(f'<ellipse cx="{xf}" cy="{feet+10}" rx="24" ry="14" fill="{P["piel"]}" stroke="{INK}" stroke-width="6"/>')
     s.append(ln(f"M 292 {feet+4} L 408 {feet+12}", 9, P["madera2"]))
@@ -1429,12 +1463,25 @@ def preso_potro(k):
     s.append(stroke_path(f"M 258 {(sh+hp)/2+30:.0f} Q 350 {(sh+hp)/2+42:.0f} 444 {(sh+hp)/2+30:.0f}", P["madera2"], 10))
     for x in (270, 430):
         s.append(f'<circle cx="{x}" cy="{sh+14}" r="24" fill="{P["arpillera"]}" stroke="{INK}" stroke-width="6"/>')
-    if k >= 2:   # músculos que se desgarran
-        for (x, y) in [(300, (sh+hand)/2), (400, (sh+hand)/2), (327, (hp+feet)/2), (373, (hp+feet)/2)]:
-            s.append(ln(f"M {x-10} {y-12} L {x+8} {y-4} M {x-10} {y+2} L {x+8} {y+10}", 5, SANGRE))
-    if k >= 3:   # hombros y caderas que se dislocan
-        for (x, y) in [(270, sh+10), (430, sh+10), (318, hp), (382, hp)]:
-            s.append(estrella4(x, y, 24, "#FFF1A8", 4))
+    if k >= 2:   # músculos que se desgarran: tajos abiertos en brazos y piernas
+        for (x, y) in [(244, (sh+hand)/2), (456, (sh+hand)/2), (328, (hp+feet)/2), (372, (hp+feet)/2)]:
+            for dy in ((-14, 10) if k >= 3 else (0,)):
+                s.append(f'<ellipse cx="{x}" cy="{y+dy:.0f}" rx="{8 + 3*k}" ry="5" fill="{SANGRE2}" stroke="{INK}" stroke-width="3"/>'
+                         f'<ellipse cx="{x}" cy="{y+dy+1:.0f}" rx="{4 + 2*k}" ry="2" fill="{CARNE}"/>')
+            if k >= 3:
+                s.append(ln(f"M {x} {y+16:.0f} L {x} {y+40+10*k:.0f}", 5, SANGRE))
+    if g:        # articulaciones dislocadas: fibras de músculo, hueso a la vista y sangre
+        for jx, jy, sgn in [(270, sh + 12, -1), (430, sh + 12, -1), (324, hp, 1), (376, hp, 1)]:
+            top, bot = (jy - g, jy) if sgn < 0 else (jy, jy + g)
+            s.append(f'<rect x="{jx-17}" y="{top}" width="34" height="{bot-top}" fill="{SANGRE2}"/>')
+            for dx in (-11, -4, 4, 11):
+                s.append(ln(f"M {jx+dx} {top} Q {jx+dx*1.4:.0f} {(top+bot)/2:.0f} {jx+dx} {bot}", 4, CARNE))
+            by = top + 6 if sgn < 0 else bot - 6
+            s.append(f'<circle cx="{jx}" cy="{by}" r="11" fill="{P["hueso"]}" stroke="{INK}" stroke-width="4"/>')
+            s.append(ln(f"M {jx-17} {top} L {jx-17} {bot} M {jx+17} {top} L {jx+17} {bot}", 4))
+        for x, l in [(276, 60), (424, 80), (330, 50), (372, 70)][: 2 + (k == 4) * 2]:
+            yy = sh + 40 if x in (276, 424) else hp + g + 30
+            s.append(ln(f"M {x} {yy} L {x} {yy + l + 20*k}", 7, SANGRE) + f'<circle cx="{x}" cy="{yy + l + 20*k + 4}" r="7" fill="{SANGRE}"/>')
     faces = {0: ("wide", "miedo", "wavy"), 1: ("wide", "dolor", "o"), 2: ("pain", "dolor", "scream"),
              3: ("pain", "dolor", "scream"), 4: ("pain", "dolor", "scream")}
     e_, b_, m_ = faces[k]
@@ -1474,35 +1521,64 @@ def zigzag(x0, y0, x1, y1, n=3, amp=18):
     return "M " + " L ".join(pts)
 
 
+def entrelazar(cx, cy, aplasta, miembros, ancho, rayo_ancho, rayos=12):
+    """Miembros rotos que siguen el borde de la rueda pasando por encima y por debajo
+    de los rayos. Cada miembro: (r_ini, ang_ini, r_arco, ang_fin) en grados; sale de la
+    articulación, va hacia afuera y sigue un arco. Donde cruza un rayo por debajo, se
+    redibuja ese tramo de rayo encima. aplasta: factor vertical (1 = rueda de frente)."""
+    def xy(r, ang):
+        t = math.radians(ang)
+        return cx + r * math.cos(t), cy + r * math.sin(t) * aplasta
+    paso = 360 / rayos
+    out, encima, puntas = [], [], []
+    for (r0, a0, ra, a1) in miembros:
+        pts = [xy(r0 + (ra - r0) * i / 6, a0) for i in range(7)]
+        n = max(2, int(abs(a1 - a0) / 3))
+        for i in range(1, n + 1):
+            ang = a0 + (a1 - a0) * i / n
+            pts.append(xy(ra + 10 * math.sin(i * .9), ang))
+        d = "M " + " L ".join(f"{x:.0f} {y:.0f}" for x, y in pts)
+        out.append(stroke_path(d, P["piel"], ancho))
+        # cruces con los rayos, alternando arriba/abajo
+        lo, hi = sorted((a0, a1))
+        k0 = math.floor(lo / paso) + 1
+        cruce = 0
+        while k0 * paso < hi:
+            ang = k0 * paso
+            if cruce % 2 == 1:
+                p0, p1 = xy(ra - ancho * .9, ang), xy(ra + ancho * .9, ang)
+                encima.append(stroke_path(f"M {p0[0]:.0f} {p0[1]:.0f} L {p1[0]:.0f} {p1[1]:.0f}", P["madera"], rayo_ancho))
+            cruce += 1
+            k0 += 1
+        # moretones y la mano/pie al final
+        for t in (.3, .6):
+            x, y = pts[int(len(pts) * t)]
+            out.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{ancho*.35:.0f}" fill="#8E6BBF" opacity=".6"/>')
+        puntas.append(pts[-1])
+    for x, y in puntas:
+        out.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{ancho*.62:.0f}" fill="{P["piel"]}" stroke="{INK}" stroke-width="6"/>')
+    return "".join(out) + "".join(encima)
+
+
 def preso_rueda(k):
     """Preso en la rueda: 0 atado en X, 1 brazos rotos, 2 todo roto, 3 entrelazado en los rayos."""
     s = []
     hands = [(150, 190), (550, 190)]
     feet = [(205, 590), (495, 590)]
     sh, hp = [(300, 300), (400, 300)], [(320, 450), (380, 450)]
-    limbs = list(zip(sh, hands)) + list(zip(hp, feet))
-    for i, ((x0, y0), (x1, y1)) in enumerate(limbs):
-        roto = (k >= 1 and i < 2) or (k >= 2)
-        if k == 3:
-            d = zigzag(x0, y0, x1, y1, 5, 30)
-            d = d.replace(" L ", " Q ", 1) if False else d
-        elif roto:
-            d = zigzag(x0, y0, x1, y1, 2, 26)
-        else:
-            d = f"M {x0} {y0} L {x1} {y1}"
-        s.append(stroke_path(d, P["piel"], 30))
-        if roto:
-            for t in (.35, .65):
-                bx, by = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
-                s.append(f'<circle cx="{bx:.0f}" cy="{by:.0f}" r="12" fill="#8E6BBF" opacity=".6"/>')
-    if k == 3:   # tramos de rayo por delante: el cuerpo pasa por encima y por debajo
-        for i in range(12):
-            a = math.radians(i * 30)
-            for r0, r1 in [(150, 185), (235, 265)]:
-                if (i + (r0 > 200)) % 2:
-                    s.append(stroke_path(f"M {350 + r0*math.cos(a):.0f} {350 + r0*math.sin(a):.0f} L {350 + r1*math.cos(a):.0f} {350 + r1*math.sin(a):.0f}",
-                                         P["madera"], 22))
+    if k == 3:
+        # brazos hacia los costados de arriba, piernas hacia los costados de abajo
+        s.append(entrelazar(350, 350, 1, [(70, 225, 215, 165), (70, 315, 215, 375),
+                                          (110, 108, 215, 160), (110, 72, 215, 20)], 30, 22))
     else:
+        for i, ((x0, y0), (x1, y1)) in enumerate(list(zip(sh, hands)) + list(zip(hp, feet))):
+            roto = (k >= 1 and i < 2) or (k >= 2)
+            d = zigzag(x0, y0, x1, y1, 2, 26) if roto else f"M {x0} {y0} L {x1} {y1}"
+            s.append(stroke_path(d, P["piel"], 30))
+            if roto:
+                for t in (.35, .65):
+                    bx, by = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
+                    s.append(f'<circle cx="{bx:.0f}" cy="{by:.0f}" r="12" fill="#8E6BBF" opacity=".6"/>')
         for (x, y) in hands + feet:
             s.append(f'<circle cx="{x}" cy="{y}" r="20" fill="{P["piel"]}" stroke="{INK}" stroke-width="6"/>')
             s.append(ln(f"M {x-20} {y-6} L {x+20} {y+6} M {x-20} {y+8} L {x+20} {y+18}", 7, SOGA))
@@ -1510,7 +1586,7 @@ def preso_rueda(k):
     s.append(ln("M 290 290 Q 350 270 410 290 L 400 470 L 300 470 Z", SW, INK, P["arpillera"]))
     s.append(stroke_path("M 296 410 Q 350 422 404 410", P["madera2"], 10))
     faces = {0: ("wide", "miedo", "wavy"), 1: ("pain", "dolor", "scream"), 2: ("pain", "dolor", "scream"),
-             3: ("closed", "sad", "flat")}
+             3: ("pain", "dolor", "flat")}
     e_, b_, m_ = faces[k]
     s.append(f'<g transform="translate(350 200) scale(.5) translate(-260 -270)">' + cabeza_preso(e_, b_, m_) + '</g>')
     return "".join(s)
@@ -1556,26 +1632,20 @@ def rueda_poste(vivo=True):
     """Rueda acostada arriba de un poste, con el preso entrelazado (lienzo 800x1100)."""
     s = [f'<rect x="372" y="440" width="56" height="660" rx="10" fill="{P["madera2"]}" stroke="{INK}" stroke-width="{SW}"/>',
          ln("M 388 480 L 388 1080", 5, P["madera"])]
-    cx, cy, rx, ry = 400, 400, 330, 110
-    s.append(f'<ellipse cx="{cx}" cy="{cy+18}" rx="{rx}" ry="{ry}" fill="{P["madera2"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="none" stroke="{INK}" stroke-width="44"/>')
-    s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="none" stroke="{P["madera"]}" stroke-width="30"/>')
+    cx, cy, R, k = 400, 400, 330, 1 / 3
+    s.append(f'<ellipse cx="{cx}" cy="{cy+18}" rx="{R}" ry="{R*k:.0f}" fill="{P["madera2"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{R}" ry="{R*k:.0f}" fill="none" stroke="{INK}" stroke-width="44"/>')
+    s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{R}" ry="{R*k:.0f}" fill="none" stroke="{P["madera"]}" stroke-width="30"/>')
     for i in range(12):
-        a = math.radians(i * 30)
-        s.append(stroke_path(f"M {cx} {cy} L {cx + (rx-16)*math.cos(a):.0f} {cy + (ry-8)*math.sin(a):.0f}", P["madera"], 12))
+        t = math.radians(i * 30)
+        s.append(stroke_path(f"M {cx} {cy} L {cx + (R-16)*math.cos(t):.0f} {cy + (R-16)*math.sin(t)*k:.0f}", P["madera"], 12))
     s.append(f'<ellipse cx="{cx}" cy="{cy}" rx="44" ry="16" fill="{P["hierro"]}" stroke="{INK}" stroke-width="5"/>')
-    # cuerpo acostado y entrelazado
-    for d in [zigzag(330, 380, 160, 330, 4, 16), zigzag(330, 420, 170, 470, 4, 16),
-              zigzag(520, 380, 690, 350, 4, 16), zigzag(520, 420, 680, 460, 4, 16)]:
-        s.append(stroke_path(d, P["piel"], 22))
-    s.append(ln("M 320 370 L 540 366 Q 556 400 540 434 L 320 430 Q 306 400 320 370 Z", 6, INK, P["arpillera"]))
+    # cuerpo acostado (cabeza a la izquierda) con brazos y piernas entrelazados
+    s.append(entrelazar(cx, cy, k, [(80, 165, 250, 115), (80, 195, 250, 245),
+                                    (150, -12, 250, -70), (150, 12, 250, 70)], 22, 12))
+    s.append(ln("M 320 376 L 540 380 Q 556 400 540 424 L 320 428 Q 306 402 320 376 Z", 6, INK, P["arpillera"]))
     face = ("wide", "dolor", "scream") if vivo else ("pain", "dolor", "scream")
-    s.append(f'<g transform="translate(270 396) rotate(-90) scale(.36) translate(-260 -270)">' + cabeza_preso(*face) + '</g>')
-    for i in range(12):   # tramos de rayo encima de los miembros
-        a = math.radians(i * 30 + 15)
-        if i % 2:
-            s.append(stroke_path(f"M {cx + 150*math.cos(a):.0f} {cy + 50*math.sin(a):.0f} L {cx + 250*math.cos(a):.0f} {cy + 84*math.sin(a):.0f}",
-                                 P["madera"], 12))
+    s.append(f'<g transform="translate(272 400) rotate(-90) scale(.36) translate(-260 -270)">' + cabeza_preso(*face) + '</g>')
     return "".join(s)
 
 
@@ -1617,8 +1687,13 @@ def build_torturas3():
     for name, (e, b, m, extra) in {"cuello_cansado": ("tired", "sad", "flat", ""),
                                    "cuello_dormido": ("closed", "sad", "o", ""),
                                    "cuello_sudor": ("wide", "miedo", "wavy", gota_sudor(410, 190)),
-                                   "cuello_grito": ("pain", "dolor", "scream", "")}.items():
-        add(name, 520, 620, cabeza_con_cuello(e, b, m, extra), anchor=(0.5, 442 / 620))
+                                   "cuello_grito": ("pain", "dolor", "scream", ""),
+                                   "cuello_clavado": ("bulge", "alto", "scream", "")}.items():
+        add(name, 520, 620, cabeza_con_cuello(e, b, m, extra) + (heridas_cuello() if name == "cuello_clavado" else ""),
+            anchor=(0.5, 442 / 620))
+    add("tenedor_clavado", 120, 170, tenedor_clavado(), anchor=(0.5, 2 / 170))
+    add("pantalla_roja", W, H, f'<rect width="{W}" height="{H}" fill="{SANGRE}"/>')
+    add("potro_sangre", 700, 1100, potro_sangre())
     add("prohibido", 220, 220, prohibido())
     add("potro_mesa", 700, 1100, potro_mesa())
     for k in range(5):
@@ -1691,7 +1766,7 @@ def build():
     for name, s in ASSETS.items():
         with open(os.path.join(OUT, "svg", name + ".svg"), "w") as f:
             f.write(s)
-        scale = 1.0 if name.startswith(("fondo", "dormitorio", "blanco")) else RS
+        scale = 1.0 if name.startswith(("fondo", "dormitorio", "blanco", "pantalla")) else RS
         cairosvg.svg2png(bytestring=s.encode(), write_to=os.path.join(OUT, "png", name + ".png"), scale=scale)
     META["rs"] = RS
     with open(os.path.join(OUT, "meta.json"), "w") as f:

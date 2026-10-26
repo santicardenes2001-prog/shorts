@@ -371,6 +371,22 @@
    ],
    "fondo": "fondo_mazmorra",
    "flash": true,
+   "camara": [
+    {
+     "at": "b4:clavaban",
+     "dur": 0.1,
+     "s": 1.7,
+     "x": 540,
+     "y": 865,
+     "ease": "out"
+    },
+    {
+     "at": "b4:clavaban+1.3",
+     "dur": 0.5,
+     "s": 1.0,
+     "ease": "inout"
+    }
+   ],
    "elementos": [
     {
      "a": "tenedor",
@@ -406,6 +422,13 @@
        "r": 0,
        "ease": "inout",
        "sfx": "whoosh"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b4:clavaban",
+       "a": "tenedor_clavado",
+       "sfx": "crack"
       }
      ]
     },
@@ -483,9 +506,9 @@
      "fx_in": "slide_up",
      "idle": {
       "fx": "shake",
-      "fuerza": 1.2,
+      "fuerza": 1.6,
       "from": "b4:clavaban",
-      "to": "b4:clavaban+1.2"
+      "to": "b4:clavaban+1.5"
      },
      "keys": [
       {
@@ -513,9 +536,9 @@
      "blink": false,
      "idle": {
       "fx": "shake",
-      "fuerza": 1.2,
+      "fuerza": 1.6,
       "from": "b4:clavaban",
-      "to": "b4:clavaban+1.2"
+      "to": "b4:clavaban+1.5"
      },
      "swaps": [
       {
@@ -531,7 +554,7 @@
       },
       {
        "at": "b4:clavaban",
-       "a": "cuello_grito",
+       "a": "cuello_clavado",
        "fx": "punch",
        "sfx": "none"
       }
@@ -552,21 +575,15 @@
       {
        "at": "b4:bajar",
        "dur": 1.1,
-       "y": 841,
+       "y": 837,
        "ease": "in"
       },
       {
        "at": "b4:clavaban",
-       "dur": 0.15,
-       "y": 811,
-       "ease": "out",
+       "dur": 0.08,
+       "y": 839,
+       "ease": "in",
        "sfx": "golpe"
-      },
-      {
-       "at": "b4:clavaban+0.15",
-       "dur": 0.4,
-       "y": 825,
-       "ease": "out"
       }
      ]
     },
@@ -662,12 +679,12 @@
     },
     {
      "texto": {
-      "t": "¡AAAY!",
+      "t": "¡AAAAY!",
       "estilo": "crack",
-      "size": 120
+      "size": 100
      },
-     "x": 820,
-     "y": 495,
+     "x": 690,
+     "y": 655,
      "r": 10,
      "z": 10,
      "in": "b4:clavaban",
@@ -678,119 +695,280 @@
     },
     {
      "a": "gota_sangre",
-     "x": 520,
-     "y": 835,
-     "s": 1.0,
+     "x": 510,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.02",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.02",
+       "dur": 0.36000000000000004,
+       "x": 388.5,
+       "y": 840,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.38",
+       "dur": 0.54,
+       "x": 240,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 566,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.06",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.06",
+       "dur": 0.36000000000000004,
+       "x": 671.3,
+       "y": 825,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.42",
+       "dur": 0.54,
+       "x": 800,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 526,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.10",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.10",
+       "dur": 0.36000000000000004,
+       "x": 469.3,
+       "y": 810,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.46",
+       "dur": 0.54,
+       "x": 400,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 580,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.14",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.14",
+       "dur": 0.36000000000000004,
+       "x": 742.0,
+       "y": 840,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.50",
+       "dur": 0.54,
+       "x": 940,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 496,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.18",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.18",
+       "dur": 0.36000000000000004,
+       "x": 317.79999999999995,
+       "y": 825,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.54",
+       "dur": 0.54,
+       "x": 100,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 550,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.22",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.22",
+       "dur": 0.36000000000000004,
+       "x": 590.5,
+       "y": 810,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.58",
+       "dur": 0.54,
+       "x": 640,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 574,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.26",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.26",
+       "dur": 0.36000000000000004,
+       "x": 711.7,
+       "y": 840,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.62",
+       "dur": 0.54,
+       "x": 880,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "gota_sangre",
+     "x": 516,
+     "y": 870,
+     "s": 1.2,
+     "in": "b4:clavaban+0.30",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 9,
+     "keys": [
+      {
+       "at": "b4:clavaban+0.30",
+       "dur": 0.36000000000000004,
+       "x": 418.8,
+       "y": 825,
+       "r": 0.0,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b4:clavaban+0.66",
+       "dur": 0.54,
+       "x": 300,
+       "y": 1300,
+       "r": 0,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "salpicadura_0",
+     "x": 330,
+     "y": 885,
+     "s": 0.8,
+     "r": 0,
+     "z": 0,
      "in": "b4:clavaban+0.05",
      "fx_in": "pop",
-     "sfx": "none",
-     "z": 9,
-     "keys": [
-      {
-       "at": "b4:clavaban+0.05",
-       "dur": 0.44000000000000006,
-       "x": 502.0,
-       "y": 795,
-       "r": 0.0,
-       "s": 1.0,
-       "ease": "out"
-      },
-      {
-       "at": "b4:clavaban+0.49",
-       "dur": 0.66,
-       "x": 480,
-       "y": 1300,
-       "r": 0,
-       "ease": "in"
-      }
-     ]
+     "sfx": "none"
     },
     {
-     "a": "gota_sangre",
-     "x": 554,
-     "y": 835,
-     "s": 1.0,
-     "in": "b4:clavaban+0.13",
+     "a": "salpicadura_1",
+     "x": 760,
+     "y": 845,
+     "s": 0.8,
+     "r": 90,
+     "z": 0,
+     "in": "b4:clavaban+0.10",
      "fx_in": "pop",
-     "sfx": "none",
-     "z": 9,
-     "keys": [
-      {
-       "at": "b4:clavaban+0.13",
-       "dur": 0.44000000000000006,
-       "x": 566.6,
-       "y": 795,
-       "r": 0.0,
-       "s": 1.0,
-       "ease": "out"
-      },
-      {
-       "at": "b4:clavaban+0.57",
-       "dur": 0.66,
-       "x": 582,
-       "y": 1300,
-       "r": 0,
-       "ease": "in"
-      }
-     ]
+     "sfx": "none"
     },
     {
-     "a": "gota_sangre",
-     "x": 534,
-     "y": 835,
-     "s": 1.0,
-     "in": "b4:clavaban+0.21",
+     "a": "salpicadura_2",
+     "x": 420,
+     "y": 1085,
+     "s": 0.8,
+     "r": 180,
+     "z": 0,
+     "in": "b4:clavaban+0.15",
      "fx_in": "pop",
-     "sfx": "none",
-     "z": 9,
-     "keys": [
-      {
-       "at": "b4:clavaban+0.21",
-       "dur": 0.44000000000000006,
-       "x": 528.6,
-       "y": 795,
-       "r": 0.0,
-       "s": 1.0,
-       "ease": "out"
-      },
-      {
-       "at": "b4:clavaban+0.65",
-       "dur": 0.66,
-       "x": 522,
-       "y": 1300,
-       "r": 0,
-       "ease": "in"
-      }
-     ]
+     "sfx": "none"
     },
     {
-     "a": "gota_sangre",
-     "x": 564,
-     "y": 835,
-     "s": 1.0,
-     "in": "b4:clavaban+0.29",
-     "fx_in": "pop",
-     "sfx": "none",
-     "z": 9,
-     "keys": [
-      {
-       "at": "b4:clavaban+0.29",
-       "dur": 0.44000000000000006,
-       "x": 585.6,
-       "y": 795,
-       "r": 0.0,
-       "s": 1.0,
-       "ease": "out"
-      },
-      {
-       "at": "b4:clavaban+0.73",
-       "dur": 0.66,
-       "x": 612,
-       "y": 1300,
-       "r": 0,
-       "ease": "in"
-      }
-     ]
+     "a": "pantalla_roja",
+     "x": 540,
+     "y": 960,
+     "z": 30,
+     "alpha": 0.5,
+     "in": "b4:clavaban",
+     "out": "b4:clavaban+0.45",
+     "fx_out": "fade",
+     "dur_out": 0.4,
+     "sfx": "none"
     },
     {
      "a": "vos_miedo",
@@ -821,7 +999,52 @@
    ],
    "fondo": "fondo_mazmorra",
    "flash": true,
+   "camara": [
+    {
+     "at": "b7:dislocar",
+     "dur": 0.15,
+     "s": 1.5,
+     "x": 540,
+     "y": 719,
+     "ease": "out"
+    },
+    {
+     "at": "b7:caderas",
+     "dur": 0.3,
+     "y": 982,
+     "ease": "inout"
+    },
+    {
+     "at": "b7:escuchaban",
+     "dur": 0.5,
+     "s": 1.0,
+     "ease": "inout"
+    }
+   ],
    "elementos": [
+    {
+     "a": "potro_sangre",
+     "x": 540,
+     "y": 826,
+     "s": 0.92,
+     "z": 0.5,
+     "in": "b7:dislocar",
+     "fx_in": "fade",
+     "dur_in": 0.6,
+     "sfx": "none"
+    },
+    {
+     "a": "pantalla_roja",
+     "x": 540,
+     "y": 960,
+     "z": 30,
+     "alpha": 0.4,
+     "in": "b7:dislocar",
+     "out": "b7:dislocar+0.35",
+     "fx_out": "fade",
+     "dur_out": 0.3,
+     "sfx": "none"
+    },
     {
      "a": "potro_mesa",
      "x": 540,
@@ -858,11 +1081,13 @@
        "potro_preso_0",
        "potro_preso_1",
        "potro_preso_2",
+       "potro_preso_2",
        "potro_preso_3",
+       "potro_preso_4",
        "potro_preso_4"
       ],
       "at": "b7:estiraban",
-      "dur": 3.0,
+      "dur": 3.4,
       "ease": "linear"
      },
      "idle": [
@@ -1091,8 +1316,8 @@
       "estilo": "crack",
       "size": 110
      },
-     "x": 356,
-     "y": 688,
+     "x": 330,
+     "y": 569,
      "r": -10,
      "z": 10,
      "in": "b7:hombros",
@@ -1107,8 +1332,8 @@
       "estilo": "crack",
       "size": 110
      },
-     "x": 733,
-     "y": 964,
+     "x": 750,
+     "y": 922,
      "r": 10,
      "z": 10,
      "in": "b7:caderas",
@@ -1170,6 +1395,22 @@
    ],
    "fondo": "fondo_mazmorra",
    "flash": true,
+   "camara": [
+    {
+     "at": "b9:huesos",
+     "dur": 0.12,
+     "s": 1.35,
+     "x": 600,
+     "y": 900,
+     "ease": "out"
+    },
+    {
+     "at": "b9:huesos+0.9",
+     "dur": 0.5,
+     "s": 1.0,
+     "ease": "inout"
+    }
+   ],
    "elementos": [
     {
      "a": "rueda",
@@ -1185,17 +1426,6 @@
        "dur": 0.45,
        "r": -120,
        "ease": "out"
-      },
-      {
-       "at": "b9:gran",
-       "dur": 0.4,
-       "s": 0.9450000000000001,
-       "ease": "out"
-      },
-      {
-       "at": "b9:gran+0.4",
-       "dur": 0.3,
-       "s": 0.9
       }
      ]
     },
