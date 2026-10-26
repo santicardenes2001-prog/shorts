@@ -1,0 +1,1441 @@
+{
+ "velocidad": 1.0,
+ "cola": 1.4,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 76
+ },
+ "estilos": {
+  "numero": {
+   "size": 92,
+   "color": "#FFFFFF",
+   "box": "#FF5D5D",
+   "circle": true,
+   "pad": [
+    30,
+    14
+   ]
+  },
+  "titulo": {
+   "size": 66,
+   "color": "#24201F",
+   "box": "#FFF3DF"
+  },
+  "censura": {
+   "size": 74,
+   "color": "#FFFFFF",
+   "box": "#141218",
+   "radius": 10
+  },
+  "crack": {
+   "size": 120,
+   "color": "#FFD23F",
+   "stroke": 14
+  },
+  "etiqueta": {
+   "size": 52,
+   "color": "#24201F",
+   "box": "#FFD23F",
+   "pad": [
+    24,
+    12
+   ]
+  }
+ },
+ "narracion": [
+  {
+   "texto": "¡Te muestro 3 instrumentos de tortura tan crueles que cuesta creer que existieron!"
+  },
+  {
+   "texto": "Parte 2."
+  },
+  {
+   "texto": "1. La cuna de Judas."
+  },
+  {
+   "texto": "Colgaban a la persona con cuerdas y poleas justo encima de una pirámide de madera con la punta afilada."
+  },
+  {
+   "texto": "Después la bajaban de a poco, o la soltaban de golpe, y su propio peso hacía que la punta se le clavara en la entrepierna, desgarrándola por dentro."
+  },
+  {
+   "texto": "2. La garra de gato."
+  },
+  {
+   "texto": "Era una tenaza de hierro con puntas curvas y afiladas que se calentaba al rojo vivo en las brasas."
+  },
+  {
+   "texto": "Se clavaba en la espalda o el torso y se tiraba con fuerza, arrancando trozos de carne hasta dejar las costillas a la vista."
+  },
+  {
+   "texto": "3. El aplastacabezas."
+  },
+  {
+   "texto": "Un casco de metal con un tornillo gigante que apretaba el cráneo contra una barra debajo de la barbilla."
+  },
+  {
+   "texto": "Con cada vuelta de la manivela, primero se rompían los dientes, después la mandíbula, los ojos se salían de sus órbitas… y al final, cedía el cráneo."
+  }
+ ],
+ "persistentes": [
+  {
+   "a": "antorcha_0",
+   "x": 110,
+   "y": 760,
+   "s": 0.9,
+   "z": -20,
+   "in": 0,
+   "out": "fin",
+   "loop": {
+    "frames": [
+     "antorcha_0",
+     "antorcha_1"
+    ],
+    "fps": 5
+   },
+   "sfx": "none"
+  },
+  {
+   "a": "antorcha_0",
+   "x": 970,
+   "y": 760,
+   "s": 0.9,
+   "z": -20,
+   "in": 0,
+   "out": "fin",
+   "loop": {
+    "frames": [
+     "antorcha_0",
+     "antorcha_1"
+    ],
+    "fps": 5
+   },
+   "sfx": "none"
+  },
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "numero"
+   },
+   "x": 120,
+   "y": 250,
+   "in": "b2",
+   "out": "b5-0.15",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "LA CUNA DE JUDAS",
+    "estilo": "titulo"
+   },
+   "x": 590,
+   "y": 250,
+   "in": "b2+0.25",
+   "out": "b5-0.15",
+   "fx_in": "slide_left",
+   "fx_out": "pop",
+   "r": -2
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "numero"
+   },
+   "x": 120,
+   "y": 250,
+   "in": "b5",
+   "out": "b8-0.15",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "LA GARRA DE GATO",
+    "estilo": "titulo"
+   },
+   "x": 590,
+   "y": 250,
+   "in": "b5+0.25",
+   "out": "b8-0.15",
+   "fx_in": "slide_left",
+   "fx_out": "pop",
+   "r": -2
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "numero"
+   },
+   "x": 120,
+   "y": 250,
+   "in": "b8",
+   "out": "fin",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "idle": "breathe"
+  },
+  {
+   "texto": {
+    "t": "EL APLASTACABEZAS",
+    "estilo": "titulo"
+   },
+   "x": 590,
+   "y": 250,
+   "in": "b8+0.25",
+   "out": "fin",
+   "fx_in": "slide_left",
+   "fx_out": "pop",
+   "r": -2
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0,
+    1
+   ],
+   "fondo": "fondo_mazmorra",
+   "elementos": [
+    {
+     "a": "vos_miedo",
+     "x": 290,
+     "y": 1330,
+     "s": 0.7,
+     "in": "b0",
+     "fx_in": "jump",
+     "blink": true,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b0:crueles",
+       "a": "vos_grito",
+       "fx": "punch"
+      },
+      {
+       "at": "b0:cuesta",
+       "a": "vos_miedo",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b0:crueles",
+       "dur": 0.4,
+       "x": 270
+      }
+     ]
+    },
+    {
+     "a": "verdugo",
+     "x": 790,
+     "y": 1330,
+     "s": 0.7,
+     "in": "b0:tortura",
+     "fx_in": "slide_left",
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b0:existieron",
+       "a": "verdugo_risa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "piramide",
+     "x": 220,
+     "y": 690,
+     "s": 0.5,
+     "in": "b0:instrumentos",
+     "out": "b1",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob"
+    },
+    {
+     "a": "garra",
+     "x": 400,
+     "y": 560,
+     "s": 0.5,
+     "r": -25,
+     "in": "b0:instrumentos+0.25",
+     "out": "b1",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "float"
+    },
+    {
+     "a": "aplasta_icono",
+     "x": 830,
+     "y": 700,
+     "s": 0.32,
+     "in": "b0:instrumentos+0.5",
+     "out": "b1",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob"
+    },
+    {
+     "a": "sudor",
+     "x": 370,
+     "y": 830,
+     "s": 1.4,
+     "in": "b0:crueles",
+     "out": "b0:cuesta",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "keys": [
+      {
+       "at": "b0:crueles",
+       "dur": 0.8,
+       "y": 900,
+       "ease": "in"
+      }
+     ],
+     "sfx": "none"
+    },
+    {
+     "texto": {
+      "t": "PARTE 2",
+      "size": 150,
+      "color": "#FFFFFF",
+      "box": "#FF5D5D"
+     },
+     "x": 540,
+     "y": 640,
+     "r": -6,
+     "in": "b1",
+     "fx_in": "pop",
+     "sfx": "golpe",
+     "idle": {
+      "fx": "pulse",
+      "fuerza": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "nombre": "cuna",
+   "beats": [
+    2,
+    3,
+    4
+   ],
+   "fondo": "fondo_mazmorra",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "piramide",
+     "x": 620,
+     "y": 1330,
+     "s": 0.7,
+     "z": 1,
+     "in": "b2:cuna",
+     "fx_in": "drop",
+     "keys": [
+      {
+       "at": "b3:pirámide",
+       "dur": 0.18,
+       "s": 0.78,
+       "ease": "out",
+       "sfx": "boing"
+      },
+      {
+       "at": "b3:pirámide+0.18",
+       "dur": 0.3,
+       "s": 0.7,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "brillo",
+     "x": 620,
+     "y": 958,
+     "s": 0.7,
+     "z": 2,
+     "in": "b3:afilada",
+     "out": "b3:afilada+0.9",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "ding",
+     "idle": {
+      "fx": "spin",
+      "vel": 90
+     }
+    },
+    {
+     "a": "polea",
+     "x": 620,
+     "y": 445,
+     "s": 0.8,
+     "z": 4,
+     "in": "b3:poleas",
+     "fx_in": "drop",
+     "keys": [
+      {
+       "at": "b4:poco-0.4",
+       "dur": 1.2,
+       "r": 0
+      }
+     ]
+    },
+    {
+     "a": "preso_colgado",
+     "x": 620,
+     "y": 870,
+     "s": 0.5,
+     "z": 3,
+     "in": "b3:colgaban",
+     "fx_in": "slide_down",
+     "dur_in": 0.6,
+     "idle": [
+      {
+       "fx": "sway",
+       "fuerza": 1.5,
+       "to": "b4:clavara"
+      },
+      {
+       "fx": "shake",
+       "fuerza": 1.6,
+       "from": "b4:clavara"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b4:clavara",
+       "a": "preso_colgado_grito",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b4:poco-0.4",
+       "dur": 1.2,
+       "y": 915,
+       "ease": "inout"
+      },
+      {
+       "at": "b4:golpe",
+       "dur": 0.22,
+       "y": 985,
+       "ease": "in",
+       "sfx": "whoosh"
+      },
+      {
+       "at": "b4:clavara",
+       "dur": 0.16,
+       "y": 1035,
+       "ease": "in",
+       "sfx": "golpe"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "CUERDAS",
+      "estilo": "etiqueta"
+     },
+     "x": 300,
+     "y": 520,
+     "r": -6,
+     "in": "b3:cuerdas",
+     "out": "b3:pirámide",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "POLEAS",
+      "estilo": "etiqueta"
+     },
+     "x": 300,
+     "y": 620,
+     "r": 5,
+     "in": "b3:poleas",
+     "out": "b3:pirámide",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "a": "vos_miedo",
+     "x": 200,
+     "y": 1330,
+     "s": 0.55,
+     "z": 5,
+     "in": "b3:pirámide",
+     "fx_in": "slide_right",
+     "blink": true,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b4:clavara",
+       "a": "vos_grito",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "DE A POCO...",
+      "estilo": "etiqueta"
+     },
+     "x": 300,
+     "y": 560,
+     "r": -5,
+     "in": "b4:poco",
+     "out": "b4:golpe",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡DE GOLPE!",
+      "size": 64,
+      "color": "#FFFFFF",
+      "box": "#FF5D5D"
+     },
+     "x": 300,
+     "y": 560,
+     "r": 5,
+     "in": "b4:golpe",
+     "out": "b4:clavara",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "CENSURADO",
+      "estilo": "censura"
+     },
+     "x": 620,
+     "y": 985,
+     "r": -7,
+     "z": 8,
+     "in": "b4:clavara+0.1",
+     "fx_in": "pop",
+     "sfx": "crack",
+     "idle": {
+      "fx": "pulse",
+      "fuerza": 0.5
+     }
+    },
+    {
+     "a": "exclamacion",
+     "x": 330,
+     "y": 820,
+     "s": 0.7,
+     "r": -10,
+     "in": "b4:desgarrándola",
+     "fx_in": "pop",
+     "idle": "wiggle"
+    }
+   ]
+  },
+  {
+   "nombre": "garra",
+   "beats": [
+    5,
+    6
+   ],
+   "fondo": "fondo_mazmorra",
+   "flash": true,
+   "sonidos": [
+    {
+     "at": "b6:calentaba",
+     "s": "fuego",
+     "vol": 0.8
+    },
+    {
+     "at": "b6:rojo",
+     "s": "fuego",
+     "vol": 0.8
+    }
+   ],
+   "elementos": [
+    {
+     "a": "garra",
+     "x": 290,
+     "y": 700,
+     "s": 1.1,
+     "r": -10,
+     "z": 1,
+     "in": "b5:garra",
+     "fx_in": "pop",
+     "idle": {
+      "fx": "float",
+      "to": "b6:calentaba"
+     },
+     "swaps": [
+      {
+       "at": "b6:rojo",
+       "a": "garra_roja",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b6:tenaza",
+       "dur": 0.2,
+       "s": 1.2,
+       "ease": "out"
+      },
+      {
+       "at": "b6:tenaza+0.2",
+       "dur": 0.3,
+       "s": 1.1
+      },
+      {
+       "at": "b6:calentaba",
+       "dur": 0.6,
+       "x": 300,
+       "y": 960,
+       "r": 35,
+       "ease": "inout",
+       "sfx": "whoosh"
+      },
+      {
+       "at": "b6:brasas",
+       "dur": 0.5,
+       "x": 290,
+       "y": 700,
+       "r": -10,
+       "ease": "back"
+      }
+     ]
+    },
+    {
+     "a": "brillo",
+     "x": 700,
+     "y": 560,
+     "s": 0.6,
+     "z": 2,
+     "in": "b6:afiladas",
+     "out": "b6:afiladas+0.8",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "ding",
+     "idle": {
+      "fx": "spin",
+      "vel": 90
+     }
+    },
+    {
+     "a": "brillo",
+     "x": 760,
+     "y": 760,
+     "s": 0.45,
+     "z": 2,
+     "in": "b6:afiladas+0.15",
+     "out": "b6:afiladas+0.9",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "none",
+     "idle": {
+      "fx": "spin",
+      "vel": -90
+     }
+    },
+    {
+     "texto": {
+      "t": "HIERRO",
+      "estilo": "etiqueta"
+     },
+     "x": 250,
+     "y": 520,
+     "r": -6,
+     "in": "b6:hierro",
+     "out": "b6:calentaba",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "a": "brasero_0",
+     "x": 600,
+     "y": 1330,
+     "s": 1.0,
+     "z": 2,
+     "in": "b6:calentaba-0.4",
+     "fx_in": "jump",
+     "loop": {
+      "frames": [
+       "brasero_0",
+       "brasero_1"
+      ],
+      "fps": 6
+     }
+    },
+    {
+     "a": "resplandor",
+     "x": 600,
+     "y": 1160,
+     "s": 1.0,
+     "z": 0,
+     "in": "b6:rojo",
+     "fx_in": "fade",
+     "idle": "pulse",
+     "keys": [
+      {
+       "at": "b6:brasas",
+       "dur": 0.5,
+       "x": 640,
+       "y": 650,
+       "s": 0.9,
+       "ease": "back"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¡AL ROJO VIVO!",
+      "size": 64,
+      "color": "#FFFFFF",
+      "box": "#FF5D5D"
+     },
+     "x": 300,
+     "y": 470,
+     "r": -4,
+     "in": "b6:rojo",
+     "fx_in": "pop",
+     "idle": "wiggle"
+    },
+    {
+     "a": "vos_miedo",
+     "x": 170,
+     "y": 1330,
+     "s": 0.5,
+     "z": 3,
+     "in": "b6:calentaba",
+     "fx_in": "slide_right",
+     "blink": true,
+     "idle": "breathe",
+     "swaps": [
+      {
+       "at": "b6:rojo",
+       "a": "vos_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nombre": "garra_preso",
+   "beats": [
+    7
+   ],
+   "fondo": "fondo_mazmorra",
+   "elementos": [
+    {
+     "a": "poste",
+     "x": 660,
+     "y": 1330,
+     "s": 0.78,
+     "z": 0,
+     "in": "esc"
+    },
+    {
+     "a": "preso_atado",
+     "x": 660,
+     "y": 1330,
+     "s": 0.82,
+     "z": 1,
+     "in": "esc",
+     "blink": false,
+     "idle": [
+      {
+       "fx": "breathe"
+      },
+      {
+       "fx": "shake",
+       "fuerza": 1.4,
+       "from": "b7:clavaba"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b7:clavaba",
+       "a": "preso_atado_grito",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "resplandor",
+     "x": 330,
+     "y": 1030,
+     "s": 0.7,
+     "z": 2,
+     "in": "esc",
+     "idle": "pulse",
+     "keys": [
+      {
+       "at": "b7:clavaba",
+       "dur": 0.15,
+       "x": 560,
+       "ease": "in"
+      },
+      {
+       "at": "b7:tiraba",
+       "dur": 0.3,
+       "x": 300,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "garra_roja",
+     "x": 150,
+     "y": 1090,
+     "s": 1.0,
+     "r": -8,
+     "z": 3,
+     "in": "esc",
+     "fx_in": "slide_right",
+     "idle": {
+      "fx": "float",
+      "fuerza": 0.6
+     },
+     "keys": [
+      {
+       "at": "b7:clavaba",
+       "dur": 0.15,
+       "x": 330,
+       "r": 0,
+       "ease": "in",
+       "sfx": "golpe"
+      },
+      {
+       "at": "b7:tiraba",
+       "dur": 0.3,
+       "x": 110,
+       "r": -18,
+       "ease": "out",
+       "sfx": "whoosh"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "¡TIRÓN!",
+      "estilo": "crack",
+      "size": 100
+     },
+     "x": 300,
+     "y": 860,
+     "r": -10,
+     "z": 6,
+     "in": "b7:tiraba",
+     "out": "b7:arrancando",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "none"
+    },
+    {
+     "texto": {
+      "t": "CENSURADO",
+      "estilo": "censura"
+     },
+     "x": 660,
+     "y": 1110,
+     "r": 6,
+     "z": 7,
+     "in": "b7:arrancando",
+     "fx_in": "pop",
+     "sfx": "crack",
+     "idle": {
+      "fx": "pulse",
+      "fuerza": 0.5
+     }
+    },
+    {
+     "a": "costillas",
+     "x": 300,
+     "y": 640,
+     "s": 0.95,
+     "z": 8,
+     "in": "b7:costillas",
+     "fx_in": "pop",
+     "sfx": "boing",
+     "idle": "bob"
+    },
+    {
+     "texto": {
+      "t": "RAYOS X",
+      "estilo": "etiqueta"
+     },
+     "x": 300,
+     "y": 470,
+     "r": -4,
+     "z": 9,
+     "in": "b7:costillas+0.15",
+     "fx_in": "pop",
+     "sfx": "none"
+    }
+   ]
+  },
+  {
+   "nombre": "aplasta",
+   "beats": [
+    8,
+    9,
+    10
+   ],
+   "fondo": "fondo_mazmorra",
+   "flash": true,
+   "sonidos": [
+    {
+     "at": "b10:vuelta+0.0",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+0.3",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+0.6",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+0.9",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+1.2",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+1.5",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+1.8",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+2.1",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+2.4",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+2.7",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+3.0",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+3.3",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+3.6",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+3.9",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+4.2",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+4.5",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+4.8",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+5.1",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+5.4",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+5.7",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+6.0",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+6.3",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+6.6",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+6.9",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+7.2",
+     "s": "clic",
+     "vol": 0.9
+    },
+    {
+     "at": "b10:vuelta+7.5",
+     "s": "clic",
+     "vol": 0.9
+    }
+   ],
+   "elementos": [
+    {
+     "a": "verdugo",
+     "x": 150,
+     "y": 1330,
+     "s": 0.62,
+     "z": -1,
+     "in": "b9",
+     "fx_in": "slide_right",
+     "idle": [
+      {
+       "fx": "breathe"
+      },
+      {
+       "fx": "work",
+       "from": "b10:vuelta",
+       "to": "b10:cráneo"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b10:dientes",
+       "a": "verdugo_risa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "cabeza_miedo",
+     "x": 540.0,
+     "y": 1028.5,
+     "s": 0.738,
+     "z": 1,
+     "in": "b8:aplastacabezas",
+     "fx_in": "drop",
+     "idle": [
+      {
+       "fx": "shake",
+       "fuerza": 0.4,
+       "to": "b10:vuelta"
+      },
+      {
+       "fx": "shake",
+       "fuerza": 1.2,
+       "from": "b10:vuelta"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b9:apretaba",
+       "a": "cabeza_grito",
+       "fx": "punch"
+      },
+      {
+       "at": "b10:dientes",
+       "a": "cabeza_dientes",
+       "fx": "punch",
+       "sfx": "none"
+      },
+      {
+       "at": "b10:ojos",
+       "a": "cabeza_ojos",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b9:apretaba",
+       "dur": 0.5,
+       "ease": "out",
+       "sy": 0.924,
+       "sx": 1.034
+      },
+      {
+       "at": "b10:vuelta",
+       "dur": 0.8,
+       "ease": "out",
+       "sy": 0.869,
+       "sx": 1.059
+      },
+      {
+       "at": "b10:dientes",
+       "dur": 0.35,
+       "ease": "out",
+       "sy": 0.782,
+       "sx": 1.098
+      },
+      {
+       "at": "b10:mandíbula",
+       "dur": 0.35,
+       "ease": "out",
+       "sy": 0.695,
+       "sx": 1.137
+      },
+      {
+       "at": "b10:ojos",
+       "dur": 0.35,
+       "ease": "out",
+       "sy": 0.64,
+       "sx": 1.162
+      },
+      {
+       "at": "b10:cráneo",
+       "dur": 0.18,
+       "ease": "out",
+       "sy": 0.451,
+       "sx": 1.247
+      }
+     ]
+    },
+    {
+     "a": "aplasta_tornillo_0",
+     "x": 540.0,
+     "y": 790.0,
+     "s": 0.9,
+     "z": 2,
+     "in": "b8:aplastacabezas",
+     "fx_in": "drop",
+     "sfx": "none",
+     "loop": {
+      "frames": [
+       "aplasta_tornillo_0",
+       "aplasta_tornillo_1",
+       "aplasta_tornillo_2",
+       "aplasta_tornillo_1"
+      ],
+      "fps": 8,
+      "from": "b9:apretaba",
+      "to": "b10:cráneo>"
+     },
+     "keys": [
+      {
+       "at": "b9:apretaba",
+       "dur": 0.5,
+       "y": 810.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:vuelta",
+       "dur": 0.8,
+       "y": 824.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:dientes",
+       "dur": 0.35,
+       "y": 846.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:mandíbula",
+       "dur": 0.35,
+       "y": 868.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:ojos",
+       "dur": 0.35,
+       "y": 882.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:cráneo",
+       "dur": 0.18,
+       "y": 930.0,
+       "ease": "out"
+      }
+     ]
+    },
+    {
+     "a": "aplasta_base",
+     "x": 540,
+     "y": 1330,
+     "s": 0.9,
+     "z": 3,
+     "in": "b8:aplastacabezas",
+     "fx_in": "drop",
+     "sfx": "golpe"
+    },
+    {
+     "texto": {
+      "t": "CASCO",
+      "estilo": "etiqueta"
+     },
+     "x": 860,
+     "y": 740,
+     "r": 5,
+     "z": 6,
+     "in": "b9:casco",
+     "out": "b10",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "TORNILLO",
+      "estilo": "etiqueta"
+     },
+     "x": 850,
+     "y": 420,
+     "r": -5,
+     "z": 6,
+     "in": "b9:tornillo",
+     "out": "b10",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "BARRA",
+      "estilo": "etiqueta"
+     },
+     "x": 870,
+     "y": 1000,
+     "r": -4,
+     "z": 6,
+     "in": "b9:barra",
+     "out": "b10",
+     "fx_in": "pop",
+     "fx_out": "pop"
+    },
+    {
+     "texto": {
+      "t": "¡CRACK!",
+      "estilo": "crack"
+     },
+     "x": 820,
+     "y": 640,
+     "r": 10,
+     "z": 7,
+     "in": "b10:dientes",
+     "out": "b10:mandíbula",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "crack"
+    },
+    {
+     "texto": {
+      "t": "¡CRACK!",
+      "estilo": "crack"
+     },
+     "x": 300,
+     "y": 600,
+     "r": -10,
+     "z": 7,
+     "in": "b10:mandíbula",
+     "out": "b10:ojos",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "crack"
+    },
+    {
+     "texto": {
+      "t": "¡POP!",
+      "estilo": "crack"
+     },
+     "x": 830,
+     "y": 640,
+     "r": 8,
+     "z": 7,
+     "in": "b10:ojos",
+     "out": "b10:final",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "none"
+    },
+    {
+     "a": "diente",
+     "x": 513.0,
+     "y": 998.5,
+     "s": 0.9,
+     "z": 9,
+     "in": "b10:dientes+0.00",
+     "out": "b10:mandíbula+0.6",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b10:dientes+0.00",
+       "dur": 0.9,
+       "x": 280.0,
+       "y": 838.5,
+       "r": -150.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:dientes+0.90",
+       "dur": 0.7,
+       "y": 1288.5,
+       "r": -300,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "diente",
+     "x": 531.0,
+     "y": 998.5,
+     "s": 0.9,
+     "z": 9,
+     "in": "b10:dientes+0.05",
+     "out": "b10:mandíbula+0.6",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b10:dientes+0.05",
+       "dur": 0.9,
+       "x": 770.0,
+       "y": 838.5,
+       "r": 140.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:dientes+0.95",
+       "dur": 0.7,
+       "y": 1328.5,
+       "r": 280,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "diente",
+     "x": 549.0,
+     "y": 998.5,
+     "s": 0.9,
+     "z": 9,
+     "in": "b10:dientes+0.10",
+     "out": "b10:mandíbula+0.6",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b10:dientes+0.10",
+       "dur": 0.9,
+       "x": 420.0,
+       "y": 838.5,
+       "r": 100.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:dientes+1.00",
+       "dur": 0.7,
+       "y": 1358.5,
+       "r": 200,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "a": "diente",
+     "x": 567.0,
+     "y": 998.5,
+     "s": 0.9,
+     "z": 9,
+     "in": "b10:dientes+0.15",
+     "out": "b10:mandíbula+0.6",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "sfx": "none",
+     "keys": [
+      {
+       "at": "b10:dientes+0.15",
+       "dur": 0.9,
+       "x": 840.0,
+       "y": 838.5,
+       "r": -120.0,
+       "ease": "out"
+      },
+      {
+       "at": "b10:dientes+1.05",
+       "dur": 0.7,
+       "y": 1148.5,
+       "r": -240,
+       "ease": "in"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "CENSURADO",
+      "estilo": "censura",
+      "size": 96
+     },
+     "x": 540,
+     "y": 900,
+     "r": -8,
+     "z": 10,
+     "in": "b10:cráneo",
+     "fx_in": "pop",
+     "sfx": "crack",
+     "idle": {
+      "fx": "pulse",
+      "fuerza": 0.5
+     }
+    },
+    {
+     "a": "blanco",
+     "x": 540,
+     "y": 960,
+     "z": 9,
+     "alpha": 0.85,
+     "in": "b10:cráneo",
+     "out": "b10:cráneo+0.35",
+     "fx_out": "fade",
+     "dur_out": 0.3,
+     "sfx": "golpe"
+    }
+   ]
+  }
+ ],
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}

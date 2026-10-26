@@ -88,6 +88,15 @@ def eye(cx, cy, kind, look, side):
                 f'<ellipse cx="{cx}" cy="{cy}" rx="38" ry="44" fill="none" stroke="{INK}" stroke-width="6"/>'
                 + ln(f"M {cx-38} {cy} Q {cx} {cy+8} {cx+38} {cy}", 7)
                 + ln(f"M {cx-26} {cy+56} Q {cx} {cy+64} {cx+26} {cy+56}", 5, P["piel2"]))
+    if kind == "pain":        # > <  (dolor, ojos apretados)
+        k = 1 if side == "L" else -1
+        return ln(f"M {cx-28*k} {cy-24} L {cx+22*k} {cy} L {cx-28*k} {cy+24}", 10)
+    if kind == "bulge":       # ojos que se salen
+        return (f'<ellipse cx="{cx}" cy="{cy-6}" rx="64" ry="70" fill="#fff" stroke="{INK}" stroke-width="7"/>'
+                + "".join(ln(f"M {cx+64*math.cos(a)*.95:.0f} {cy-6+70*math.sin(a)*.95:.0f} "
+                             f"L {cx+40*math.cos(a+.2):.0f} {cy-6+44*math.sin(a+.2):.0f}", 3, P["rojo"])
+                          for a in (0.3, 1.2, 2.3, 3.4, 4.4, 5.6))
+                + f'<circle cx="{cx}" cy="{cy-6}" r="9" fill="{INK}"/>')
     raise ValueError(kind)
 
 
@@ -97,6 +106,9 @@ BROWS = {
     "asco": ("M 168 236 L 234 258", "M 286 234 Q 320 216 354 230"),
     "sad": ("M 168 258 L 232 242", "M 288 242 L 352 258"),
     "happy": ("M 168 240 Q 200 224 232 238", "M 288 238 Q 320 224 352 240"),
+    "miedo": ("M 166 236 Q 196 214 234 226", "M 286 226 Q 324 214 354 236"),
+    "dolor": ("M 166 222 L 232 250", "M 288 250 L 354 222"),
+    "alto": ("M 160 196 Q 200 176 238 192", "M 282 192 Q 320 176 360 196"),
 }
 
 
@@ -122,6 +134,18 @@ def mouth(kind):
         return ln("M 228 404 L 292 404", 8)
     if kind == "mid":
         return f'<ellipse cx="260" cy="404" rx="28" ry="14" fill="{P["boca"]}" stroke="{INK}" stroke-width="7"/>'
+    if kind == "wavy":        # boca temblorosa de miedo
+        return ln("M 214 408 Q 226 394 238 408 Q 250 422 262 408 Q 274 394 286 408 Q 298 422 310 408", 8)
+    if kind in ("scream", "broken"):   # grito; "broken" con dientes que faltan
+        d = "M 210 380 Q 260 364 310 380 Q 316 426 260 432 Q 204 426 210 380 Z"
+        teeth = [(225, 380), (243, 376), (261, 375), (279, 376), (297, 380)]
+        if kind == "broken":
+            teeth = [teeth[0], teeth[3]]
+        t = "".join(f'<rect x="{x-9}" y="{y-6}" width="18" height="22" rx="4" fill="#fff" stroke="{INK}" stroke-width="4"/>'
+                    for x, y in teeth)
+        return (f'<clipPath id="sclip"><path d="{d}"/></clipPath><path d="{d}" fill="{P["boca"]}"/>'
+                f'<g clip-path="url(#sclip)"><ellipse cx="260" cy="428" rx="30" ry="14" fill="{P["lengua"]}"/>{t}</g>'
+                + ln(d, 7))
     raise ValueError(kind)
 
 
@@ -129,13 +153,13 @@ HAIR = ("M 92 240 C 72 110, 190 58, 275 66 C 372 74, 452 130, 430 240 "
         "L 404 186 L 372 204 L 338 170 L 300 198 L 262 164 L 222 200 L 186 170 L 152 204 L 122 178 Z")
 
 
-def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra=""):
+def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra="", hair=None, hair_color=None):
     """Cabeza de Vos en coordenadas del lienzo de 520x820 (centro 260,270)."""
     s = []
     for x in (90, 430):
         s.append(f'<circle cx="{x}" cy="292" r="30" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
     s.append(f'<circle cx="260" cy="270" r="172" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    s.append(ln(HAIR, SW, INK, P["pelo"]))
+    s.append(ln(hair or HAIR, SW, INK, hair_color or P["pelo"]))
     s.append(f'<ellipse cx="165" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>'
              f'<ellipse cx="355" cy="372" rx="28" ry="15" fill="{P["rosa"]}" opacity=".5"/>')
     s.append(extra)
@@ -148,13 +172,14 @@ def head(eyes="open", brows="neutral", mouth_kind="smile", look=(0, 0), extra=""
     return "".join(s)
 
 
-def arms(kind):
+def arms(kind, sleeve=None):
     def arm(d, hand):
         hx, hy = hand
         return (stroke_path(d, P["piel"], 28)
                 + f'<circle cx="{hx}" cy="{hy}" r="25" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
-    sleeves = (f'<circle cx="186" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>'
-               f'<circle cx="334" cy="500" r="30" fill="{P["remera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    sc = sleeve or P["remera"]
+    sleeves = (f'<circle cx="186" cy="500" r="30" fill="{sc}" stroke="{INK}" stroke-width="{SW}"/>'
+               f'<circle cx="334" cy="500" r="30" fill="{sc}" stroke="{INK}" stroke-width="{SW}"/>')
     if kind == "down":
         return arm("M 182 505 Q 150 575 148 652", (148, 655)) + arm("M 338 505 Q 370 575 372 652", (372, 655)) + sleeves, ""
     if kind == "up":   # detrás de la cabeza
@@ -167,6 +192,13 @@ def arms(kind):
                  + f'<circle cx="440" cy="432" r="28" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>'
                  + ln("M 424 440 L 452 440", 5))
         return left + right + sleeves, ""
+    if kind == "colgado":   # manos atadas por encima de la cabeza
+        back = arm("M 182 500 Q 120 300 240 34", (244, 30)) + arm("M 338 500 Q 400 300 280 34", (276, 30))
+        back += "".join(ln(f"M 226 {y} L 294 {y+8}", 9, P["marron2"]) for y in (14, 34))
+        return sleeves, back
+    if kind == "atado":     # brazos atrás del cuerpo
+        back = arm("M 182 505 Q 140 590 196 660", (200, 662)) + arm("M 338 505 Q 380 590 324 660", (320, 662))
+        return sleeves, back
     raise ValueError(kind)
 
 
@@ -692,6 +724,364 @@ def fondo_cabeza():
     return "".join(s), defs
 
 
+# ---------------------------------------------------------------- torturas (mazmorra)
+P.update(arpillera="#C9A878", arpillera2="#A88A5C", hierro="#8E97A8", hierro2="#626B7D",
+         madera="#9C6B45", madera2="#7A5236", piedra="#5E6380", piedra2="#4A4E68",
+         fuego="#FF8A2B", fuego2="#FFD23F", brasa="#FF5A1F", capucha="#3A3340")
+
+PELO_PRESO = ("M 88 250 L 70 200 L 92 180 L 80 130 L 120 120 L 120 80 L 170 86 L 190 48 L 236 70 "
+              "L 270 36 L 304 70 L 350 46 L 362 90 L 412 88 L 404 130 L 450 140 L 430 186 L 452 214 L 432 250 "
+              "L 404 196 L 370 214 L 338 176 L 300 206 L 262 170 L 222 206 L 186 176 L 150 210 L 118 186 Z")
+
+
+def barba_preso():
+    """Barba de varios días y tierra en la cara."""
+    pts = [(160, 392), (176, 410), (198, 420), (222, 428), (298, 428), (322, 420), (344, 410), (360, 392),
+           (188, 398), (332, 398), (206, 412), (314, 412)]
+    return ("".join(f'<circle cx="{x}" cy="{y}" r="4" fill="#8A6E5A" opacity=".7"/>' for x, y in pts)
+            + f'<ellipse cx="350" cy="228" rx="26" ry="12" fill="#B98A6A" opacity=".45"/>')
+
+
+def cabeza_preso(eyes, brows, mouth_kind, extra=""):
+    return head(eyes, brows, mouth_kind, extra=barba_preso() + extra, hair=PELO_PRESO, hair_color="#5A4433")
+
+
+SUDOR = "M 0 0 C 0 0 16 24 16 34 A 16 16 0 0 1 -16 34 C -16 24 0 0 0 0 Z"
+
+
+def gota_sudor(x, y, k=1.0):
+    return (f'<g transform="translate({x} {y}) scale({k})">' + ln(SUDOR, 5, INK, P["cielo"])
+            + ln("M -7 30 Q -7 22 -2 16", 4, "#fff") + '</g>')
+
+
+def preso(eyes="wide", brows="miedo", mouth_kind="wavy", arm_kind="down", sudor=False):
+    """Prisionero: túnica de arpillera rota, descalzo, pelo revuelto (lienzo 520x820 como Vos)."""
+    s = [f'<ellipse cx="260" cy="806" rx="125" ry="13" fill="#000" opacity=".12"/>']
+    front, back = arms(arm_kind, P["arpillera"])
+    s.append(back)
+    for x in (210, 268):
+        s.append(f'<rect x="{x}" y="640" width="42" height="150" rx="20" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (226, 294):
+        s.append(f'<ellipse cx="{x}" cy="792" rx="36" ry="19" fill="{P["piel"]}" stroke="{INK}" stroke-width="6"/>')
+    tunic = ("M 194 454 Q 260 440 326 454 Q 366 470 368 540 L 374 712 L 350 690 L 330 716 L 306 692 L 284 718 "
+             "L 260 694 L 236 718 L 214 692 L 190 716 L 170 690 L 146 712 L 152 540 Q 154 470 194 454 Z")
+    s.append(ln(tunic, SW, INK, P["arpillera"]))
+    s.append(f'<rect x="282" y="620" width="44" height="40" rx="4" fill="{P["arpillera2"]}" stroke="{INK}" stroke-width="4" transform="rotate(8 304 640)"/>')
+    s.append(ln("M 292 628 L 300 636 M 312 626 L 318 636", 3))
+    s.append(ln("M 224 462 Q 260 494 296 462", 6))
+    s.append(stroke_path("M 156 590 Q 260 610 364 590", P["madera2"], 12))
+    if arm_kind == "atado":   # sogas que lo atan al poste
+        for y in (530, 580):
+            s.append(stroke_path(f"M 140 {y} Q 260 {y+22} 380 {y}", "#C79A5B", 14))
+    s.append(front)
+    s.append(cabeza_preso(eyes, brows, mouth_kind, gota_sudor(410, 190) if sudor else ""))
+    return "".join(s)
+
+
+PRESO_VARIANTS = {
+    "preso_miedo": dict(sudor=True),
+    "preso_grito": dict(eyes="pain", brows="dolor", mouth_kind="scream"),
+    "preso_atado": dict(arm_kind="atado", sudor=True),
+    "preso_atado_grito": dict(arm_kind="atado", eyes="pain", brows="dolor", mouth_kind="scream"),
+}
+CUERDA = 1300   # largo de soga por encima de las manos del preso colgado
+
+
+def build_preso():
+    for name, kw in PRESO_VARIANTS.items():
+        add(name, 520, 820, preso(**kw), anchor=(0.5, 1.0))
+    # colgado: lienzo más alto con la soga hacia arriba; ancla en los pies
+    for name, kw in [("preso_colgado", dict(sudor=True)),
+                     ("preso_colgado_grito", dict(eyes="pain", brows="dolor", mouth_kind="scream"))]:
+        hgt = 820 + CUERDA
+        body = (stroke_path(f"M 260 30 L 260 {-CUERDA}", "#C79A5B", 14)
+                + preso(arm_kind="colgado", **kw))
+        add(name, 520, hgt, f'<g transform="translate(0 {CUERDA})">{body}</g>', anchor=(0.5, (CUERDA + 806) / hgt))
+    # cabezas sueltas para el aplastacabezas (ancla en el mentón)
+    for name, (e, b, m) in {"cabeza_miedo": ("wide", "miedo", "wavy"),
+                            "cabeza_grito": ("pain", "dolor", "scream"),
+                            "cabeza_dientes": ("pain", "dolor", "broken"),
+                            "cabeza_ojos": ("bulge", "alto", "broken")}.items():
+        add(name, 520, 470, cabeza_preso(e, b, m), anchor=(0.5, 442 / 470))
+
+
+# ---------------------------------------------------------------- verdugo
+def verdugo(cara="malo"):
+    s = [f'<ellipse cx="260" cy="806" rx="150" ry="14" fill="#000" opacity=".14"/>']
+    for x in (196, 272):
+        s.append(f'<rect x="{x}" y="640" width="52" height="150" rx="20" fill="#2F2A33" stroke="{INK}" stroke-width="{SW}"/>')
+    for x in (214, 306):
+        s.append(f'<ellipse cx="{x}" cy="794" rx="44" ry="22" fill="#5A3A2A" stroke="{INK}" stroke-width="6"/>')
+    # brazos gruesos
+    for d, h in [("M 160 500 Q 110 590 118 668", (118, 672)), ("M 360 500 Q 410 590 402 668", (402, 672))]:
+        s.append(stroke_path(d, P["piel"], 46))
+        s.append(f'<circle cx="{h[0]}" cy="{h[1]}" r="34" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(ln(f"M {h[0]-14} {h[1]-8} L {h[0]+14} {h[1]-8}", 4))
+    s.append(f'<rect x="138" y="440" width="244" height="250" rx="70" fill="{P["piel"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 214 520 Q 236 540 258 520 M 262 520 Q 284 540 306 520", 5, P["piel2"]))
+    # delantal de cuero
+    s.append(ln("M 170 560 L 350 560 L 362 702 Q 260 724 158 702 Z", SW, INK, "#7A4A2E"))
+    s.append(ln("M 170 500 L 196 560 M 350 500 L 324 560", 8, "#5A3420"))
+    s.append(f'<rect x="226" y="600" width="68" height="44" rx="8" fill="#5A3420" stroke="{INK}" stroke-width="5"/>')
+    # capucha puntiaguda
+    hood = "M 74 476 Q 70 300 170 170 Q 220 96 262 30 Q 300 96 352 170 Q 450 300 446 476 Q 260 528 74 476 Z"
+    s.append(ln(hood, SW, INK, P["capucha"]))
+    s.append(ln("M 150 250 Q 200 200 240 170", 10, "#fff", extra='opacity=".12"'))
+    for cx in (204, 316):
+        s.append(f'<ellipse cx="{cx}" cy="330" rx="48" ry="40" fill="#1A1620" stroke="{INK}" stroke-width="5"/>')
+        if cara == "risa":
+            s.append(ln(f"M {cx-26} 342 Q {cx} 312 {cx+26} 342", 9, "#fff"))
+        else:
+            s.append(f'<circle cx="{cx}" cy="334" r="20" fill="#fff"/><circle cx="{cx + (6 if cx < 260 else -6)}" cy="338" r="10" fill="{INK}"/>')
+    if cara == "malo":
+        s.append(ln("M 150 288 L 246 312", 12, P["capucha"]) + ln("M 370 288 L 274 312", 12, P["capucha"]))
+        s.append(ln("M 150 286 L 246 310", 6) + ln("M 370 286 L 274 310", 6))
+    if cara == "risa":
+        s.append(ln("M 214 420 Q 260 452 306 420", 7, "#fff", extra='opacity=".5"'))
+    return "".join(s)
+
+
+# ---------------------------------------------------------------- instrumentos
+def textura_madera(x0, y0, x1, y1, n=4, seed=1):
+    rnd = random.Random(seed)
+    out = []
+    for i in range(n):
+        y = y0 + (y1 - y0) * (i + .5) / n + rnd.uniform(-6, 6)
+        xa, xb = x0 + rnd.uniform(8, 30), x1 - rnd.uniform(8, 30)
+        out.append(ln(f"M {xa:.0f} {y:.0f} Q {(xa+xb)/2:.0f} {y + rnd.uniform(-8, 8):.0f} {xb:.0f} {y:.0f}", 4, P["madera2"]))
+    return "".join(out)
+
+
+def piramide():
+    """La cuna de Judas: pirámide de madera sobre un taburete (lienzo 380x560)."""
+    s = []
+    for d in ["M 92 360 L 40 550", "M 288 360 L 340 550", "M 190 360 L 190 556"]:
+        s.append(stroke_path(d, P["madera2"], 22))
+    s.append(ln("M 70 470 L 310 470", 14, P["madera2"]) + ln("M 70 470 L 310 470", 5, INK, extra='opacity=".4"'))
+    s.append(f'<rect x="30" y="330" width="320" height="40" rx="10" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 190 24 L 64 332 L 210 332 Z", SW, INK, "#B9845A"))
+    s.append(ln("M 190 24 L 210 332 L 316 332 Z", SW, INK, P["madera"]))
+    s.append(ln("M 150 160 Q 140 220 120 290 M 170 200 Q 168 260 160 316", 4, P["madera2"]))
+    s.append(ln("M 228 150 Q 240 230 262 300", 4, P["madera2"]))
+    s.append(ln("M 190 22 L 176 64 L 202 64 Z", 4, INK, "#D9DCE4"))
+    return "".join(s)
+
+
+def polea():
+    """Viga con polea; la soga baja por la izquierda de la rueda hacia el preso (lienzo 360x300)."""
+    s = [f'<rect x="0" y="16" width="360" height="56" rx="10" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>',
+         textura_madera(0, 20, 360, 70, 2, 4),
+         ln("M 170 72 L 150 160 M 210 72 L 230 160", 16, P["hierro2"]),
+         stroke_path("M 246 170 Q 300 190 330 300", "#C79A5B", 14)]
+    s.append(f'<circle cx="190" cy="170" r="64" fill="{P["hierro"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="190" cy="170" r="44" fill="{P["hierro2"]}" stroke="{INK}" stroke-width="5"/>')
+    for a in range(0, 360, 60):
+        r = math.radians(a)
+        s.append(ln(f"M 190 170 L {190+40*math.cos(r):.0f} {170+40*math.sin(r):.0f}", 8, P["hierro"]))
+    s.append(f'<circle cx="190" cy="170" r="14" fill="{P["hierro"]}" stroke="{INK}" stroke-width="5"/>')
+    s.append(stroke_path("M 128 168 L 128 310", "#C79A5B", 14))
+    return "".join(s)
+
+
+def garra(roja=False):
+    """Garra de gato: mango de madera y cuatro uñas de hierro curvas (lienzo 560x340)."""
+    met, met2 = ("#FF6A2B", "#FFB347") if roja else (P["hierro"], "#C3CAD6")
+    s = [f'<rect x="20" y="148" width="210" height="44" rx="20" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>',
+         ln("M 50 160 Q 120 154 200 162", 4, P["madera2"]) + ln("M 60 180 Q 130 176 210 182", 4, P["madera2"]),
+         f'<rect x="214" y="138" width="40" height="64" rx="8" fill="{met}" stroke="{INK}" stroke-width="{SW}"/>']
+    claw = "M 250 156 Q 410 120 480 176 Q 500 196 492 228 Q 470 196 430 186 Q 360 174 250 186 Z"
+    for ang in (-30, -10, 10, 30):
+        s.append(f'<g transform="rotate({ang} 250 170)">' + ln(claw, 6, INK, met)
+                 + ln("M 300 160 Q 400 140 460 176", 5, met2) + '</g>')
+    s.append(f'<circle cx="262" cy="170" r="34" fill="{met}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<circle cx="262" cy="170" r="10" fill="{INK}"/>')
+    return "".join(s)
+
+
+def resplandor(color, r=200):
+    """Halo de degradado radial (para cosas al rojo vivo)."""
+    return (f'<circle cx="{r}" cy="{r}" r="{r}" fill="url(#g)"/>',
+            f'<radialGradient id="g"><stop offset="0" stop-color="{color}" stop-opacity=".75"/>'
+            f'<stop offset="1" stop-color="{color}" stop-opacity="0"/></radialGradient>')
+
+
+def llama(cx, base, w, h, fase):
+    k = 1 if fase == 0 else -1
+    outer = (f"M {cx-w} {base} Q {cx-w*1.1} {base-h*.5} {cx-w*.3*k} {base-h*.75} Q {cx-w*.1*k} {base-h*.95} "
+             f"{cx+w*.2*k} {base-h} Q {cx+w*.15*k} {base-h*.7} {cx+w*.6} {base-h*.55} Q {cx+w*1.1} {base-h*.3} {cx+w} {base} Z")
+    inner = (f"M {cx-w*.5} {base} Q {cx-w*.6} {base-h*.3} {cx-w*.05*k} {base-h*.6} "
+             f"Q {cx+w*.5} {base-h*.3} {cx+w*.5} {base} Z")
+    return ln(outer, 6, INK, P["fuego"]) + ln(inner, 0, "none", P["fuego2"])
+
+
+def brasero(fase=0):
+    """Brasero con brasas y llamas (lienzo 360x400). fase 0/1 para animar el fuego."""
+    s = []
+    for d in ["M 110 300 L 70 392", "M 250 300 L 290 392", "M 180 310 L 180 396"]:
+        s.append(stroke_path(d, P["hierro2"], 16))
+    for (cx, w, h) in [(120, 46, 150), (190, 60, 200), (255, 44, 140)]:
+        s.append(llama(cx, 250, w, h if fase == 0 else h * .88, (fase + (cx > 150)) % 2))
+    for x, y, r in [(110, 240, 26), (160, 232, 30), (214, 236, 28), (262, 242, 24), (190, 248, 22), (136, 252, 18)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{P["brasa"]}" stroke="{INK}" stroke-width="5"/>'
+                 f'<circle cx="{x-6}" cy="{y-6}" r="{r*.35:.0f}" fill="{P["fuego2"]}"/>')
+    s.append(ln("M 50 246 L 310 246 Q 300 316 180 316 Q 60 316 50 246 Z", SW, INK, P["hierro2"]))
+    s.append(ln("M 72 262 Q 120 296 180 300", 6, P["hierro"]))
+    return "".join(s)
+
+
+def antorcha(fase=0):
+    s = [stroke_path("M 80 300 L 80 170", P["madera"], 22),
+         ln("M 40 140 L 120 140 L 104 190 L 56 190 Z", SW, INK, P["hierro2"]),
+         llama(80, 146, 40 if fase == 0 else 36, 120 if fase == 0 else 108, fase)]
+    return "".join(s)
+
+
+def poste():
+    return (f'<rect x="20" y="10" width="110" height="1000" rx="10" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>'
+            + textura_madera(20, 10, 130, 1000, 1, 2)
+            + ln("M 50 40 L 50 980 M 100 60 L 100 960", 4, P["madera2"]))
+
+
+def costillas_burbuja():
+    """Burbuja tipo rayos X con unas costillas de caricatura (lienzo 300x300)."""
+    s = [f'<circle cx="150" cy="150" r="140" fill="#1E2A44" stroke="{INK}" stroke-width="9"/>',
+         f'<circle cx="150" cy="150" r="128" fill="none" stroke="#fff" stroke-width="5" opacity=".6"/>']
+    s.append(f'<rect x="138" y="50" width="24" height="200" rx="10" fill="{P["hueso"]}" stroke="{INK}" stroke-width="5"/>')
+    for i, y in enumerate([84, 120, 156, 192]):
+        w = 92 - i * 6
+        s.append(stroke_path(f"M 146 {y} Q {150-w} {y-10} {150-w} {y+30}", P["hueso"], 12, INK, 22))
+        s.append(stroke_path(f"M 154 {y} Q {150+w} {y-10} {150+w} {y+30}", P["hueso"], 12, INK, 22))
+    s.append(f'<circle cx="112" cy="92" r="6" fill="{INK}"/><circle cx="188" cy="92" r="6" fill="{INK}"/>')
+    return "".join(s)
+
+
+def diente():
+    return ln("M 12 10 Q 30 0 48 10 Q 54 30 44 46 L 40 66 Q 34 70 32 50 L 28 50 Q 26 70 20 66 L 16 46 Q 6 30 12 10 Z",
+              5, INK, "#fff")
+
+
+# Aplastacabezas en tres capas que encajan (lienzo base 700x900):
+#   cabeza (ancla en el mentón, x=350, y=565) < tornillo con casco < marco con mesa.
+APLASTA = {"menton": [350, 565], "casco": [350, 300], "size": [700, 900]}
+
+
+def aplasta_base():
+    s = []
+    for x in (80, 560):
+        s.append(f'<rect x="{x}" y="680" width="60" height="214" rx="8" fill="{P["madera2"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(f'<rect x="10" y="616" width="680" height="76" rx="12" fill="{P["madera"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(textura_madera(10, 620, 690, 690, 2, 7))
+    for x in (130, 520):
+        s.append(f'<rect x="{x}" y="60" width="50" height="566" rx="8" fill="{P["hierro"]}" stroke="{INK}" stroke-width="{SW}"/>')
+        s.append(ln(f"M {x+14} 130 L {x+14} 540", 6, "#C3CAD6"))
+    s.append(f'<rect x="120" y="60" width="460" height="64" rx="12" fill="{P["hierro"]}" stroke="{INK}" stroke-width="{SW}"/>')
+    s.append(ln("M 314 92 L 330 64 L 370 64 L 386 92 L 370 120 L 330 120 Z", 6, INK, P["hierro2"]))
+    s.append(ln("M 120 566 L 270 566 Q 350 600 430 566 L 580 566 L 580 616 L 120 616 Z", SW, INK, P["hierro"]))
+    for x, y in [(155, 92), (545, 92), (155, 590), (545, 590)]:
+        s.append(f'<circle cx="{x}" cy="{y}" r="11" fill="{P["hierro2"]}" stroke="{INK}" stroke-width="4"/>')
+    return "".join(s)
+
+
+def aplasta_tornillo(fase=0):
+    """Tornillo con manivela arriba y casco abajo (lienzo 400x380, ancla en el borde del casco).
+    fase 0/1/2: la manivela vista girando."""
+    s = [f'<rect x="186" y="26" width="28" height="300" fill="{P["hierro2"]}" stroke="{INK}" stroke-width="6"/>']
+    for y in range(40 + fase * 8, 310, 24):
+        s.append(ln(f"M 188 {y} L 212 {y+10}", 5, P["hierro"]))
+    half = [160, 90, 30][fase]
+    s.append(f'<rect x="{200-half}" y="10" width="{2*half}" height="28" rx="12" fill="{P["hierro"]}" stroke="{INK}" stroke-width="6"/>')
+    knob = [(200 - half, 22), (200 + half, 22)] if fase < 2 else [(200, 22)]
+    for i, (x, y) in enumerate(knob):
+        s.append(f'<rect x="{x-16}" y="{y-40}" width="32" height="56" rx="14" fill="{P["madera"]}" stroke="{INK}" stroke-width="6"/>')
+    s.append(ln("M 50 350 C 50 250, 350 250, 350 350 Z", SW, INK, P["hierro"]))
+    s.append(ln("M 92 316 Q 120 284 170 274", 9, "#C3CAD6"))
+    s.append(f'<rect x="40" y="336" width="320" height="30" rx="10" fill="{P["hierro2"]}" stroke="{INK}" stroke-width="6"/>')
+    return "".join(s)
+
+
+def aplasta_icono():
+    """Aplastacabezas armado en una sola pieza (para la presentación)."""
+    head_g = (f'<g transform="translate(350 565) scale(.82) translate(-260 -442)">'
+              + cabeza_preso("wide", "miedo", "wavy") + '</g>')
+    torn = f'<g transform="translate(150 {300-366})">{aplasta_tornillo(0)}</g>'
+    return head_g + torn + aplasta_base()
+
+
+def fondo_mazmorra():
+    rnd = random.Random(21)
+    s = [f'<rect width="{W}" height="{H}" fill="{P["piedra2"]}"/>']
+    y, row = 0, 0
+    while y < 1330:
+        h = rnd.choice([90, 100, 110])
+        x = -rnd.randint(0, 90)
+        while x < W:
+            w = rnd.choice([150, 180, 210])
+            col = rnd.choice([P["piedra"], "#585C78", "#646987"])
+            s.append(f'<rect x="{x+5}" y="{y+5}" width="{w-10}" height="{h-10}" rx="18" fill="{col}" stroke="#3B3E55" stroke-width="5"/>')
+            if rnd.random() < .25:
+                s.append(ln(f"M {x+30} {y+20} L {x+50} {y+40} L {x+44} {y+60}", 4, "#3B3E55"))
+            x += w
+        y += h
+        row += 1
+    # suelo de losas
+    s.append(f'<rect x="0" y="1300" width="{W}" height="{H-1300}" fill="#3E3548"/>')
+    for yy in range(1300, H, 110):
+        s.append(ln(f"M 0 {yy} L {W} {yy}", 5, "#2E2738"))
+        off = rnd.randint(0, 200)
+        for xx in range(off, W, 260):
+            s.append(ln(f"M {xx} {yy} L {xx-30} {yy+110}", 5, "#2E2738"))
+    s.append(ln(f"M 0 1300 L {W} 1300", SW, INK))
+    # resplandor de las antorchas y viñeta
+    s.append(f'<circle cx="120" cy="620" r="360" fill="url(#luz)"/><circle cx="960" cy="620" r="360" fill="url(#luz)"/>')
+    s.append(f'<rect width="{W}" height="{H}" fill="url(#vin)"/>')
+    # cadenas colgando
+    for cx, n in [(330, 7), (760, 5)]:
+        for i in range(n):
+            yy = i * 34
+            if i % 2 == 0:
+                s.append(f'<ellipse cx="{cx}" cy="{yy+18}" rx="12" ry="20" fill="none" stroke="{INK}" stroke-width="11"/>'
+                         f'<ellipse cx="{cx}" cy="{yy+18}" rx="12" ry="20" fill="none" stroke="#7A8194" stroke-width="5"/>')
+            else:
+                s.append(f'<rect x="{cx-3}" y="{yy}" width="6" height="36" rx="3" fill="#7A8194" stroke="{INK}" stroke-width="3"/>')
+    defs = ('<radialGradient id="luz"><stop offset="0" stop-color="#FFB357" stop-opacity=".35"/>'
+            '<stop offset="1" stop-color="#FFB357" stop-opacity="0"/></radialGradient>'
+            '<radialGradient id="vin" cx="0.5" cy="0.45" r="0.8"><stop offset="0.55" stop-color="#000" stop-opacity="0"/>'
+            '<stop offset="1" stop-color="#000" stop-opacity="0.45"/></radialGradient>')
+    return "".join(s), defs
+
+
+def build_torturas():
+    build_preso()
+    add("verdugo", 520, 820, verdugo("malo"), anchor=(0.5, 1.0))
+    add("verdugo_risa", 520, 820, verdugo("risa"), anchor=(0.5, 1.0))
+    add("vos_miedo", 520, 820, vos(eyes="wide", brows="miedo", mouth_kind="wavy",
+                                  extra=gota_sudor(410, 190)), anchor=(0.5, 1.0))
+    add("vos_miedo__blink", 520, 820, vos(eyes="closed", brows="miedo", mouth_kind="wavy",
+                                         extra=gota_sudor(410, 190)), anchor=(0.5, 1.0))
+    add("vos_grito", 520, 820, vos(eyes="pain", brows="dolor", mouth_kind="scream"), anchor=(0.5, 1.0))
+    add("piramide", 380, 560, piramide(), anchor=(0.5, 1.0))
+    META["piramide_punta"] = [190, 24]
+    add("polea", 360, 320, polea(), anchor=(128 / 360, 170 / 320))
+    add("garra", 560, 340, garra(), anchor=(0.25, 0.5))
+    add("garra_roja", 560, 340, garra(True), anchor=(0.25, 0.5))
+    body, defs = resplandor("#FF7A1A")
+    add("resplandor", 400, 400, body, defs)
+    for f in (0, 1):
+        add(f"brasero_{f}", 360, 400, brasero(f), anchor=(0.5, 1.0))
+        add(f"antorcha_{f}", 160, 310, antorcha(f), anchor=(0.5, 1.0))
+    add("poste", 150, 1020, poste(), anchor=(0.5, 1.0))
+    add("costillas", 300, 300, costillas_burbuja())
+    add("diente", 60, 72, diente())
+    add("sudor", 40, 60, f'<g transform="translate(20 4)">{ln(SUDOR, 5, INK, P["cielo"])}</g>')
+    add("aplasta_base", 700, 900, aplasta_base(), anchor=(0.5, 1.0))
+    for f in range(3):
+        add(f"aplasta_tornillo_{f}", 400, 380, aplasta_tornillo(f), anchor=(0.5, 366 / 380))
+    add("aplasta_icono", 700, 900, aplasta_icono(), anchor=(0.5, 1.0))
+    META["aplasta"] = APLASTA
+    body, defs = fondo_mazmorra()
+    add("fondo_mazmorra", W, H, body, defs)
+
+
 # ---------------------------------------------------------------- armado
 def build():
     build_vos()
@@ -733,6 +1123,7 @@ def build():
     add("dormitorio", W, H, dormitorio(False))
     add("dormitorio_noche", W, H, dormitorio(True))
     add("blanco", W, H, f'<rect width="{W}" height="{H}" fill="#fff"/>')
+    build_torturas()
 
     os.makedirs(os.path.join(OUT, "svg"), exist_ok=True)
     os.makedirs(os.path.join(OUT, "png"), exist_ok=True)

@@ -330,6 +330,9 @@ class Element:
         self.z = spec.get("z", 0) + idx * 1e-3
         self.ph = phase_of(json.dumps(spec, sort_keys=True))
         self.blink = spec.get("blink", False)
+        lp = spec.get("loop", {})
+        self.loop_t0 = R(lp["from"]) if "from" in lp else None
+        self.loop_t1 = R(lp["to"]) if "to" in lp else 1e9
 
     # ------------------------------------------------------------ sonidos
     def sfx_events(self):
@@ -338,10 +341,10 @@ class Element:
         if s and s != "none":
             ev.append((self.tin, s, self.sp.get("vol", 1.0)))
         for sw in self.swaps:
-            if sw.get("fx") == "punch":
+            if sw.get("fx") == "punch" and sw.get("sfx", "boing") != "none":
                 ev.append((sw["t"], sw.get("sfx", "boing"), .7))
         for k in self.keys:
-            if k.get("sfx"):
+            if k.get("sfx") and k["sfx"] != "none":
                 ev.append((k["t"], k["sfx"], 1.0))
         return ev
 
@@ -375,8 +378,13 @@ class Element:
             p = ease(sq.get("ease", "inout"), (t - sq["t"]) / max(sq.get("dur", 1), 1e-6))
             asset = frames[int(round(p * (len(frames) - 1)))]
         if "loop" in sp:
+            # secuencia en bucle; con "from"/"to" solo corre en esa ventana (fuera muestra el primer dibujo)
             lp = sp["loop"]
-            asset = lp["frames"][int((t - self.tin) * lp.get("fps", 6)) % len(lp["frames"])]
+            t0 = self.loop_t0 if self.loop_t0 is not None else self.tin
+            if t0 <= t < self.loop_t1:
+                asset = lp["frames"][int((t - t0) * lp.get("fps", 6)) % len(lp["frames"])]
+            elif self.loop_t0 is not None:
+                asset = lp["frames"][0]
         if punch is not None and punch < .3:
             q = punch / .3
             st["sx"] *= 1 + .12 * math.sin(math.pi * q) * (1 - q)
@@ -725,6 +733,40 @@ def synth(kind, ph=0.0):
         tone = np.sin(2 * np.pi * np.cumsum(200 + 900 * t / d) / SR) * .3
         sig = (lp / (np.abs(lp).max() + 1e-6) + tone) * env
         return (sig / (np.abs(sig).max() + 1e-6) * .8).astype(np.float32)
+    if kind == "crack":     # crujido seco (hueso, madera)
+        d = .32
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        x = _noise(n, 3)
+        clicks = np.zeros(n, dtype=np.float32)
+        for k, at in enumerate((0, .025, .05, .09, .14)):
+            i = int(at * SR)
+            clicks[i:i + 400] += np.exp(-np.arange(min(400, n - i)) / 60) * (1 - .15 * k)
+        hp = x - np.convolve(x, np.ones(6, dtype=np.float32) / 6, mode="same")
+        sig = hp * clicks * 1.4 + np.sin(2 * np.pi * 110 * t) * np.exp(-t * 30) * .5
+        return (sig / (np.abs(sig).max() + 1e-6) * .9).astype(np.float32)
+    if kind == "golpe":     # golpe sordo
+        d = .3
+        t = np.arange(int(d * SR)) / SR
+        f = 140 * var * np.exp(-t * 10) + 45
+        sig = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 14)
+        lp = np.convolve(_noise(len(t), 4), np.ones(30, dtype=np.float32) / 30, mode="same") * np.exp(-t * 40)
+        sig = sig + lp * 2
+        return (sig / (np.abs(sig).max() + 1e-6) * .9).astype(np.float32)
+    if kind == "clic":      # trinquete metálico (manivela)
+        d = .07
+        t = np.arange(int(d * SR)) / SR
+        sig = (np.sin(2 * np.pi * 2600 * var * t) + .5 * np.sin(2 * np.pi * 4100 * t)) * np.exp(-t * 90)
+        return (sig * .5).astype(np.float32)
+    if kind == "fuego":     # chisporroteo
+        d = 1.0
+        n = int(d * SR)
+        rng = np.random.default_rng(int(ph * 1000) % 2 ** 32)
+        sig = np.convolve(_noise(n, 5), np.ones(50, dtype=np.float32) / 50, mode="same") * .25
+        for i in rng.integers(0, n - 300, 40):
+            sig[i:i + 300] += _noise(300, 6) * np.exp(-np.arange(300) / 40) * rng.uniform(.2, .8)
+        env = np.minimum(1, np.minimum(np.arange(n) / 2000, (n - np.arange(n)) / 8000))
+        return (sig * env / (np.abs(sig).max() + 1e-6) * .7).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 
