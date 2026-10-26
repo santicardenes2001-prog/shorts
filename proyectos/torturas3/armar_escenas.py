@@ -71,7 +71,7 @@ e0 = {"nombre": "gancho", "beats": [0, 1], "fondo": "fondo_mazmorra", "elementos
     {"a": "verdugo", "x": 790, "y": 1330, "s": .7, "in": "b0:tortura", "fx_in": "slide_left", "idle": "breathe",
      "swaps": [{"at": "b0:existieron", "a": "verdugo_risa", "fx": "punch"}]},
     {"a": "tenedor", "x": 200, "y": 570, "s": 1.5, "anchor": [.5, .5], "r": 12, "in": "b0:instrumentos", "out": "b1", "fx_in": "pop", "fx_out": "pop", "idle": "bob"},
-    {"a": "potro_icono", "x": 540, "y": 570, "s": .3, "anchor": [.5, .5], "in": "b0:instrumentos+0.25", "out": "b1", "fx_in": "pop", "fx_out": "pop", "idle": "bob"},
+    {"a": "potro_icono", "x": 540, "y": 570, "s": .27, "anchor": [.5, .5], "in": "b0:instrumentos+0.25", "out": "b1", "fx_in": "pop", "fx_out": "pop", "idle": "bob"},
     {"a": "rueda_icono", "x": 870, "y": 570, "s": .34, "anchor": [.5, .5], "in": "b0:instrumentos+0.5", "out": "b1", "fx_in": "pop", "fx_out": "pop", "idle": {"fx": "spin", "vel": 40}},
     {"a": "sudor", "x": 370, "y": 830, "s": 1.4, "in": "b0:crueles", "out": "b0:cuesta", "fx_in": "pop", "fx_out": "fade",
      "keys": [{"at": "b0:crueles", "dur": .8, "y": 900, "ease": "in"}], "sfx": "none"},
@@ -100,23 +100,23 @@ for i, (dx, dy) in enumerate([(-26, 0), (26, 0), (-26, 166), (26, 166)]):
 gotas1 = [vuelo("gota_sangre", 540 + dx, round(CH) + 10, dx * 2, 40, 1300, f"b4:clavaban+{0.05 + i*0.08:.2f}", 1.1, 0, 1.0)
           for i, dx in enumerate([-20, 14, -6, 24])]
 e1 = {"nombre": "tenedor", "beats": [2, 3, 4], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
-    {"a": "tenedor", "x": BX, "y": BY, "s": BIG, "r": BR, "z": 5, "in": "b2:tenedor", "fx_in": "pop",
+    {"a": "tenedor", "x": BX, "y": BY, "s": BIG, "r": BR, "z": 4, "in": "b2:tenedor", "fx_in": "pop",
      "idle": {"fx": "float", "to": "b3:cuello"},
      "keys": [{"at": "b3:barra", "dur": .2, "s": BIG * 1.1, "ease": "out"}, {"at": "b3:barra+0.2", "dur": .3, "s": BIG},
               {"at": "b3:cuello", "dur": .55, "x": 540, "y": round(CH - 4), "s": S1, "r": 0, "ease": "inout", "sfx": "whoosh"}]},
     *brillos,
-    {"a": "preso_cuello", "x": 540, "y": PIES, "s": S1, "z": 1, "in": "b3:atada", "fx_in": "slide_up",
-     "idle": [{"fx": "sway", "to": "b4:clavaban"}, {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban"}],
+    {"a": "preso_cuello", "x": 540, "y": PIES, "s": S1, "z": 3, "in": "b3:atada", "fx_in": "slide_up",
+     "idle": {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban", "to": "b4:clavaban+1.2"},
      "keys": [{"at": "b4:colgaban", "dur": .3, "y": PIES - 30, "ease": "out"}, {"at": "b4:colgaban+0.3", "dur": .5, "y": PIES, "ease": "bounce"}]},
-    {"a": "cabeza_sudor", "x": 540, "y": round(CH), "s": S1, "z": 7, "in": "b3:atada", "fx_in": "slide_up", "blink": False,
-     "idle": [{"fx": "sway", "to": "b4:clavaban"}, {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban"}],
-     "swaps": [{"at": "b4:sueño", "a": "cabeza_cansado", "fx": "punch", "sfx": "none"},
-               {"at": "b4:bajar", "a": "cabeza_dormido", "sfx": "none"},
-               {"at": "b4:clavaban", "a": "cabeza_grito", "fx": "punch", "sfx": "none"}],
+    {"a": "cuello_sudor", "x": 540, "y": round(CH), "s": S1, "z": 1, "in": "b3:atada", "fx_in": "slide_up", "blink": False,
+     "idle": {"fx": "shake", "fuerza": 1.2, "from": "b4:clavaban", "to": "b4:clavaban+1.2"},
+     "swaps": [{"at": "b4:sueño", "a": "cuello_cansado", "fx": "punch", "sfx": "none"},
+               {"at": "b4:bajar", "a": "cuello_dormido", "sfx": "none"},
+               {"at": "b4:clavaban", "a": "cuello_grito", "fx": "punch", "sfx": "none"}],
      "keys": [{"at": "b4:colgaban", "dur": .3, "y": round(CH) - 30, "ease": "out"}, {"at": "b4:colgaban+0.3", "dur": .5, "y": round(CH), "ease": "bounce"},
-              {"at": "b4:bajar", "dur": 1.1, "y": round(CH) + 26, "r": -7, "ease": "in"},
-              {"at": "b4:clavaban", "dur": .15, "y": round(CH) - 14, "r": 4, "ease": "out", "sfx": "golpe"},
-              {"at": "b4:clavaban+0.15", "dur": .4, "y": round(CH), "r": 0, "ease": "out"}]},
+              {"at": "b4:bajar", "dur": 1.1, "y": round(CH) + 16, "ease": "in"},
+              {"at": "b4:clavaban", "dur": .15, "y": round(CH) - 14, "ease": "out", "sfx": "golpe"},
+              {"at": "b4:clavaban+0.15", "dur": .4, "y": round(CH), "ease": "out"}]},
     {"texto": {"t": "CORREA", "estilo": "etiqueta"}, "x": 840, "y": round(CH) + 70, "r": 5, "z": 8, "in": "b3:correa", "out": "b3:barbilla", "fx_in": "pop", "fx_out": "pop"},
     {"texto": {"t": "BARBILLA", "estilo": "etiqueta"}, "x": 840, "y": round(CH) - 40, "r": -4, "z": 8, "in": "b3:barbilla", "out": "b4:colgaban", "fx_in": "pop", "fx_out": "pop"},
     {"texto": {"t": "PECHO", "estilo": "etiqueta"}, "x": 830, "y": round(CH) + 200, "r": 4, "z": 8, "in": "b3:pecho", "out": "b4:colgaban", "fx_in": "pop", "fx_out": "pop"},
@@ -131,37 +131,38 @@ e1 = {"nombre": "tenedor", "beats": [2, 3, 4], "fondo": "fondo_mazmorra", "flash
 ]}
 
 # ---------------------------------------------------------------- escena 2: el potro
-PX, PY, PS = 540, 900, 1.0
-ox, oy = PX - 500 * PS, PY - 310 * PS
-rod = [(ox + 110 * PS, oy + 262 * PS), (ox + 890 * PS, oy + 262 * PS)]
+PX, PY, PS = 540, 826, .92      # potro parado: lienzo 700x1100
+ox, oy = PX - 350 * PS, PY - 550 * PS
+def kpos(cx, cy):
+    return round(ox + cx * PS), round(oy + cy * PS)
+
+
+palancas = [kpos(54, 90), kpos(646, 1010)]
 giro = [("b7:girar", .8), ("b7:estiraban", .8), ("b7:desgarrar", .8), ("b7:dislocar", .8), ("b7:caderas", .8), ("b7:chasquidos", .8)]
 rod_keys = lambda sgn: [{"at": at, "dur": d, "r": sgn * 90 * (i + 1), "ease": "inout", **({"sfx": "cruje"} if sgn > 0 else {})}
                         for i, (at, d) in enumerate(giro)]
-hombro_x = ox + (330 - 30 + 96) * PS
-cadera_x = ox + (610 + 30) * PS
 e2 = {"nombre": "potro", "beats": [5, 6, 7], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
     {"a": "potro_mesa", "x": PX, "y": PY, "s": PS, "z": 0, "in": "b5:potro", "fx_in": "drop",
-     "keys": [{"at": "b6:mesa", "dur": .15, "sy": 1.06, "ease": "out"}, {"at": "b6:mesa+0.15", "dur": .3, "sy": 1.0, "ease": "out"}]},
+     "keys": [{"at": "b6:mesa", "dur": .15, "s": PS * 1.04, "ease": "out"}, {"at": "b6:mesa+0.15", "dur": .3, "s": PS, "ease": "out"}]},
     {"a": "potro_preso_0", "x": PX, "y": PY, "s": PS, "z": 1, "in": "b6:ataban", "fx_in": "drop",
      "seq": {"frames": ["potro_preso_0", "potro_preso_1", "potro_preso_2", "potro_preso_3", "potro_preso_4"],
              "at": "b7:estiraban", "dur": 3.0, "ease": "linear"},
      "idle": [{"fx": "shake", "fuerza": .5, "from": "b7:estiraban", "to": "b7:dislocar"}, {"fx": "shake", "fuerza": 1.3, "from": "b7:dislocar"}]},
-    *[{"a": "rodillo", "x": round(x), "y": round(y), "s": PS * .9, "z": 2, "in": "b6:rodillos", "fx_in": "pop",
+    *[{"a": "rodillo", "x": x, "y": y, "s": PS * .9, "z": 2, "in": "b6:rodillos", "fx_in": "pop",
        "keys": [{"at": "b6:rodillos", "dur": .6, "r": (1 if i else -1) * 90, "ease": "out"}] + rod_keys(1 if i else -1)}
-      for i, (x, y) in enumerate(rod)],
-    {"texto": {"t": "RODILLOS", "estilo": "etiqueta"}, "x": 540, "y": 600, "r": -3, "z": 6, "in": "b6:rodillos", "out": "b6:ataban", "fx_in": "pop", "fx_out": "pop"},
-    {"texto": {"t": "MUÑECAS", "estilo": "etiqueta"}, "x": 230, "y": 680, "r": -5, "z": 6, "in": "b6:muñecas", "out": "b7", "fx_in": "pop", "fx_out": "pop"},
-    {"texto": {"t": "TOBILLOS", "estilo": "etiqueta"}, "x": 830, "y": 680, "r": 5, "z": 6, "in": "b6:tobillos", "out": "b7", "fx_in": "pop", "fx_out": "pop"},
-    {"a": "flechita", "x": 170, "y": 760, "s": .6, "r": 70, "z": 6, "in": "b6:muñecas", "out": "b7", "fx_in": "pop", "fx_out": "pop", "sfx": "none"},
-    {"a": "flechita", "x": 900, "y": 760, "s": .6, "r": 110, "flip": True, "z": 6, "in": "b6:tobillos", "out": "b7", "fx_in": "pop", "fx_out": "pop", "sfx": "none"},
-    {"texto": {"t": "¡GIRAR!", "estilo": "etiqueta"}, "x": 540, "y": 600, "r": 3, "z": 6, "in": "b7:girar", "out": "b7:estiraban", "fx_in": "pop", "fx_out": "pop"},
-    {"texto": {"t": "¡ESTIRA!", "size": 70, "color": "#FFFFFF", "box": "#FF5D5D"}, "x": 540, "y": 600, "z": 6, "in": "b7:estiraban", "out": "b7:dislocar",
-     "fx_in": "pop", "fx_out": "pop", "keys": [{"at": "b7:estiraban", "dur": 1.6, "sx": 1.25, "ease": "inout"}]},
-    crack("b7:hombros", round(hombro_x), round(oy + 150), -10),
-    crack("b7:caderas", round(cadera_x), round(oy + 410), 10),
-    crack("b7:chasquidos", 300, 640, -8, "¡CHASK!", 110, .6),
-    crack("b7:escuchaban", 780, 600, 8, "¡CRACK!", 110, .6),
-    {"a": "vos_grito", "x": 540, "y": 1340, "s": .42, "z": 3, "in": "b7:dislocar", "fx_in": "jump", "idle": "shake"},
+      for i, (x, y) in enumerate(palancas)],
+    {"texto": {"t": "RODILLOS", "estilo": "etiqueta"}, "x": 540, "y": 400, "r": -3, "z": 6, "in": "b6:rodillos", "out": "b6:ataban", "fx_in": "pop", "fx_out": "pop"},
+    {"texto": {"t": "RODILLOS", "estilo": "etiqueta"}, "x": 540, "y": 1250, "r": 3, "z": 6, "in": "b6:rodillos+0.2", "out": "b6:ataban", "fx_in": "pop", "fx_out": "pop", "sfx": "none"},
+    {"texto": {"t": "MUÑECAS", "estilo": "etiqueta"}, "x": 800, "y": 470, "r": 5, "z": 6, "in": "b6:muñecas", "out": "b7", "fx_in": "pop", "fx_out": "pop"},
+    {"texto": {"t": "TOBILLOS", "estilo": "etiqueta"}, "x": 790, "y": 1130, "r": -5, "z": 6, "in": "b6:tobillos", "out": "b7", "fx_in": "pop", "fx_out": "pop"},
+    {"texto": {"t": "¡GIRAR!", "estilo": "etiqueta"}, "x": 540, "y": 400, "r": 3, "z": 6, "in": "b7:girar", "out": "b7:estiraban", "fx_in": "pop", "fx_out": "pop"},
+    {"texto": {"t": "¡ESTIRA!", "size": 70, "color": "#FFFFFF", "box": "#FF5D5D"}, "x": 540, "y": 400, "z": 6, "in": "b7:estiraban", "out": "b7:dislocar",
+     "fx_in": "pop", "fx_out": "pop", "keys": [{"at": "b7:estiraban", "dur": 1.6, "sy": 1.3, "ease": "inout"}]},
+    crack("b7:hombros", *kpos(150, 400), -10),
+    crack("b7:caderas", *kpos(560, 700), 10),
+    crack("b7:chasquidos", 300, 560, -8, "¡CHASK!", 110, .6),
+    crack("b7:escuchaban", 780, 900, 8, "¡CRACK!", 110, .6),
+    {"a": "vos_grito", "x": 120, "y": 1330, "s": .42, "z": 3, "in": "b7:dislocar", "fx_in": "jump", "idle": "shake"},
 ]}
 
 # ---------------------------------------------------------------- escena 3: la rueda
@@ -225,7 +226,7 @@ e4 = {"nombre": "poste", "beats": [11], "fondo": "fondo_patibulo", "flash": True
 ]}
 
 # ---------------------------------------------------------------- escena 5: outro
-iconos = [("tenedor", 240, 1.6, 12), ("potro_icono", 540, .3, 0), ("rueda_icono", 840, .34, 0)]
+iconos = [("tenedor", 240, 1.6, 12), ("potro_icono", 540, .28, 0), ("rueda_icono", 840, .34, 0)]
 e5 = {"nombre": "outro", "beats": [12], "fondo": "fondo_mazmorra", "flash": True, "elementos": [
     {"texto": {"t": "¿CUÁL ES EL PEOR?", "size": 80, "color": "#24201F", "box": "#FFD23F"}, "x": 540, "y": 260, "r": -2, "z": 6,
      "in": "b12", "fx_in": "pop", "idle": {"fx": "pulse", "fuerza": .4}},

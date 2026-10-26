@@ -294,7 +294,7 @@
      "a": "potro_icono",
      "x": 540,
      "y": 570,
-     "s": 0.3,
+     "s": 0.27,
      "anchor": [
       0.5,
       0.5
@@ -378,7 +378,7 @@
      "y": 560,
      "s": 2.4,
      "r": 15,
-     "z": 5,
+     "z": 4,
      "in": "b2:tenedor",
      "fx_in": "pop",
      "idle": {
@@ -478,20 +478,15 @@
      "x": 540,
      "y": 1420,
      "s": 1.25,
-     "z": 1,
+     "z": 3,
      "in": "b3:atada",
      "fx_in": "slide_up",
-     "idle": [
-      {
-       "fx": "sway",
-       "to": "b4:clavaban"
-      },
-      {
-       "fx": "shake",
-       "fuerza": 1.2,
-       "from": "b4:clavaban"
-      }
-     ],
+     "idle": {
+      "fx": "shake",
+      "fuerza": 1.2,
+      "from": "b4:clavaban",
+      "to": "b4:clavaban+1.2"
+     },
      "keys": [
       {
        "at": "b4:colgaban",
@@ -508,40 +503,35 @@
      ]
     },
     {
-     "a": "cabeza_sudor",
+     "a": "cuello_sudor",
      "x": 540,
      "y": 825,
      "s": 1.25,
-     "z": 7,
+     "z": 1,
      "in": "b3:atada",
      "fx_in": "slide_up",
      "blink": false,
-     "idle": [
-      {
-       "fx": "sway",
-       "to": "b4:clavaban"
-      },
-      {
-       "fx": "shake",
-       "fuerza": 1.2,
-       "from": "b4:clavaban"
-      }
-     ],
+     "idle": {
+      "fx": "shake",
+      "fuerza": 1.2,
+      "from": "b4:clavaban",
+      "to": "b4:clavaban+1.2"
+     },
      "swaps": [
       {
        "at": "b4:sueño",
-       "a": "cabeza_cansado",
+       "a": "cuello_cansado",
        "fx": "punch",
        "sfx": "none"
       },
       {
        "at": "b4:bajar",
-       "a": "cabeza_dormido",
+       "a": "cuello_dormido",
        "sfx": "none"
       },
       {
        "at": "b4:clavaban",
-       "a": "cabeza_grito",
+       "a": "cuello_grito",
        "fx": "punch",
        "sfx": "none"
       }
@@ -562,15 +552,13 @@
       {
        "at": "b4:bajar",
        "dur": 1.1,
-       "y": 851,
-       "r": -7,
+       "y": 841,
        "ease": "in"
       },
       {
        "at": "b4:clavaban",
        "dur": 0.15,
        "y": 811,
-       "r": 4,
        "ease": "out",
        "sfx": "golpe"
       },
@@ -578,7 +566,6 @@
        "at": "b4:clavaban+0.15",
        "dur": 0.4,
        "y": 825,
-       "r": 0,
        "ease": "out"
       }
      ]
@@ -838,8 +825,8 @@
     {
      "a": "potro_mesa",
      "x": 540,
-     "y": 900,
-     "s": 1.0,
+     "y": 826,
+     "s": 0.92,
      "z": 0,
      "in": "b5:potro",
      "fx_in": "drop",
@@ -847,13 +834,13 @@
       {
        "at": "b6:mesa",
        "dur": 0.15,
-       "sy": 1.06,
+       "s": 0.9568000000000001,
        "ease": "out"
       },
       {
        "at": "b6:mesa+0.15",
        "dur": 0.3,
-       "sy": 1.0,
+       "s": 0.92,
        "ease": "out"
       }
      ]
@@ -861,8 +848,8 @@
     {
      "a": "potro_preso_0",
      "x": 540,
-     "y": 900,
-     "s": 1.0,
+     "y": 826,
+     "s": 0.92,
      "z": 1,
      "in": "b6:ataban",
      "fx_in": "drop",
@@ -894,9 +881,9 @@
     },
     {
      "a": "rodillo",
-     "x": 150,
-     "y": 852,
-     "s": 0.9,
+     "x": 268,
+     "y": 403,
+     "s": 0.8280000000000001,
      "z": 2,
      "in": "b6:rodillos",
      "fx_in": "pop",
@@ -947,9 +934,9 @@
     },
     {
      "a": "rodillo",
-     "x": 930,
-     "y": 852,
-     "s": 0.9,
+     "x": 812,
+     "y": 1249,
+     "s": 0.8280000000000001,
      "z": 2,
      "in": "b6:rodillos",
      "fx_in": "pop",
@@ -1010,7 +997,7 @@
       "estilo": "etiqueta"
      },
      "x": 540,
-     "y": 600,
+     "y": 400,
      "r": -3,
      "z": 6,
      "in": "b6:rodillos",
@@ -1020,12 +1007,27 @@
     },
     {
      "texto": {
+      "t": "RODILLOS",
+      "estilo": "etiqueta"
+     },
+     "x": 540,
+     "y": 1250,
+     "r": 3,
+     "z": 6,
+     "in": "b6:rodillos+0.2",
+     "out": "b6:ataban",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "none"
+    },
+    {
+     "texto": {
       "t": "MUÑECAS",
       "estilo": "etiqueta"
      },
-     "x": 230,
-     "y": 680,
-     "r": -5,
+     "x": 800,
+     "y": 470,
+     "r": 5,
      "z": 6,
      "in": "b6:muñecas",
      "out": "b7",
@@ -1037,9 +1039,9 @@
       "t": "TOBILLOS",
       "estilo": "etiqueta"
      },
-     "x": 830,
-     "y": 680,
-     "r": 5,
+     "x": 790,
+     "y": 1130,
+     "r": -5,
      "z": 6,
      "in": "b6:tobillos",
      "out": "b7",
@@ -1047,39 +1049,12 @@
      "fx_out": "pop"
     },
     {
-     "a": "flechita",
-     "x": 170,
-     "y": 760,
-     "s": 0.6,
-     "r": 70,
-     "z": 6,
-     "in": "b6:muñecas",
-     "out": "b7",
-     "fx_in": "pop",
-     "fx_out": "pop",
-     "sfx": "none"
-    },
-    {
-     "a": "flechita",
-     "x": 900,
-     "y": 760,
-     "s": 0.6,
-     "r": 110,
-     "flip": true,
-     "z": 6,
-     "in": "b6:tobillos",
-     "out": "b7",
-     "fx_in": "pop",
-     "fx_out": "pop",
-     "sfx": "none"
-    },
-    {
      "texto": {
       "t": "¡GIRAR!",
       "estilo": "etiqueta"
      },
      "x": 540,
-     "y": 600,
+     "y": 400,
      "r": 3,
      "z": 6,
      "in": "b7:girar",
@@ -1095,7 +1070,7 @@
       "box": "#FF5D5D"
      },
      "x": 540,
-     "y": 600,
+     "y": 400,
      "z": 6,
      "in": "b7:estiraban",
      "out": "b7:dislocar",
@@ -1105,7 +1080,7 @@
       {
        "at": "b7:estiraban",
        "dur": 1.6,
-       "sx": 1.25,
+       "sy": 1.3,
        "ease": "inout"
       }
      ]
@@ -1116,8 +1091,8 @@
       "estilo": "crack",
       "size": 110
      },
-     "x": 436,
-     "y": 740,
+     "x": 356,
+     "y": 688,
      "r": -10,
      "z": 10,
      "in": "b7:hombros",
@@ -1132,8 +1107,8 @@
       "estilo": "crack",
       "size": 110
      },
-     "x": 680,
-     "y": 1000,
+     "x": 733,
+     "y": 964,
      "r": 10,
      "z": 10,
      "in": "b7:caderas",
@@ -1149,7 +1124,7 @@
       "size": 110
      },
      "x": 300,
-     "y": 640,
+     "y": 560,
      "r": -8,
      "z": 10,
      "in": "b7:chasquidos",
@@ -1165,7 +1140,7 @@
       "size": 110
      },
      "x": 780,
-     "y": 600,
+     "y": 900,
      "r": 8,
      "z": 10,
      "in": "b7:escuchaban",
@@ -1176,8 +1151,8 @@
     },
     {
      "a": "vos_grito",
-     "x": 540,
-     "y": 1340,
+     "x": 120,
+     "y": 1330,
      "s": 0.42,
      "z": 3,
      "in": "b7:dislocar",
@@ -1680,7 +1655,7 @@
      "a": "potro_icono",
      "x": 540,
      "y": 620,
-     "s": 0.3,
+     "s": 0.28,
      "r": 0,
      "anchor": [
       0.5,
