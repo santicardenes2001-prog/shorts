@@ -20,6 +20,7 @@ Cada entrada del JSON:
                                        # línea del pelo, textura de pelo sacada de un parche de la misma foto
    "achicar": {"centro": [x, y], "radios": [rx, ry], "escala": .42},   # el meme de la "cara chiquita":
                                        # ojos, nariz y boca achicados en el medio; alrededor, la misma cara borrosa
+   "borroso": 22,                      # cara desenfocada (intriga: no se sabe quién es); el borde queda nítido
    "ancho": 600,                       # ancho de salida en px
    "colores": 14, "suavizado": 3,      # estilo: cantidad de colores y filtro de mediana
    "contorno_px": 9}                   # grosor del borde oscuro
@@ -203,6 +204,13 @@ def procesar(e):
     if borde > 0:
         gordo = gordo.filter(ImageFilter.MaxFilter(2 * borde + 1)).filter(ImageFilter.GaussianBlur(1))
         lienzo.paste(Image.new("RGBA", lienzo.size, INK + (255,)), (0, 0), gordo)
+    if e.get("borroso"):   # desenfoque solo adentro del recorte (premultiplicado: sin halo del fondo)
+        r = e["borroso"]
+        a = np.asarray(m, dtype=float)[..., None] / 255
+        rgb = np.asarray(st, dtype=float) * a
+        num = np.asarray(Image.fromarray(rgb.clip(0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(r)), dtype=float)
+        den = np.asarray(m.filter(ImageFilter.GaussianBlur(r)), dtype=float)[..., None] / 255
+        st = Image.fromarray((num / np.maximum(den, 1e-3)).clip(0, 255).astype(np.uint8))
     cara = st.convert("RGBA")
     cara.putalpha(m)
     lienzo.alpha_composite(cara, (pad, pad))

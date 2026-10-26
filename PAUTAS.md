@@ -17,6 +17,9 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - Si se pide un efecto de sonido protagonista (p. ej. el ruido del pico), darle un hueco propio en
   la edición para que se escuche solo.
 - El gancho tiene que crear curiosidad ("…y la primera es la peor"); la primera tiene que ser la más fuerte.
+- Intriga en el gancho: si los protagonistas son conocidos, se muestran **con la cara borrosa** (y un "?")
+  y cada uno se revela recién cuando se lo nombra; en el cierre aparecen los tres nítidos.
+  (`foto_recurso.py` con `"borroso"`: desenfoca solo la cara, el borde queda nítido.)
 - Si el usuario escribe el guion, es palabra por palabra. No cambiar palabras sin preguntar.
 - Si el audio no dice lo mismo que el texto (p. ej. falta un "más"), **los subtítulos siguen al audio**
   y se avisa al usuario. Excepción: un error gramatical de la voz ("el único ave") se escribe bien en
@@ -152,3 +155,5 @@ regla se puede chequear con código, sumarla también a `revisar.py`.
 - 2026-10-26 · memes · "Necesito que sus caras se reconozcan" / "no se parecen, quiero que sean ellos" →
   caras de fotos de referencia recortadas (`foto_recurso.py`) sobre cuerpos dibujados. "Sé pulcro con las
   animaciones" → revisión por fotogramas de cada escena y cada corte. A Kirk, hacerlo reír.
+- 2026-10-26 · memes · "Mostralos con las caras borrosas al comienzo para generar intriga" → gancho con
+  caras borrosas + "?", revelación al nombrar a cada uno.

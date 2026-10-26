@@ -28,3 +28,6 @@
   guardia dormido → el meme en un chat, taza y remera. Cierre con los 3, pregunta y suscripción.
 - Sonidos nuevos en el motor: notificacion, sirena, estatica, ronquido, rejas, obturador; ambientes
   fiesta, carcel, internet. Sirena y rejas "destacado".
+- Corrección (2026-10-26) "mostralos con las caras borrosas al comienzo para generar intriga" → en el gancho
+  los tres con la cara borrosa (`*_cara_borrosa`, `"borroso": 24`) y un "?" encima que los sigue; se revelan
+  al nombrarlos (Kirk en "Charlie", Diddy y Epstein en sus secciones).

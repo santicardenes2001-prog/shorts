@@ -523,17 +523,40 @@
      "z": 45
     },
     {
-     "a": "kirk_chica_traje",
+     "a": "kirk_borroso_traje",
+     "id": "b0",
      "x": 195,
      "y": 1330,
      "s": 0.68,
-     "in": "b0:personas",
+     "in": "b0:personas+0.00",
      "fx_in": "pop",
      "idle": "float",
      "fase": 0
     },
     {
-     "a": "diddy_blanco",
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 130
+     },
+     "x": 195,
+     "y": 1050,
+     "r": -10,
+     "in": "b0:personas+0.35",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "fase": 0,
+     "out": "esc>-0.35",
+     "fx_out": "pop",
+     "sigue": {
+      "id": "b0"
+     },
+     "z": 9
+    },
+    {
+     "a": "diddy_borroso_blanco",
+     "id": "b1",
      "x": 540,
      "y": 1330,
      "s": 0.72,
@@ -543,7 +566,29 @@
      "fase": 2
     },
     {
-     "a": "epstein_sueter",
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 130
+     },
+     "x": 540,
+     "y": 1050,
+     "r": 6,
+     "in": "b0:personas+0.47",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "fase": 1,
+     "out": "esc>-0.35",
+     "fx_out": "pop",
+     "sigue": {
+      "id": "b1"
+     },
+     "z": 9
+    },
+    {
+     "a": "epstein_borroso_sueter",
+     "id": "b2",
      "x": 885,
      "y": 1330,
      "s": 0.68,
@@ -551,6 +596,27 @@
      "fx_in": "pop",
      "idle": "float",
      "fase": 4
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "pregunta",
+      "size": 130
+     },
+     "x": 845,
+     "y": 1050,
+     "r": 12,
+     "in": "b0:personas+0.59",
+     "fx_in": "pop",
+     "sfx": "none",
+     "idle": "wiggle",
+     "fase": 2,
+     "out": "esc>-0.35",
+     "fx_out": "pop",
+     "sigue": {
+      "id": "b2"
+     },
+     "z": 9
     },
     {
      "a": "emoji_risa",

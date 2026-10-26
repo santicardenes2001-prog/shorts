@@ -2475,6 +2475,9 @@ def pelo_epstein(x0, ancho, costura):
 PERSONAS = {   # cara (recursos/fotos), ancho en el lienzo, dónde queda el mentón (fracción del alto de la foto)
     "kirk": ("kirk_cara", 300, .985), "kirk_chica": ("kirk_cara_chica", 300, .985),
     "kirk_habla": ("kirk_habla_cara", 290, .985), "diddy": ("diddy_cara", 300, .9), "epstein": ("epstein_cara", 300, .985),
+    # caras borrosas para el gancho (intriga: todavía no se sabe quiénes son)
+    "kirk_borroso": ("kirk_cara_borrosa", 300, .985), "diddy_borroso": ("diddy_cara_borrosa", 300, .9),
+    "epstein_borroso": ("epstein_cara_borrosa", 300, .985),
 }
 PERSONA_W, PERSONA_H, MENTON = 520, 660, 494   # lienzo del busto y altura del mentón (justo arriba del cuello)
 
@@ -3509,7 +3512,8 @@ def fondo_cabeza():
 def build_memes():
     """Recursos del short "3 personas que ahora son memes"."""
     for quien, ropas in [("kirk", ["traje"]), ("kirk_chica", ["traje"]), ("kirk_habla", ["traje"]),
-                         ("diddy", ["blanco", "preso_caqui"]), ("epstein", ["sueter", "preso_naranja"])]:
+                         ("diddy", ["blanco", "preso_caqui"]), ("epstein", ["sueter", "preso_naranja"]),
+                         ("kirk_borroso", ["traje"]), ("diddy_borroso", ["blanco"]), ("epstein_borroso", ["sueter"])]:
         for ropa in ropas:
             add(f"{quien}_{ropa}", PERSONA_W, PERSONA_H, persona(quien, ropa), anchor=(0.5, 1.0))
     for cara, kw in VOS_CELU.items():

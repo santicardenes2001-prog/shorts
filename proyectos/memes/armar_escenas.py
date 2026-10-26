@@ -91,10 +91,14 @@ escenas.append({
         vineta(.35, keys=[{"at": "b1:historia", "dur": 1.2, "alpha": .95}]),
         {"texto": {"t": "3 PERSONAS QUE\nAHORA SON MEMES", "estilo": "titulo_meme"}, "x": 540, "y": 330, "in": "b0:3",
          "fx_in": "pop", "idle": "breathe", "out": "b1:historia", "fx_out": "suave", "z": 45},
-        {"a": "kirk_chica_traje", "x": 195, **BUSTO, "s": .68, "in": "b0:personas", "fx_in": "pop", "idle": "float", "fase": 0},
-        {"a": "diddy_blanco", "x": 540, **BUSTO, "s": .72, "in": "b0:personas+0.12", "fx_in": "pop", "idle": "float", "fase": 2},
-        {"a": "epstein_sueter", "x": 885, **BUSTO, "s": .68, "in": "b0:personas+0.24", "fx_in": "pop", "idle": "float",
-         "fase": 4},
+        # caras borrosas: todavía no se sabe quiénes son (se revelan cuando se nombra a cada uno)
+        *[x for i, (a, bx, bs) in enumerate([("kirk_borroso_traje", 195, .68), ("diddy_borroso_blanco", 540, .72),
+                                              ("epstein_borroso_sueter", 885, .68)]) for x in (
+            {"a": a, "id": f"b{i}", "x": bx, **BUSTO, "s": bs, "in": f"b0:personas+{i * .12:.2f}", "fx_in": "pop",
+             "idle": "float", "fase": i * 2},
+            {"texto": {"t": "?", "estilo": "pregunta", "size": 130}, "x": bx - (0, 0, 40)[i], "y": 1050, "r": (-10, 6, 12)[i],
+             "in": f"b0:personas+{.35 + i * .12:.2f}", "fx_in": "pop", "sfx": "none", "idle": "wiggle", "fase": i,
+             "out": "esc>-0.35", "fx_out": "pop", "sigue": {"id": f"b{i}"}, "z": 9})],
         *emojis("b0:memes", [(150, 760, .62), (930, 740, .58), (540, 640, .68), (330, 600, .5), (760, 580, .52),
                              (100, 1000, .46), (985, 980, .44)], "b1:no", semilla=3),
         cartel("NO ES NINGÚN CHISTE", 540, 470, "b1:no", size=70, estilo="cartel_negro"),
