@@ -767,6 +767,27 @@ def synth(kind, ph=0.0):
             sig[i:i + 300] += _noise(300, 6) * np.exp(-np.arange(300) / 40) * rng.uniform(.2, .8)
         env = np.minimum(1, np.minimum(np.arange(n) / 2000, (n - np.arange(n)) / 8000))
         return (sig * env / (np.abs(sig).max() + 1e-6) * .7).astype(np.float32)
+    if kind == "cuervo":    # graznido: tono ronco con ruido, dos golpes
+        d = .5
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        f = 520 * var * (1 - .25 * t / d)
+        car = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * .5 + _noise(n, 7) * .35
+        env = np.zeros(n, dtype=np.float32)
+        for t0 in (0, .24):
+            i0, i1 = int(t0 * SR), int((t0 + .2) * SR)
+            env[i0:i1] = np.sin(np.pi * np.arange(i1 - i0) / (i1 - i0)) ** .6
+        sig = np.convolve(car * env, np.ones(8, dtype=np.float32) / 8, mode="same")
+        return (sig / (np.abs(sig).max() + 1e-6) * .6).astype(np.float32)
+    if kind == "cruje":     # crujido de madera y soga tensa
+        d = .7
+        n = int(d * SR)
+        t = np.arange(n) / SR
+        pulses = (np.sin(2 * np.pi * 38 * t) > .7).astype(np.float32)
+        tone = np.sin(2 * np.pi * np.cumsum(180 + 60 * np.sin(2 * np.pi * 3 * t)) / SR)
+        sig = (tone * .6 + _noise(n, 8) * .4) * pulses
+        sig = np.convolve(sig, np.ones(20, dtype=np.float32) / 20, mode="same") * np.sin(np.pi * t / d)
+        return (sig / (np.abs(sig).max() + 1e-6) * .7).astype(np.float32)
     raise ValueError(f"sonido desconocido: {kind}")
 
 
