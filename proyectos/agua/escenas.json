@@ -1,0 +1,1902 @@
+{
+ "cola": 1.3,
+ "volumen_efectos": 0.5,
+ "subtitulos": {
+  "activos": true,
+  "y": 1470,
+  "size": 78
+ },
+ "estilos": {
+  "titulo": {
+   "size": 74,
+   "box": "#FFFFFF",
+   "color": "#24201F"
+  },
+  "header": {
+   "size": 64,
+   "box": "#FFFFFF",
+   "color": "#24201F"
+  },
+  "numero": {
+   "size": 72,
+   "box": "#FFD23F",
+   "color": "#24201F",
+   "circle": true,
+   "pad": [
+    22,
+    14
+   ]
+  },
+  "dato": {
+   "size": 78,
+   "box": "#FFD23F",
+   "color": "#24201F"
+  },
+  "sello": {
+   "size": 82,
+   "box": "#FFFFFF",
+   "color": "#FF5D5D",
+   "box_stroke": 8
+  },
+  "foto_num": {
+   "size": 60,
+   "color": "#24201F",
+   "stroke": 0
+  }
+ },
+ "narracion": [
+  {
+   "texto": "La Tierra no debería tener ni una gota de agua."
+  },
+  {
+   "texto": "Nació tan cerca del Sol que el hielo no aguantaba."
+  },
+  {
+   "texto": "¿Entonces de dónde salió? Hay tres sospechosos, y el que hoy gana fuerza estuvo aquí desde el principio."
+  },
+  {
+   "texto": "Uno: los cometas, bolas de hielo sucio."
+  },
+  {
+   "texto": "En 2014, una sonda midió uno y su agua no coincidía con la nuestra."
+  },
+  {
+   "texto": "Caso cerrado… hasta que en 2024 descubrieron que el polvo había alterado la medición."
+  },
+  {
+   "texto": "Pero había otro favorito."
+  },
+  {
+   "texto": "Dos: los asteroides. Su agua sí coincide."
+  },
+  {
+   "texto": "Pero el polvo lunar de las misiones Apolo mostró que los que cayeron tarde trajeron muy poca."
+  },
+  {
+   "texto": "Y el tercero es el que nadie revisaba."
+  },
+  {
+   "texto": "Tres: la propia Tierra."
+  },
+  {
+   "texto": "Las rocas que la formaron traían hidrógeno escondido, como para llenar los océanos tres veces."
+  },
+  {
+   "texto": "Y en 2026, un laboratorio calentó roca seca a más de mil grados con hidrógeno, y salió vapor de agua."
+  },
+  {
+   "texto": "La Tierra pudo fabricar su propia agua."
+  },
+  {
+   "texto": "¿Y el título? Era una trampa: toda el agua del planeta cabe en una bola de unos mil cuatrocientos kilómetros, ni la mitad de la Luna."
+  },
+  {
+   "texto": "Y parte de esa agua sería más vieja que el Sol."
+  },
+  {
+   "texto": "Sígueme y te cuento cómo en el próximo."
+  }
+ ],
+ "persistentes": [
+  {
+   "texto": {
+    "t": "¿POR QUÉ HAY\nTANTA AGUA\nEN LA TIERRA?",
+    "estilo": "titulo"
+   },
+   "x": 540,
+   "y": 330,
+   "in": 0,
+   "out": "e2",
+   "fx_in": "pop",
+   "sfx": "none",
+   "z": 60
+  },
+  {
+   "texto": {
+    "t": "1",
+    "estilo": "numero"
+   },
+   "x": 294,
+   "y": 250,
+   "in": "b3",
+   "out": "b5>",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "z": 60
+  },
+  {
+   "texto": {
+    "t": "LOS COMETAS",
+    "estilo": "header"
+   },
+   "x": 606,
+   "y": 250,
+   "in": "b3+0.1",
+   "out": "b5>",
+   "fx_in": "slide_left",
+   "fx_out": "fade",
+   "z": 60,
+   "sfx": "none"
+  },
+  {
+   "texto": {
+    "t": "2",
+    "estilo": "numero"
+   },
+   "x": 255,
+   "y": 250,
+   "in": "b7",
+   "out": "b8>",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "z": 60
+  },
+  {
+   "texto": {
+    "t": "LOS ASTEROIDES",
+    "estilo": "header"
+   },
+   "x": 606,
+   "y": 250,
+   "in": "b7+0.1",
+   "out": "b8>",
+   "fx_in": "slide_left",
+   "fx_out": "fade",
+   "z": 60,
+   "sfx": "none"
+  },
+  {
+   "texto": {
+    "t": "3",
+    "estilo": "numero"
+   },
+   "x": 227,
+   "y": 250,
+   "in": "b11",
+   "out": "b13>",
+   "fx_in": "pop",
+   "fx_out": "pop",
+   "z": 60
+  },
+  {
+   "texto": {
+    "t": "LA PROPIA TIERRA",
+    "estilo": "header"
+   },
+   "x": 606,
+   "y": 250,
+   "in": "b11+0.1",
+   "out": "b13>",
+   "fx_in": "slide_left",
+   "fx_out": "fade",
+   "z": 60,
+   "sfx": "none"
+  }
+ ],
+ "escenas": [
+  {
+   "nombre": "gancho",
+   "beats": [
+    0
+   ],
+   "fondo": "fondo_espacio",
+   "elementos": [
+    {
+     "a": "tierra",
+     "x": 540,
+     "y": 930,
+     "s": 1.4,
+     "in": 0,
+     "fx_in": "pop",
+     "idle": "float",
+     "swaps": [
+      {
+       "at": "b0:no",
+       "a": "tierra_sorpresa"
+      },
+      {
+       "at": "b0:gota",
+       "a": "tierra_seca",
+       "fx": "punch"
+      }
+     ],
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.15,
+       "s": 1.25,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.15",
+       "dur": 0.3,
+       "s": 1.4,
+       "ease": "back"
+      }
+     ],
+     "z": 5
+    },
+    {
+     "a": "gota_tierra",
+     "x": 540,
+     "y": 930,
+     "s": 0.55,
+     "in": "b0:gota",
+     "out": "b0:gota+0.9",
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.8,
+       "x": 210,
+       "y": 670,
+       "r": -55.0,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.55",
+       "dur": 0.3,
+       "alpha": 0.0
+      }
+     ],
+     "sfx": "pop",
+     "z": 4
+    },
+    {
+     "a": "gota_tierra",
+     "x": 540,
+     "y": 930,
+     "s": 0.55,
+     "in": "b0:gota",
+     "out": "b0:gota+0.9",
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.8,
+       "x": 870,
+       "y": 690,
+       "r": 55.0,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.55",
+       "dur": 0.3,
+       "alpha": 0.0
+      }
+     ],
+     "sfx": "none",
+     "z": 4
+    },
+    {
+     "a": "gota_tierra",
+     "x": 540,
+     "y": 930,
+     "s": 0.55,
+     "in": "b0:gota",
+     "out": "b0:gota+0.9",
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.8,
+       "x": 180,
+       "y": 1050,
+       "r": -60.0,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.55",
+       "dur": 0.3,
+       "alpha": 0.0
+      }
+     ],
+     "sfx": "none",
+     "z": 4
+    },
+    {
+     "a": "gota_tierra",
+     "x": 540,
+     "y": 930,
+     "s": 0.55,
+     "in": "b0:gota",
+     "out": "b0:gota+0.9",
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.8,
+       "x": 900,
+       "y": 1090,
+       "r": 60.0,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.55",
+       "dur": 0.3,
+       "alpha": 0.0
+      }
+     ],
+     "sfx": "none",
+     "z": 4
+    },
+    {
+     "a": "gota_tierra",
+     "x": 540,
+     "y": 930,
+     "s": 0.55,
+     "in": "b0:gota",
+     "out": "b0:gota+0.9",
+     "keys": [
+      {
+       "at": "b0:gota",
+       "dur": 0.8,
+       "x": 540,
+       "y": 1310,
+       "r": 0.0,
+       "ease": "out"
+      },
+      {
+       "at": "b0:gota+0.55",
+       "dur": 0.3,
+       "alpha": 0.0
+      }
+     ],
+     "sfx": "none",
+     "z": 4
+    }
+   ]
+  },
+  {
+   "nombre": "nace",
+   "beats": [
+    1
+   ],
+   "fondo": "fondo_espacio",
+   "elementos": [
+    {
+     "a": "sol",
+     "x": 120,
+     "y": 960,
+     "s": 2.6,
+     "in": "esc",
+     "fx_in": "slide_right",
+     "idle": [
+      "pulse",
+      {
+       "fx": "spin",
+       "vel": 12
+      }
+     ],
+     "z": 1
+    },
+    {
+     "a": "tierra_lava",
+     "x": 690,
+     "y": 980,
+     "s": 1.05,
+     "in": "b1:Nació",
+     "fx_in": "pop",
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.35
+     },
+     "z": 3
+    },
+    {
+     "a": "hielo_0",
+     "x": 690,
+     "y": 690,
+     "s": 1.0,
+     "in": "b1:hielo-0.15",
+     "fx_in": "drop",
+     "dur_in": 0.45,
+     "seq": {
+      "frames": [
+       "hielo_0",
+       "hielo_1",
+       "hielo_2",
+       "hielo_3",
+       "hielo_4",
+       "hielo_5",
+       "hielo_6",
+       "hielo_7"
+      ],
+      "at": "b1:no",
+      "dur": 0.85,
+      "ease": "linear"
+     },
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.4
+     },
+     "z": 4
+    }
+   ]
+  },
+  {
+   "nombre": "sospechosos",
+   "beats": [
+    2
+   ],
+   "fondo": "fondo_corcho",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "foto_cometa",
+     "x": 265,
+     "y": 640,
+     "z": 2,
+     "in": "b2:Hay",
+     "fx_in": "pop"
+    },
+    {
+     "texto": {
+      "t": "1",
+      "estilo": "foto_num"
+     },
+     "x": 265,
+     "y": 768,
+     "z": 3,
+     "in": "b2:Hay+0.12",
+     "fx_in": "pop",
+     "sfx": "none"
+    },
+    {
+     "a": "foto_asteroide",
+     "x": 815,
+     "y": 640,
+     "z": 2,
+     "in": "b2:tres",
+     "fx_in": "pop"
+    },
+    {
+     "texto": {
+      "t": "2",
+      "estilo": "foto_num"
+     },
+     "x": 815,
+     "y": 768,
+     "z": 3,
+     "in": "b2:tres+0.12",
+     "fx_in": "pop",
+     "sfx": "none"
+    },
+    {
+     "a": "foto_misterio",
+     "x": 540,
+     "y": 1060,
+     "z": 2,
+     "in": "b2:sospechosos",
+     "fx_in": "pop",
+     "idle": {
+      "fx": "pulse",
+      "from": "b2:gana",
+      "fuerza": 0.8
+     }
+    },
+    {
+     "texto": {
+      "t": "3",
+      "estilo": "foto_num"
+     },
+     "x": 540,
+     "y": 1188,
+     "z": 3,
+     "in": "b2:sospechosos+0.12",
+     "fx_in": "pop",
+     "sfx": "none"
+    },
+    {
+     "a": "hilos",
+     "x": 540,
+     "y": 960,
+     "z": 2.5,
+     "in": "b2:sospechosos+0.3",
+     "fx_in": "wipe",
+     "dur_in": 0.7
+    },
+    {
+     "a": "vosdet_sorpresa",
+     "x": 175,
+     "y": 1340,
+     "s": 0.55,
+     "blink": true,
+     "idle": "breathe",
+     "z": 4,
+     "in": "esc",
+     "fx_in": "jump",
+     "swaps": [
+      {
+       "at": "b2:Hay",
+       "a": "vosdet_mira"
+      },
+      {
+       "at": "b2:gana",
+       "a": "vosdet_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "lupa",
+     "x": 345,
+     "y": 1135,
+     "s": 0.6,
+     "flip": true,
+     "in": "esc+0.15",
+     "fx_in": "pop",
+     "idle": "sway",
+     "z": 5
+    },
+    {
+     "a": "exclamacion",
+     "x": 760,
+     "y": 900,
+     "s": 0.55,
+     "r": 14,
+     "in": "b2:gana",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "z": 6
+    }
+   ]
+  },
+  {
+   "nombre": "cometas",
+   "beats": [
+    3,
+    4,
+    5
+   ],
+   "fondo": "fondo_espacio",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "cometa",
+     "x": 640,
+     "y": 780,
+     "s": 1.25,
+     "in": "b3:cometas-0.15",
+     "fx_in": "slide_right",
+     "idle": "float",
+     "keys": [
+      {
+       "at": "b4",
+       "dur": 0.6,
+       "x": 760,
+       "y": 760,
+       "s": 1.0
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b4:no",
+       "a": "cometa_enojado",
+       "fx": "punch"
+      },
+      {
+       "at": "b5:polvo",
+       "a": "cometa"
+      }
+     ],
+     "z": 3
+    },
+    {
+     "texto": {
+      "t": "2014",
+      "estilo": "dato"
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b4:2014",
+     "out": "b5",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "sonda",
+     "x": 250,
+     "y": 600,
+     "s": 0.95,
+     "in": "b4:sonda-0.1",
+     "out": "b5",
+     "fx_in": "slide_right",
+     "fx_out": "fade",
+     "idle": "bob",
+     "z": 4
+    },
+    {
+     "a": "rayo",
+     "x": 520,
+     "y": 690,
+     "s": 0.5,
+     "r": 18,
+     "in": "b4:midió",
+     "out": "b5",
+     "fx_in": "wipe",
+     "dur_in": 0.4,
+     "fx_out": "fade",
+     "z": 2
+    },
+    {
+     "a": "gota_cometa",
+     "x": 330,
+     "y": 1130,
+     "s": 1.0,
+     "in": "b4:agua",
+     "out": "b5:cerrado",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob",
+     "z": 5
+    },
+    {
+     "a": "gota_tierra",
+     "x": 750,
+     "y": 1130,
+     "s": 1.0,
+     "in": "b4:agua+0.2",
+     "out": "b5:cerrado",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob",
+     "z": 5
+    },
+    {
+     "a": "cruz",
+     "x": 540,
+     "y": 1140,
+     "s": 0.85,
+     "in": "b4:coincidía",
+     "out": "b5:cerrado",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "boing",
+     "z": 6
+    },
+    {
+     "texto": {
+      "t": "CASO\nCERRADO",
+      "estilo": "sello"
+     },
+     "x": 540,
+     "y": 1080,
+     "r": -10,
+     "in": "b5",
+     "fx_in": "pop",
+     "sfx": "boing",
+     "keys": [
+      {
+       "at": "b5:alterado",
+       "dur": 0.7,
+       "y": 2300,
+       "r": 35,
+       "ease": "in",
+       "sfx": "whoosh"
+      }
+     ],
+     "z": 9
+    },
+    {
+     "texto": {
+      "t": "2024",
+      "estilo": "dato"
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b5:2024",
+     "fx_in": "pop",
+     "z": 8
+    },
+    {
+     "a": "nube_polvo",
+     "x": 560,
+     "y": 1000,
+     "s": 0.85,
+     "in": "b5:polvo-0.1",
+     "fx_in": "slide_left",
+     "idle": "float",
+     "z": 4
+    },
+    {
+     "texto": {
+      "t": "?",
+      "estilo": "numero",
+      "box": "#FFFFFF"
+     },
+     "x": 905,
+     "y": 640,
+     "in": "b5:medición",
+     "fx_in": "pop",
+     "idle": "wiggle",
+     "z": 8
+    }
+   ]
+  },
+  {
+   "nombre": "bucle1",
+   "beats": [
+    6
+   ],
+   "fondo": "fondo_corcho",
+   "elementos": [
+    {
+     "a": "foto_cometa",
+     "x": 265,
+     "y": 640,
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "1",
+      "estilo": "foto_num"
+     },
+     "x": 265,
+     "y": 768,
+     "z": 3
+    },
+    {
+     "a": "foto_asteroide",
+     "x": 815,
+     "y": 640,
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "2",
+      "estilo": "foto_num"
+     },
+     "x": 815,
+     "y": 768,
+     "z": 3
+    },
+    {
+     "a": "foto_misterio",
+     "x": 540,
+     "y": 1060,
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "3",
+      "estilo": "foto_num"
+     },
+     "x": 540,
+     "y": 1188,
+     "z": 3
+    },
+    {
+     "a": "hilos",
+     "x": 540,
+     "y": 960,
+     "z": 2.5
+    },
+    {
+     "a": "vosdet_mira",
+     "x": 175,
+     "y": 1340,
+     "s": 0.55,
+     "blink": true,
+     "idle": "breathe",
+     "z": 4
+    },
+    {
+     "a": "lupa",
+     "x": 265,
+     "y": 613,
+     "s": 0.85,
+     "in": "esc",
+     "fx_in": "pop",
+     "z": 7,
+     "keys": [
+      {
+       "at": "b6:otro",
+       "dur": 0.55,
+       "x": 815,
+       "y": 613,
+       "sfx": "whoosh_suave"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nombre": "asteroides",
+   "beats": [
+    7,
+    8
+   ],
+   "fondo": "fondo_espacio",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "asteroide",
+     "x": 540,
+     "y": 760,
+     "s": 1.45,
+     "in": "b7:asteroides-0.15",
+     "out": "b8",
+     "fx_in": "drop",
+     "fx_out": "pop",
+     "idle": "float",
+     "swaps": [
+      {
+       "at": "b7:coincide",
+       "a": "asteroide_feliz",
+       "fx": "punch"
+      }
+     ],
+     "z": 3
+    },
+    {
+     "a": "gota_tierra",
+     "x": 320,
+     "y": 1140,
+     "s": 1.0,
+     "in": "b7:agua",
+     "out": "b8",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob",
+     "z": 5
+    },
+    {
+     "a": "gota_tierra_feliz",
+     "x": 760,
+     "y": 1140,
+     "s": 1.0,
+     "in": "b7:agua+0.2",
+     "out": "b8",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob",
+     "z": 5
+    },
+    {
+     "a": "tilde",
+     "x": 540,
+     "y": 1150,
+     "s": 0.85,
+     "in": "b7:coincide",
+     "out": "b8",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "ding",
+     "z": 6
+    },
+    {
+     "a": "luna_llena",
+     "x": 290,
+     "y": 700,
+     "s": 0.9,
+     "in": "b8:lunar",
+     "fx_in": "pop",
+     "idle": "float",
+     "z": 2
+    },
+    {
+     "a": "bolsa_muestras",
+     "x": 740,
+     "y": 800,
+     "s": 0.95,
+     "in": "b8:Apolo-0.1",
+     "fx_in": "jump",
+     "idle": "sway",
+     "z": 4
+    },
+    {
+     "texto": {
+      "t": "APOLO",
+      "size": 40,
+      "color": "#24201F",
+      "stroke": 0
+     },
+     "x": 740,
+     "y": 762,
+     "in": "b8:Apolo-0.1",
+     "fx_in": "jump",
+     "idle": "sway",
+     "sfx": "none",
+     "z": 5
+    },
+    {
+     "a": "frasco_00",
+     "x": 540,
+     "y": 1300,
+     "s": 0.9,
+     "in": "b8:trajeron-0.1",
+     "fx_in": "pop",
+     "seq": {
+      "frames": [
+       "frasco_00",
+       "frasco_01"
+      ],
+      "at": "b8:muy",
+      "dur": 0.3
+     },
+     "z": 7
+    },
+    {
+     "a": "meteorito",
+     "x": 60,
+     "y": 560,
+     "s": 1.1,
+     "in": "b8:cayeron-0.15",
+     "out": "b8:cayeron+0.65",
+     "keys": [
+      {
+       "at": "b8:cayeron-0.15",
+       "dur": 0.75,
+       "x": 620,
+       "y": 1120,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "meteorito",
+     "x": 360,
+     "y": 470,
+     "s": 1.1,
+     "in": "b8:cayeron+0.01",
+     "out": "b8:cayeron+0.81",
+     "keys": [
+      {
+       "at": "b8:cayeron+0.01",
+       "dur": 0.75,
+       "x": 920,
+       "y": 1030,
+       "ease": "in"
+      }
+     ],
+     "sfx": "none",
+     "z": 6
+    },
+    {
+     "a": "meteorito",
+     "x": 620,
+     "y": 560,
+     "s": 1.1,
+     "in": "b8:cayeron+0.17",
+     "out": "b8:cayeron+0.97",
+     "keys": [
+      {
+       "at": "b8:cayeron+0.17",
+       "dur": 0.75,
+       "x": 1180,
+       "y": 1120,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "meteorito",
+     "x": 180,
+     "y": 760,
+     "s": 1.1,
+     "in": "b8:cayeron+0.33",
+     "out": "b8:cayeron+1.13",
+     "keys": [
+      {
+       "at": "b8:cayeron+0.33",
+       "dur": 0.75,
+       "x": 740,
+       "y": 1320,
+       "ease": "in"
+      }
+     ],
+     "sfx": "none",
+     "z": 6
+    },
+    {
+     "a": "meteorito",
+     "x": 470,
+     "y": 700,
+     "s": 1.1,
+     "in": "b8:cayeron+0.49",
+     "out": "b8:cayeron+1.29",
+     "keys": [
+      {
+       "at": "b8:cayeron+0.49",
+       "dur": 0.75,
+       "x": 1030,
+       "y": 1260,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    }
+   ]
+  },
+  {
+   "nombre": "bucle2",
+   "beats": [
+    9,
+    10
+   ],
+   "fondo": "fondo_corcho",
+   "elementos": [
+    {
+     "a": "foto_cometa",
+     "x": 265,
+     "y": 640,
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "1",
+      "estilo": "foto_num"
+     },
+     "x": 265,
+     "y": 768,
+     "z": 3
+    },
+    {
+     "a": "foto_asteroide",
+     "x": 815,
+     "y": 640,
+     "z": 2
+    },
+    {
+     "texto": {
+      "t": "2",
+      "estilo": "foto_num"
+     },
+     "x": 815,
+     "y": 768,
+     "z": 3
+    },
+    {
+     "a": "foto_misterio_polvo",
+     "x": 540,
+     "y": 1060,
+     "z": 2,
+     "swaps": [
+      {
+       "at": "b10+0.1",
+       "a": "foto_tierra",
+       "fx": "punch"
+      }
+     ],
+     "idle": {
+      "fx": "pulse",
+      "from": "b10+0.1"
+     }
+    },
+    {
+     "texto": {
+      "t": "3",
+      "estilo": "foto_num"
+     },
+     "x": 540,
+     "y": 1188,
+     "z": 3
+    },
+    {
+     "a": "hilos",
+     "x": 540,
+     "y": 960,
+     "z": 2.5
+    },
+    {
+     "a": "vosdet_mira",
+     "x": 175,
+     "y": 1340,
+     "s": 0.55,
+     "blink": true,
+     "idle": "breathe",
+     "z": 4,
+     "swaps": [
+      {
+       "at": "b10:propia",
+       "a": "vosdet_sorpresa",
+       "fx": "punch"
+      }
+     ]
+    },
+    {
+     "a": "lupa",
+     "x": 815,
+     "y": 613,
+     "s": 0.85,
+     "in": "esc",
+     "out": "b10",
+     "fx_in": "none",
+     "fx_out": "pop",
+     "z": 7,
+     "keys": [
+      {
+       "at": "b9:tercero",
+       "dur": 0.6,
+       "x": 540,
+       "y": 1033,
+       "sfx": "whoosh_suave"
+      }
+     ]
+    },
+    {
+     "a": "nube_polvo",
+     "x": 540,
+     "y": 1060,
+     "s": 0.8,
+     "in": "b10-0.05",
+     "out": "b10+0.7",
+     "fx_in": "pop",
+     "fx_out": "fade",
+     "dur_out": 0.4,
+     "keys": [
+      {
+       "at": "b10",
+       "dur": 0.7,
+       "x": 860,
+       "y": 940,
+       "s": 1.2,
+       "ease": "out"
+      }
+     ],
+     "z": 8
+    }
+   ]
+  },
+  {
+   "nombre": "rocas",
+   "beats": [
+    11
+   ],
+   "fondo": "fondo_espacio",
+   "flash": true,
+   "elementos": [
+    {
+     "a": "tierra_lava",
+     "x": 540,
+     "y": 780,
+     "s": 0.72,
+     "in": "esc",
+     "fx_in": "pop",
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.2
+     },
+     "keys": [
+      {
+       "at": "b11:rocas+0.35",
+       "dur": 0.2,
+       "s": 0.8,
+       "ease": "back"
+      },
+      {
+       "at": "b11:que+0.45",
+       "dur": 0.2,
+       "s": 0.88,
+       "ease": "back"
+      },
+      {
+       "at": "b11:formaron+0.45",
+       "dur": 0.2,
+       "s": 0.96,
+       "ease": "back"
+      },
+      {
+       "at": "b11:formaron+0.75",
+       "dur": 0.2,
+       "s": 1.02,
+       "ease": "back"
+      }
+     ],
+     "swaps": [
+      {
+       "at": "b11:océanos",
+       "a": "tierra_contenta",
+       "fx": "punch"
+      }
+     ],
+     "z": 4
+    },
+    {
+     "a": "roca_0",
+     "x": 90,
+     "y": 460,
+     "s": 1.6,
+     "r": 0,
+     "in": "b11:rocas-0.10",
+     "out": "b11:rocas+0.40",
+     "keys": [
+      {
+       "at": "b11:rocas-0.10",
+       "dur": 0.5,
+       "x": 390,
+       "y": 660,
+       "s": 0.95,
+       "r": 90,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "roca_1",
+     "x": 990,
+     "y": 480,
+     "s": 1.6,
+     "r": 20,
+     "in": "b11:rocas+0.15",
+     "out": "b11:rocas+0.65",
+     "keys": [
+      {
+       "at": "b11:rocas+0.15",
+       "dur": 0.5,
+       "x": 690,
+       "y": 660,
+       "s": 0.95,
+       "r": 110,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "roca_2",
+     "x": 110,
+     "y": 1180,
+     "s": 1.6,
+     "r": 40,
+     "in": "b11:que+0.00",
+     "out": "b11:que+0.50",
+     "keys": [
+      {
+       "at": "b11:que+0.00",
+       "dur": 0.5,
+       "x": 380,
+       "y": 900,
+       "s": 0.95,
+       "r": 130,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "roca_0",
+     "x": 900,
+     "y": 1200,
+     "s": 1.6,
+     "r": 60,
+     "in": "b11:formaron+0.00",
+     "out": "b11:formaron+0.50",
+     "keys": [
+      {
+       "at": "b11:formaron+0.00",
+       "dur": 0.5,
+       "x": 700,
+       "y": 900,
+       "s": 0.95,
+       "r": 150,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "roca_1",
+     "x": 540,
+     "y": 1300,
+     "s": 1.6,
+     "r": 80,
+     "in": "b11:formaron+0.25",
+     "out": "b11:formaron+0.75",
+     "keys": [
+      {
+       "at": "b11:formaron+0.25",
+       "dur": 0.5,
+       "x": 540,
+       "y": 960,
+       "s": 0.95,
+       "r": 170,
+       "ease": "in"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "burbuja_h",
+     "x": 300,
+     "y": 620,
+     "s": 0.9,
+     "in": "b11:hidrógeno+0.00",
+     "fx_in": "pop",
+     "idle": "float",
+     "sfx": "pop",
+     "z": 7
+    },
+    {
+     "a": "burbuja_h",
+     "x": 790,
+     "y": 600,
+     "s": 0.9,
+     "in": "b11:hidrógeno+0.12",
+     "fx_in": "pop",
+     "idle": "float",
+     "sfx": "pop",
+     "z": 7
+    },
+    {
+     "a": "burbuja_h",
+     "x": 250,
+     "y": 880,
+     "s": 0.9,
+     "in": "b11:hidrógeno+0.24",
+     "fx_in": "pop",
+     "idle": "float",
+     "sfx": "pop",
+     "z": 7
+    },
+    {
+     "a": "burbuja_h",
+     "x": 830,
+     "y": 900,
+     "s": 0.9,
+     "in": "b11:hidrógeno+0.36",
+     "fx_in": "pop",
+     "idle": "float",
+     "sfx": "none",
+     "z": 7
+    },
+    {
+     "a": "burbuja_h",
+     "x": 540,
+     "y": 520,
+     "s": 0.9,
+     "in": "b11:hidrógeno+0.48",
+     "fx_in": "pop",
+     "idle": "float",
+     "sfx": "none",
+     "z": 7
+    },
+    {
+     "a": "frasco_00",
+     "x": 290,
+     "y": 1300,
+     "s": 0.8,
+     "in": "b11:llenar+0.00",
+     "fx_in": "pop",
+     "seq": {
+      "frames": [
+       "frasco_00",
+       "frasco_01",
+       "frasco_02",
+       "frasco_03",
+       "frasco_04",
+       "frasco_05",
+       "frasco_06",
+       "frasco_07",
+       "frasco_08",
+       "frasco_09",
+       "frasco_10"
+      ],
+      "at": "b11:océanos-0.1",
+      "dur": 0.55
+     },
+     "z": 7
+    },
+    {
+     "a": "frasco_00",
+     "x": 540,
+     "y": 1300,
+     "s": 0.8,
+     "in": "b11:llenar+0.10",
+     "fx_in": "pop",
+     "seq": {
+      "frames": [
+       "frasco_00",
+       "frasco_01",
+       "frasco_02",
+       "frasco_03",
+       "frasco_04",
+       "frasco_05",
+       "frasco_06",
+       "frasco_07",
+       "frasco_08",
+       "frasco_09",
+       "frasco_10"
+      ],
+      "at": "b11:océanos+0.25",
+      "dur": 0.55
+     },
+     "z": 7
+    },
+    {
+     "a": "frasco_00",
+     "x": 790,
+     "y": 1300,
+     "s": 0.8,
+     "in": "b11:llenar+0.20",
+     "fx_in": "pop",
+     "seq": {
+      "frames": [
+       "frasco_00",
+       "frasco_01",
+       "frasco_02",
+       "frasco_03",
+       "frasco_04",
+       "frasco_05",
+       "frasco_06",
+       "frasco_07",
+       "frasco_08",
+       "frasco_09",
+       "frasco_10"
+      ],
+      "at": "b11:tres",
+      "dur": 0.55
+     },
+     "z": 7
+    }
+   ]
+  },
+  {
+   "nombre": "laboratorio",
+   "beats": [
+    12,
+    13
+   ],
+   "fondo": "fondo_lab",
+   "flash": true,
+   "elementos": [
+    {
+     "texto": {
+      "t": "2026",
+      "estilo": "dato"
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:2026",
+     "out": "b12:mil",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "z": 8
+    },
+    {
+     "a": "horno",
+     "x": 540,
+     "y": 1190,
+     "s": 1.2,
+     "in": "b12:laboratorio-0.1",
+     "out": "b13",
+     "fx_in": "slide_up",
+     "fx_out": "pop",
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.25,
+      "from": "b12:calentó"
+     },
+     "z": 3
+    },
+    {
+     "texto": {
+      "t": "1200°",
+      "size": 38,
+      "color": "#FF5D5D",
+      "stroke": 0
+     },
+     "x": 712,
+     "y": 845,
+     "in": "b12:calentó",
+     "out": "b13",
+     "fx_in": "fade",
+     "sfx": "none",
+     "z": 4
+    },
+    {
+     "a": "termometro",
+     "x": 925,
+     "y": 790,
+     "s": 0.95,
+     "in": "b12:calentó",
+     "out": "b13",
+     "fx_in": "jump",
+     "fx_out": "pop",
+     "idle": {
+      "fx": "shake",
+      "fuerza": 0.3,
+      "from": "b12:mil"
+     },
+     "z": 4
+    },
+    {
+     "a": "roca_1",
+     "x": 300,
+     "y": 760,
+     "s": 0.9,
+     "in": "b12:roca",
+     "out": "b12:roca+1.0",
+     "fx_in": "pop",
+     "keys": [
+      {
+       "at": "b12:seca",
+       "dur": 0.55,
+       "x": 472,
+       "y": 960,
+       "s": 0.3,
+       "r": 120,
+       "ease": "in"
+      }
+     ],
+     "z": 9
+    },
+    {
+     "texto": {
+      "t": "+1.000 °C",
+      "estilo": "dato",
+      "box": "#FF5D5D",
+      "color": "#FFFFFF"
+     },
+     "x": 540,
+     "y": 470,
+     "in": "b12:mil",
+     "out": "b12:vapor",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "sfx": "ding",
+     "z": 8
+    },
+    {
+     "a": "vapor_a",
+     "x": 500,
+     "y": 670,
+     "s": 0.8,
+     "in": "b12:vapor-0.1",
+     "out": "b13",
+     "fx_in": "grow",
+     "fx_out": "fade",
+     "loop": {
+      "frames": [
+       "vapor_a",
+       "vapor_b"
+      ],
+      "fps": 4
+     },
+     "keys": [
+      {
+       "at": "b12:vapor",
+       "dur": 1.0,
+       "y": 570,
+       "s": 1.25,
+       "ease": "out"
+      }
+     ],
+     "sfx": "whoosh_suave",
+     "z": 6
+    },
+    {
+     "a": "gota_tierra_feliz",
+     "x": 820,
+     "y": 560,
+     "s": 0.85,
+     "in": "b12:agua",
+     "out": "b13",
+     "fx_in": "pop",
+     "fx_out": "pop",
+     "idle": "bob",
+     "sfx": "ding",
+     "z": 7
+    },
+    {
+     "a": "tierra_contenta",
+     "x": 540,
+     "y": 860,
+     "s": 1.15,
+     "in": "b13",
+     "fx_in": "pop",
+     "idle": "float",
+     "z": 5
+    },
+    {
+     "a": "gota_tierra_feliz",
+     "x": 230,
+     "y": 700,
+     "s": 0.75,
+     "in": "b13:fabricar",
+     "fx_in": "pop",
+     "idle": "bob",
+     "z": 6
+    },
+    {
+     "a": "gota_tierra",
+     "x": 850,
+     "y": 690,
+     "s": 0.75,
+     "in": "b13:propia",
+     "fx_in": "pop",
+     "idle": "bob",
+     "z": 6
+    },
+    {
+     "a": "gota_tierra_feliz",
+     "x": 540,
+     "y": 1240,
+     "s": 0.7,
+     "in": "b13:agua",
+     "fx_in": "pop",
+     "idle": "bob",
+     "z": 6
+    },
+    {
+     "a": "burbuja_h",
+     "x": 250,
+     "y": 700,
+     "s": 0.85,
+     "in": "b12:hidrógeno+0.00",
+     "out": "b12:hidrógeno+0.95",
+     "fx_in": "pop",
+     "keys": [
+      {
+       "at": "b12:hidrógeno+0.30",
+       "dur": 0.6,
+       "x": 472,
+       "y": 960,
+       "s": 0.3,
+       "ease": "in"
+      }
+     ],
+     "sfx": "pop",
+     "z": 9
+    },
+    {
+     "a": "burbuja_h",
+     "x": 540,
+     "y": 600,
+     "s": 0.85,
+     "in": "b12:hidrógeno+0.10",
+     "out": "b12:hidrógeno+1.05",
+     "fx_in": "pop",
+     "keys": [
+      {
+       "at": "b12:hidrógeno+0.40",
+       "dur": 0.6,
+       "x": 472,
+       "y": 960,
+       "s": 0.3,
+       "ease": "in"
+      }
+     ],
+     "sfx": "none",
+     "z": 9
+    },
+    {
+     "a": "burbuja_h",
+     "x": 830,
+     "y": 690,
+     "s": 0.85,
+     "in": "b12:hidrógeno+0.20",
+     "out": "b12:hidrógeno+1.15",
+     "fx_in": "pop",
+     "keys": [
+      {
+       "at": "b12:hidrógeno+0.50",
+       "dur": 0.6,
+       "x": 472,
+       "y": 960,
+       "s": 0.3,
+       "ease": "in"
+      }
+     ],
+     "sfx": "none",
+     "z": 9
+    }
+   ]
+  },
+  {
+   "nombre": "revelacion",
+   "beats": [
+    14
+   ],
+   "fondo": "fondo_espacio",
+   "flash": true,
+   "elementos": [
+    {
+     "texto": {
+      "t": "¿POR QUÉ HAY\nTANTA AGUA\nEN LA TIERRA?",
+      "estilo": "titulo"
+     },
+     "x": 540,
+     "y": 330,
+     "in": "esc",
+     "fx_in": "pop",
+     "z": 8
+    },
+    {
+     "a": "tachon",
+     "x": 303.3,
+     "y": 322.0,
+     "s": 0.643,
+     "in": "b14:trampa",
+     "fx_in": "wipe",
+     "dur_in": 0.35,
+     "sfx": "whoosh",
+     "z": 9
+    },
+    {
+     "a": "tierra_seca",
+     "x": 400,
+     "y": 930,
+     "s": 1.3,
+     "in": "b14:toda",
+     "fx_in": "pop",
+     "idle": "float",
+     "z": 3
+    },
+    {
+     "a": "bola_agua",
+     "x": 760,
+     "y": 720,
+     "s": 0.95,
+     "in": "b14:bola",
+     "fx_in": "pop",
+     "z": 5,
+     "keys": [
+      {
+       "at": "b14:mil",
+       "dur": 0.6,
+       "x": 755,
+       "y": 930,
+       "s": 0.32,
+       "ease": "inout",
+       "sfx": "zoom"
+      }
+     ]
+    },
+    {
+     "texto": {
+      "t": "1.400 km",
+      "estilo": "dato",
+      "size": 52
+     },
+     "x": 755,
+     "y": 1050,
+     "in": "b14:kilómetros",
+     "fx_in": "pop",
+     "z": 7
+    },
+    {
+     "a": "luna_llena",
+     "x": 895,
+     "y": 930,
+     "s": 0.374,
+     "in": "b14:ni",
+     "fx_in": "pop",
+     "z": 5
+    },
+    {
+     "texto": {
+      "t": "LUNA",
+      "estilo": "foto_num",
+      "size": 40,
+      "color": "#FFFFFF",
+      "stroke": 8
+     },
+     "x": 895,
+     "y": 840,
+     "in": "b14:mitad",
+     "fx_in": "pop",
+     "sfx": "none",
+     "z": 7
+    }
+   ]
+  },
+  {
+   "nombre": "vieja",
+   "beats": [
+    15
+   ],
+   "fondo": "fondo_espacio",
+   "elementos": [
+    {
+     "a": "gota_tierra_feliz",
+     "x": 330,
+     "y": 880,
+     "s": 1.35,
+     "in": "b15",
+     "fx_in": "pop",
+     "idle": "bob",
+     "z": 4
+    },
+    {
+     "a": "sol",
+     "x": 760,
+     "y": 640,
+     "s": 1.15,
+     "in": "b15:Sol-0.1",
+     "fx_in": "pop",
+     "idle": "pulse",
+     "z": 2
+    },
+    {
+     "a": "reloj_arena",
+     "x": 740,
+     "y": 920,
+     "s": 0.95,
+     "in": "b15:vieja-0.1",
+     "fx_in": "jump",
+     "idle": "wiggle",
+     "z": 5
+    }
+   ]
+  },
+  {
+   "nombre": "cierre",
+   "beats": [
+    16
+   ],
+   "fondo": "fondo_burst",
+   "flash": true,
+   "elementos": [
+    {
+     "texto": {
+      "t": "¡SÍGUEME!",
+      "estilo": "dato",
+      "size": 96,
+      "box": "#FF5D5D",
+      "color": "#FFFFFF"
+     },
+     "x": 540,
+     "y": 400,
+     "in": "b16:Sígueme",
+     "fx_in": "pop",
+     "idle": "pulse",
+     "z": 8
+    },
+    {
+     "texto": {
+      "t": "PRÓXIMO: EL AGUA\nMÁS VIEJA QUE EL SOL",
+      "estilo": "header",
+      "size": 50
+     },
+     "x": 540,
+     "y": 590,
+     "in": "b16:próximo-0.2",
+     "fx_in": "slide_left",
+     "z": 8
+    },
+    {
+     "a": "vosdet_pulgar",
+     "x": 540,
+     "y": 1340,
+     "s": 0.78,
+     "in": "esc",
+     "fx_in": "jump",
+     "idle": "breathe",
+     "z": 5
+    }
+   ]
+  }
+ ],
+ "audio_voz": "audio/voz.wav",
+ "palabras_json": "audio/palabras.json"
+}

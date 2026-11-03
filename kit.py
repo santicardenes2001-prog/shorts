@@ -733,6 +733,8 @@ def build():
     add("dormitorio", W, H, dormitorio(False))
     add("dormitorio_noche", W, H, dormitorio(True))
     add("blanco", W, H, f'<rect width="{W}" height="{H}" fill="#fff"/>')
+    import kit_agua                  # recursos del short del agua
+    kit_agua.build_agua(META)
 
     os.makedirs(os.path.join(OUT, "svg"), exist_ok=True)
     os.makedirs(os.path.join(OUT, "png"), exist_ok=True)
@@ -748,4 +750,5 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    import kit as _kit   # mismo módulo que importan los kits extra, para compartir ASSETS y META
+    _kit.build()
