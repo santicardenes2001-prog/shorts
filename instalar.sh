@@ -4,8 +4,8 @@ set -e
 cd "$(dirname "$0")"
 
 echo "== Paquetes de Python"
-pip install --quiet cairosvg sherpa-onnx numpy pillow 2>/dev/null \
-  || pip install --quiet --break-system-packages cairosvg sherpa-onnx numpy pillow
+pip install --quiet cairosvg pycairo opencv-python-headless sherpa-onnx numpy pillow 2>/dev/null \
+  || pip install --quiet --break-system-packages cairosvg pycairo opencv-python-headless sherpa-onnx numpy pillow
 
 echo "== ffmpeg"
 if ! command -v ffmpeg >/dev/null 2>&1; then
