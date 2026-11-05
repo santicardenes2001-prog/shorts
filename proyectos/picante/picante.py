@@ -1,5 +1,8 @@
 """Short "El picante no es un sabor" — animación procedural; Vos solo en la apertura.
 
+Estilo de los últimos videos: fondo azul oscuro con puntos, cámara que entra y sale de las escenas,
+objetos con cara (la capsaicina es una llave falsa) y la alarma solo al principio y al final.
+
     python proyectos/picante/picante.py --fotos 1,5.5,14
     python proyectos/picante/picante.py            # render completo -> salidas/el_picante.mp4
 
@@ -28,8 +31,8 @@ sys.path.insert(0, os.path.join(ROOT, "proyectos", "pantalla"))
 import kit  # noqa: E402
 import motor  # noqa: E402
 import pantalla as P  # noqa: E402
-from pantalla import (AMARILLO, BLANCO, INK, LILITA, a_rgb, bump, cartel, clamp, desde_rgb, ease, flecha, hx,  # noqa: E402
-                      lerp, lienzo, pop, prog, punto_brillo, rng, rrect, texto, zoom_lineal)
+from pantalla import (AMARILLO, BLANCO, INK, a_rgb, bump, cartel, clamp, ease, flecha, hx, lerp, lienzo,  # noqa: E402
+                      pop, prog, punto_brillo, rng, rrect, texto)
 
 W, H, FPS, SR = 1080, 1920, 30, 48000
 
@@ -84,73 +87,6 @@ CREMA = hx("#FFF1C9")
 
 def mezcla(c0, c1, p):
     return tuple(lerp(a, c, clamp(p)) for a, c in zip(c0, c1))
-
-
-# ------------------------------------------------------------------ fondos
-def fondo_calido(ctx, t, giro=True):
-    g = cairo.RadialGradient(540, 820, 60, 540, 900, 1250)
-    g.add_color_stop_rgb(0, *hx("#FFB347"))
-    g.add_color_stop_rgb(0.55, *hx("#FF5E3A"))
-    g.add_color_stop_rgb(1, *hx("#8E1414"))
-    ctx.set_source(g)
-    ctx.paint()
-    if giro:
-        ctx.save()
-        ctx.translate(540, 860)
-        ctx.rotate(t * 0.12)
-        for k in range(16):
-            ctx.move_to(0, 0)
-            a0 = k * math.pi * 2 / 16
-            ctx.arc(0, 0, 1700, a0, a0 + math.pi / 16)
-            ctx.close_path()
-        ctx.set_source_rgba(1, 1, 0.8, 0.08)
-        ctx.fill()
-        ctx.restore()
-
-
-def fondo_boca(ctx, t):
-    g = cairo.RadialGradient(540, 700, 80, 540, 900, 1300)
-    g.add_color_stop_rgb(0, *hx("#7A1E2C"))
-    g.add_color_stop_rgb(1, *hx("#250509"))
-    ctx.set_source(g)
-    ctx.paint()
-
-
-def fondo_oscuro(ctx, t):
-    P.fondo(ctx, t, tinte=(0.10, 0.025, 0.03))
-
-
-def fondo_exterior(ctx, t, pan=0.0):
-    g = cairo.LinearGradient(0, 0, 0, 1300)
-    g.add_color_stop_rgb(0, *hx("#7FD3FF"))
-    g.add_color_stop_rgb(1, *hx("#DFF6FF"))
-    ctx.set_source(g)
-    ctx.paint()
-    ctx.arc(880, 260, 90, 0, 2 * math.pi)
-    ctx.set_source_rgb(*hx("#FFE066"))
-    ctx.fill()
-    for i, (cx, cy, s) in enumerate(((180, 300, 1.0), (620, 180, 0.8), (1000, 420, 1.1), (1400, 260, 0.9))):
-        x = (cx - t * 18 - pan * 0.3 + i * 0) % 1500 - 200
-        ctx.save()
-        ctx.translate(x, cy)
-        ctx.scale(s, s)
-        for dx, dy, r in ((0, 0, 50), (55, -20, 60), (115, 0, 48), (60, 15, 50)):
-            ctx.arc(dx, dy, r, 0, 2 * math.pi)
-            ctx.new_sub_path()
-        ctx.set_source_rgba(1, 1, 1, 0.9)
-        ctx.fill()
-        ctx.restore()
-    # colinas
-    for capa, (col, base, amp, f, vel) in enumerate((("#8ED47A", 1180, 70, 0.006, 0.5),
-                                                       ("#5DB85A", 1260, 50, 0.009, 1.0))):
-        ctx.move_to(0, 1920)
-        for x in range(0, 1100, 20):
-            y = base - amp * math.sin((x + pan * vel) * f + capa)
-            ctx.line_to(x, y)
-        ctx.line_to(1080, 1920)
-        ctx.close_path()
-        ctx.set_source_rgb(*hx(col))
-        ctx.fill()
 
 
 # ------------------------------------------------------------------ piezas
@@ -373,193 +309,6 @@ def campana(ctx, x, y, s, t, sonando=True):
     ctx.restore()
 
 
-def lengua(ctx, y0, t, seed=5):
-    ctx.save()
-    ctx.move_to(60, 1960)
-    ctx.line_to(60, y0 + 230)
-    ctx.curve_to(60, y0 - 50, 1020, y0 - 50, 1020, y0 + 230)
-    ctx.line_to(1020, 1960)
-    ctx.close_path()
-    path = ctx.copy_path()
-    g = cairo.LinearGradient(0, y0, 0, y0 + 900)
-    g.add_color_stop_rgb(0, *ROSA)
-    g.add_color_stop_rgb(1, *ROSA2)
-    ctx.set_source(g)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(9)
-    ctx.stroke()
-    ctx.append_path(path)
-    ctx.clip()
-    r = rng(seed)
-    for _ in range(260):
-        px, py = r.uniform(60, 1020), r.uniform(y0, 1920)
-        rr = r.uniform(4, 11)
-        ctx.arc(px, py, rr, 0, 2 * math.pi)
-        ctx.set_source_rgba(1, 0.8, 0.85, 0.35)
-        ctx.fill()
-    ctx.move_to(540, y0 + 60)
-    ctx.curve_to(530, y0 + 400, 550, y0 + 800, 540, 1920)
-    ctx.set_source_rgba(0.6, 0.15, 0.25, 0.35)
-    ctx.set_line_width(16)
-    ctx.stroke()
-    ctx.restore()
-
-
-def sensor(ctx, x, y, r, alarma, t, s=1.0, forma="redonda"):
-    if s <= 0.01:
-        return
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.scale(s, s)
-    col = mezcla(TEAL, hx("#FF2D2D"), alarma)
-    if alarma > 0.05:
-        for k in range(2):
-            q = ((t * 1.6 + k * 0.5) % 1)
-            ctx.arc(0, 0, r * (1 + q * 1.4), 0, 2 * math.pi)
-            ctx.set_source_rgba(1, 0.2, 0.15, 0.6 * (1 - q) * alarma)
-            ctx.set_line_width(6)
-            ctx.stroke()
-        g = cairo.RadialGradient(0, 0, r * 0.5, 0, 0, r * 2.2)
-        g.add_color_stop_rgba(0, 1, 0.25, 0.2, 0.55 * alarma)
-        g.add_color_stop_rgba(1, 1, 0.25, 0.2, 0)
-        ctx.set_source(g)
-        ctx.arc(0, 0, r * 2.2, 0, 2 * math.pi)
-        ctx.fill()
-    ctx.arc(0, 0, r, 0, 2 * math.pi)
-    ctx.set_source_rgb(*col)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(max(4, r * 0.12))
-    ctx.stroke()
-    _ojo_cerradura(ctx, r * 0.55, forma)
-    ctx.restore()
-
-
-def _ojo_cerradura(ctx, k, forma="redonda"):
-    ctx.set_source_rgb(*INK)
-    if forma == "redonda":
-        ctx.arc(0, -k * 0.25, k * 0.38, 0, 2 * math.pi)
-        ctx.fill()
-        ctx.move_to(-k * 0.2, -k * 0.1)
-        ctx.line_to(k * 0.2, -k * 0.1)
-        ctx.line_to(k * 0.32, k * 0.72)
-        ctx.line_to(-k * 0.32, k * 0.72)
-        ctx.close_path()
-        ctx.fill()
-    else:  # estrella: la cerradura de los pájaros
-        for i in range(10):
-            a = -math.pi / 2 + i * math.pi / 5
-            rr = k * (0.7 if i % 2 == 0 else 0.3)
-            (ctx.move_to if i == 0 else ctx.line_to)(math.cos(a) * rr, math.sin(a) * rr)
-        ctx.close_path()
-        ctx.fill()
-
-
-def cerradura(ctx, x, y, r, alarma, t, forma="redonda", s=1.0):
-    if s <= 0.01:
-        return
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.scale(s, s)
-    if alarma > 0.05:
-        for k in range(3):
-            q = ((t * 1.3 + k / 3) % 1)
-            ctx.arc(0, 0, r * (1 + q * 0.9), 0, 2 * math.pi)
-            ctx.set_source_rgba(1, 0.2, 0.15, 0.55 * (1 - q) * alarma)
-            ctx.set_line_width(10)
-            ctx.stroke()
-    g = cairo.RadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r)
-    base = mezcla(hx("#C9D3DD"), hx("#FF5A4F"), alarma)
-    g.add_color_stop_rgb(0, *mezcla(base, (1, 1, 1), 0.5))
-    g.add_color_stop_rgb(1, *mezcla(base, (0, 0, 0), 0.3))
-    ctx.arc(0, 0, r, 0, 2 * math.pi)
-    ctx.set_source(g)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(10)
-    ctx.stroke()
-    for k in range(6):
-        a = k * math.pi / 3 + 0.5
-        ctx.arc(math.cos(a) * r * 0.82, math.sin(a) * r * 0.82, r * 0.05, 0, 2 * math.pi)
-        ctx.set_source_rgb(*mezcla(base, (0, 0, 0), 0.45))
-        ctx.fill()
-    _ojo_cerradura(ctx, r * 0.62, forma)
-    ctx.restore()
-
-
-def llave(ctx, x, y, s=1.0, rot=0.0, alpha=1.0):
-    """Llave naranja; (x, y) es la punta de la paleta (lo que entra en la cerradura)."""
-    if s <= 0.01 or alpha <= 0.01:
-        return
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.rotate(math.radians(rot))
-    ctx.scale(s, s)
-    ctx.push_group()
-    col = NARANJA
-    ctx.move_to(-300, 0)
-    ctx.line_to(0, 0)
-    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
-    for lw, c in ((38, INK), (24, col)):
-        ctx.move_to(-300, 0)
-        ctx.line_to(-6, 0)
-        ctx.set_source_rgb(*c)
-        ctx.set_line_width(lw)
-        ctx.stroke()
-    for dx in (-70, -30):
-        rrect(ctx, dx - 12, 4, 24, 40, 6)
-        ctx.set_source_rgb(*col)
-        ctx.fill_preserve()
-        ctx.set_source_rgb(*INK)
-        ctx.set_line_width(6)
-        ctx.stroke()
-    ctx.arc(-350, 0, 62, 0, 2 * math.pi)
-    ctx.set_source_rgb(*col)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(8)
-    ctx.stroke()
-    ctx.arc(-350, 0, 22, 0, 2 * math.pi)
-    ctx.set_source_rgb(*INK)
-    ctx.fill()
-    ctx.pop_group_to_source()
-    ctx.paint_with_alpha(alpha)
-    ctx.restore()
-
-
-def termometro(ctx, x, y, h, frac, s=1.0):
-    """(x, y) = centro del bulbo; frac 0..1 de la columna."""
-    if s <= 0.01:
-        return
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.scale(s, s)
-    rrect(ctx, -30, -h, 60, h + 20, 30)
-    ctx.set_source_rgb(*BLANCO)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(8)
-    ctx.stroke()
-    ctx.arc(0, 0, 52, 0, 2 * math.pi)
-    ctx.set_source_rgb(*ROJO)
-    ctx.fill_preserve()
-    ctx.set_source_rgb(*INK)
-    ctx.stroke()
-    hh = (h - 30) * clamp(frac)
-    rrect(ctx, -14, -hh - 10, 28, hh + 30, 14)
-    ctx.set_source_rgb(*ROJO)
-    ctx.fill()
-    for k in range(1, 6):
-        yy = -k * (h - 30) / 6
-        ctx.move_to(14, yy)
-        ctx.line_to(30, yy)
-    ctx.set_source_rgba(*INK, 0.5)
-    ctx.set_line_width(4)
-    ctx.stroke()
-    ctx.restore()
-
-
 def taza(ctx, x, y, s, t):
     if s <= 0.01:
         return
@@ -680,31 +429,6 @@ def gota(ctx, x, y, r, color, alpha=1.0, borde=True):
     ctx.restore()
 
 
-def gotita_aceite(ctx, x, y, r, envuelta=0.0, alpha=1.0):
-    if envuelta > 0:
-        for k in range(8):
-            a = k * math.pi / 4
-            ctx.arc(x + math.cos(a) * r * 1.25, y + math.sin(a) * r * 1.25, r * 0.55 * envuelta, 0, 2 * math.pi)
-            ctx.new_sub_path()
-        ctx.set_source_rgba(1, 1, 0.97, alpha)
-        ctx.fill_preserve()
-        ctx.set_source_rgba(*INK, 0.6 * alpha)
-        ctx.set_line_width(3)
-        ctx.stroke()
-    g = cairo.RadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r)
-    g.add_color_stop_rgba(0, 1, 0.85, 0.4, alpha)
-    g.add_color_stop_rgba(1, 0.95, 0.4, 0.05, alpha)
-    ctx.arc(x, y, r, 0, 2 * math.pi)
-    ctx.set_source(g)
-    ctx.fill_preserve()
-    ctx.set_source_rgba(*INK, alpha)
-    ctx.set_line_width(4)
-    ctx.stroke()
-    ctx.arc(x - r * 0.35, y - r * 0.35, r * 0.25, 0, 2 * math.pi)
-    ctx.set_source_rgba(1, 1, 1, 0.75 * alpha)
-    ctx.fill()
-
-
 def globulo(ctx, x, y, r, alpha=1.0):
     g = cairo.RadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r)
     g.add_color_stop_rgba(0, 1, 1, 1, alpha)
@@ -799,11 +523,22 @@ def pajaro(ctx, x, y, s, t, aleteo=0.0, pico=0.0, ojos="normal", xray=0.0, semil
         ctx.arc(0, 0, 112, 0, 2 * math.pi)
         ctx.clip()
         ctx.rectangle(-120, -120, 240, 240)
-        ctx.set_source_rgba(0.05, 0.1, 0.2, 0.3 * xray)
+        ctx.set_source_rgba(0.82, 0.94, 1.0, 0.75 * xray)
         ctx.fill()
+        ctx.save()
+        ctx.translate(0, 25)
+        ctx.scale(1, 0.75)
+        ctx.arc(0, 0, 78, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_dash([10, 8])
+        ctx.set_source_rgba(0.2, 0.45, 0.7, 0.8 * xray)
+        ctx.set_line_width(4)
+        ctx.stroke()
+        ctx.set_dash([])
+        aji(ctx, -8, 28, 0.42, rot=-15, alpha=0.55 * xray)
         rr = rng(11)
         for k in range(semillas):
-            px, py = rr.uniform(-55, 55), rr.uniform(-20, 70)
+            px, py = rr.uniform(-50, 50), rr.uniform(0, 60)
             semilla(ctx, px + 4 * math.sin(t * 3 + k), py, 1.35, rot=rr.uniform(0, 3))
         ctx.restore()
     ctx.arc(0, 0, 115, 0, 2 * math.pi)
@@ -989,38 +724,6 @@ def planta_aji(ctx, x, y, s, crec, t, ajies=True):
     ctx.restore()
 
 
-def boca_grande(ctx, x, y, s, cierre, t):
-    """Boca con dientes vista de frente; cierre 0 = abierta, 1 = cerrada."""
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.scale(s, s)
-    ab = 260 * (1 - ease(cierre, "in"))
-    ctx.save()
-    ctx.scale(1, max(0.05, (ab + 60) / 320))
-    ctx.arc(0, 0, 330, 0, 2 * math.pi)
-    ctx.restore()
-    ctx.set_source_rgb(*hx("#5C0E1E"))
-    ctx.fill()
-    for sg in (-1, 1):
-        yy = sg * ab / 2
-        for k in range(-3, 4):
-            rrect(ctx, k * 82 - 36, yy - (0 if sg > 0 else 90) - (6 if sg > 0 else -6), 72, 90, 22)
-            ctx.set_source_rgb(*BLANCO)
-            ctx.fill_preserve()
-            ctx.set_source_rgb(*INK)
-            ctx.set_line_width(6)
-            ctx.stroke()
-        ctx.save()
-        ctx.translate(0, yy + sg * 70)
-        ctx.scale(1, 0.32)
-        ctx.arc(0, 0, 360, math.pi if sg < 0 else 0, 2 * math.pi if sg < 0 else math.pi)
-        ctx.restore()
-        ctx.set_source_rgb(*hx("#E2445C"))
-        ctx.set_line_width(70)
-        ctx.stroke()
-    ctx.restore()
-
-
 # ------------------------------------------------------------------ Vos (solo en la apertura)
 def _vos_svg(pose):
     P_ = kit.P
@@ -1116,37 +819,760 @@ def sudor(ctx, x, y, t, t0, seed):
         gota(ctx, px, py, 16, AZUL_AGUA, alpha=1 - q * 0.6)
 
 
-# ------------------------------------------------------------------ escenas
-S = [0.0, b(2), b(3), b(4), b(5), b(6), b(7), b(8), b(10), b(12), b(13)]
-S = [S[0]] + [x - 0.08 for x in S[1:]]
-T_BITE = b(0, "picante") + 0.28
-T_QUEMA = b(0, "sabor") + 0.1
+# ------------------------------------------------------------------ cámara y fondo azul (como los últimos videos)
+def camara(ctx, fx, fy, z, sx=540, sy=960):
+    ctx.translate(sx, sy)
+    ctx.scale(z, z)
+    ctx.translate(-fx, -fy)
 
 
-def escena_de(t):
-    i = 0
-    for k, s0 in enumerate(S):
-        if t >= s0:
-            i = k
-    return i
+def capa(ctx, fn, t, cam=None, alpha=1.0, dx=0.0, dy=0.0):
+    """Dibuja una escena completa con cámara y transparencia."""
+    if alpha <= 0.003:
+        return
+    ctx.save()
+    grupo = alpha < 0.997
+    if grupo:
+        ctx.push_group()
+    ctx.translate(dx, dy)
+    if cam:
+        camara(ctx, *cam)
+    fn(ctx, t)
+    if grupo:
+        ctx.pop_group_to_source()
+        ctx.paint_with_alpha(alpha)
+    ctx.restore()
 
 
-def titulo_gancho(ctx, t, s=1.0):
-    cartel(ctx, "EL PICANTE\nNO ES UN SABOR", 540, 245, 84, s=s * (1 + 0.012 * math.sin(t * 2.4)), pad=(56, 26))
+def zoom_entre(ctx, q, ext, t_ext, f, dentro, t_dentro, g, Z, a0=0.3, a1=0.75):
+    """q = 0: 'ext' a pantalla completa; q = 1: 'dentro' a pantalla completa.
+    'dentro' vive en el punto f de 'ext' a escala 1/Z (g es su punto que coincide con f)."""
+    k = ease(q, "inout")
+    sx, sy = lerp(f[0], g[0], k), lerp(f[1], g[1], k)
+    z = Z ** k
+    capa(ctx, ext, t_ext, cam=(f[0], f[1], z, sx, sy))
+    capa(ctx, dentro, t_dentro, cam=(g[0], g[1], z / Z, sx, sy), alpha=clamp((k - a0) / (a1 - a0)))
 
 
-def sc_gancho(t):
-    s, ctx = lienzo()
-    fondo_calido(ctx, t)
-    alarma = clamp((t - b(1, "alarma")) / 0.25) if t >= b(1, "alarma") else 0
-    if alarma > 0:
-        q = 0.5 + 0.5 * math.sin(t * 14)
-        g = cairo.RadialGradient(540, 960, 400, 540, 960, 1200)
-        g.add_color_stop_rgba(0, 1, 0, 0, 0)
-        g.add_color_stop_rgba(1, 1, 0, 0, 0.45 * q * alarma)
+def _elipse_suave(ctx, x, y, rx, ry, col, a):
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(rx, ry)
+    g = cairo.RadialGradient(0, 0, 0, 0, 0, 1)
+    g.add_color_stop_rgba(0, *col, a)
+    g.add_color_stop_rgba(1, *col, 0)
+    ctx.set_source(g)
+    ctx.arc(0, 0, 1, 0, 2 * math.pi)
+    ctx.fill()
+    ctx.restore()
+
+
+def fondo_azul(ctx, t, calor=0.0, cx=540, cy=900, rc=760):
+    P.fondo(ctx, t)
+    _elipse_suave(ctx, 160, 420, 520, 320, hx("#6A5BE0"), 0.16)
+    _elipse_suave(ctx, 960, 1380, 540, 360, hx("#2F9BE0"), 0.13)
+    _elipse_suave(ctx, 700, 760, 300, 200, hx("#C25BE0"), 0.08)
+    if calor > 0:
+        g = cairo.RadialGradient(cx, cy, 30, cx, cy, rc)
+        g.add_color_stop_rgba(0, 1, 0.45, 0.12, 0.45 * calor)
+        g.add_color_stop_rgba(0.5, 1, 0.28, 0.08, 0.17 * calor)
+        g.add_color_stop_rgba(1, 1, 0.28, 0.08, 0)
         ctx.set_source(g)
         ctx.paint()
-    # Vos
+
+
+def vineta_roja(ctx, k):
+    if k <= 0.01:
+        return
+    g = cairo.RadialGradient(540, 960, 380, 540, 960, 1250)
+    g.add_color_stop_rgba(0, 1, 0, 0, 0)
+    g.add_color_stop_rgba(1, 1, 0.05, 0.02, 0.55 * k)
+    ctx.set_source(g)
+    ctx.paint()
+
+
+# ------------------------------------------------------------------ caritas (mismo trazo que el video del agua)
+def _q(ctx, x0, y0, qx, qy, x1, y1):
+    ctx.move_to(x0, y0)
+    ctx.curve_to(x0 + 2 / 3 * (qx - x0), y0 + 2 / 3 * (qy - y0), x1 + 2 / 3 * (qx - x1), y1 + 2 / 3 * (qy - y1), x1, y1)
+
+
+def _trazo(ctx, w, col=INK, a=1.0):
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.set_source_rgba(*col, a)
+    ctx.set_line_width(w)
+    ctx.stroke()
+
+
+def ojo(ctx, x, y, r, kind="open", look=(0, 0)):
+    if kind in ("open", "wide"):
+        rx, ry, pr = (24 * r, 28 * r, 11 * r) if kind == "open" else (30 * r, 34 * r, 8 * r)
+        ctx.save()
+        ctx.translate(x, y)
+        ctx.scale(rx, ry)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgb(*BLANCO)
+        ctx.fill_preserve()
+        ctx.set_source_rgb(*INK)
+        ctx.set_line_width(5 * r)
+        ctx.stroke()
+        px, py = x + look[0] * 9 * r, y + look[1] * 9 * r + 3 * r
+        ctx.arc(px, py, pr, 0, 2 * math.pi)
+        ctx.set_source_rgb(*INK)
+        ctx.fill()
+        ctx.arc(px - pr * 0.35, py - pr * 0.4, max(2.5, pr * 0.32), 0, 2 * math.pi)
+        ctx.set_source_rgb(*BLANCO)
+        ctx.fill()
+    elif kind == "happy":
+        _q(ctx, x - 20 * r, y + 8 * r, x, y - 16 * r, x + 20 * r, y + 8 * r)
+        _trazo(ctx, 7 * r)
+    elif kind == "closed":
+        _q(ctx, x - 20 * r, y, x, y + 10 * r, x + 20 * r, y)
+        _trazo(ctx, 7 * r)
+    elif kind == "dot":
+        ctx.arc(x, y, 9 * r, 0, 2 * math.pi)
+        ctx.set_source_rgb(*INK)
+        ctx.fill()
+
+
+def boquita(ctx, x, y, kind, r):
+    if kind == "smile":
+        _q(ctx, x - 26 * r, y, x, y + 24 * r, x + 26 * r, y)
+        _trazo(ctx, 7 * r)
+    elif kind in ("grin", "o"):
+        if kind == "grin":
+            ctx.move_to(x - 32 * r, y - 4 * r)
+            ctx.curve_to(x - 14 * r, y + 34 * r, x + 14 * r, y + 34 * r, x + 32 * r, y - 4 * r)
+            ctx.close_path()
+        else:
+            ctx.save()
+            ctx.translate(x, y + 6 * r)
+            ctx.scale(13 * r, 17 * r)
+            ctx.arc(0, 0, 1, 0, 2 * math.pi)
+            ctx.restore()
+        path = ctx.copy_path()
+        ctx.set_source_rgb(*hx(kit.P["boca"]))
+        ctx.fill()
+        ctx.save()
+        ctx.append_path(path)
+        ctx.clip()
+        ctx.save()
+        ctx.translate(x, y + (18 if kind == "grin" else 20) * r)
+        ctx.scale(14 * r, 7 * r)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgb(*hx(kit.P["lengua"]))
+        ctx.fill()
+        ctx.restore()
+        ctx.append_path(path)
+        _trazo(ctx, 6 * r)
+    elif kind == "flat":
+        ctx.move_to(x - 20 * r, y + 6 * r)
+        ctx.line_to(x + 20 * r, y + 6 * r)
+        _trazo(ctx, 7 * r)
+    elif kind == "wavy":
+        ctx.move_to(x - 28 * r, y + 6 * r)
+        ctx.curve_to(x - 18 * r, y - 4 * r, x - 10 * r, y - 4 * r, x, y + 6 * r)
+        ctx.curve_to(x + 10 * r, y + 16 * r, x + 18 * r, y + 16 * r, x + 28 * r, y + 6 * r)
+        _trazo(ctx, 7 * r)
+
+
+def cejas(ctx, x, y, sep, kind, r):
+    a, c = x - sep / 2, x + sep / 2
+    if kind == "worried":
+        ctx.move_to(a - 20 * r, y + 4 * r)
+        ctx.line_to(a + 18 * r, y - 8 * r)
+        ctx.move_to(c - 18 * r, y - 8 * r)
+        ctx.line_to(c + 20 * r, y + 4 * r)
+    elif kind == "angry":
+        ctx.move_to(a - 20 * r, y - 8 * r)
+        ctx.line_to(a + 18 * r, y + 4 * r)
+        ctx.move_to(c - 18 * r, y + 4 * r)
+        ctx.line_to(c + 20 * r, y - 8 * r)
+    elif kind == "up":
+        _q(ctx, a - 18 * r, y, a, y - 14 * r, a + 18 * r, y)
+        _q(ctx, c - 18 * r, y, c, y - 14 * r, c + 18 * r, y)
+    else:
+        return
+    _trazo(ctx, 7 * r)
+
+
+def carita(ctx, x, y, sep, r, ojos="open", boca="smile", ceja=None, look=(0, 0), rubor=False, dy_boca=None):
+    if rubor:
+        for sx in (-1, 1):
+            ctx.save()
+            ctx.translate(x + sx * sep * 0.72, y + 28 * r)
+            ctx.scale(18 * r, 10 * r)
+            ctx.arc(0, 0, 1, 0, 2 * math.pi)
+            ctx.restore()
+            ctx.set_source_rgba(*hx("#FF8FA8"), 0.6)
+            ctx.fill()
+    ojo(ctx, x - sep / 2, y, r, ojos, look)
+    ojo(ctx, x + sep / 2, y, r, ojos, look)
+    if ceja:
+        cejas(ctx, x, y - (40 if ojos == "wide" else 34) * r, sep, ceja, r)
+    boquita(ctx, x, y + (dy_boca if dy_boca is not None else 36 * r), boca, r)
+
+
+# ------------------------------------------------------------------ la capsaicina: una llave falsa con cara
+CARAS_LLAVE = {
+    "picara": dict(ojos="open", boca="grin", ceja="angry", look=(0.5, 0.2)),
+    "feliz": dict(ojos="happy", boca="grin"),
+    "susto": dict(ojos="wide", boca="o", ceja="worried"),
+    "tranqui": dict(ojos="open", boca="smile"),
+    "enojo": dict(ojos="open", boca="wavy", ceja="angry"),
+}
+
+
+def llavecita(ctx, x, y, s, rot=0.0, cara="picara", giro=1.0, alpha=1.0, col=NARANJA):
+    """(x, y) = punta de la llave. Con rot = 0 apunta hacia abajo (la cabeza queda arriba)."""
+    if s <= 0.004 or alpha <= 0.01:
+        return
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.rotate(math.radians(rot))
+    ctx.scale(s, s)
+    grupo = alpha < 0.99
+    if grupo:
+        ctx.push_group()
+    lw = max(8.0, 2.4 / s)
+    gx = max(0.07, abs(giro))
+    ctx.save()
+    ctx.scale(gx, 1)
+    # dientes de la llave
+    ctx.move_to(12, -36)
+    ctx.line_to(58, -36)
+    ctx.line_to(58, -64)
+    ctx.line_to(38, -72)
+    ctx.line_to(38, -90)
+    ctx.line_to(58, -98)
+    ctx.line_to(58, -126)
+    ctx.line_to(12, -126)
+    ctx.close_path()
+    ctx.set_source_rgb(*col)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(lw)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.stroke()
+    # vástago
+    rrect(ctx, -18, -270, 36, 270, 16)
+    ctx.set_source_rgb(*col)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.stroke()
+    ctx.move_to(-6, -250)
+    ctx.line_to(-6, -30)
+    ctx.set_source_rgba(1, 1, 1, 0.35)
+    ctx.set_line_width(8)
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+    ctx.stroke()
+    # cabeza
+    g = cairo.RadialGradient(-26, -362, 10, 0, -335, 82)
+    g.add_color_stop_rgb(0, *mezcla(col, (1, 1, 1), 0.35))
+    g.add_color_stop_rgb(1, *mezcla(col, (0.6, 0.15, 0), 0.25))
+    ctx.arc(0, -335, 80, 0, 2 * math.pi)
+    ctx.set_source(g)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(lw)
+    ctx.stroke()
+    ctx.restore()
+    if giro > 0.3:
+        ctx.save()
+        ctx.translate(0, -335)
+        ctx.scale(giro, 1)
+        carita(ctx, 0, -14, 58, 1.2, **CARAS_LLAVE[cara])
+        ctx.restore()
+    if grupo:
+        ctx.pop_group_to_source()
+        ctx.paint_with_alpha(alpha)
+    ctx.restore()
+
+
+# ------------------------------------------------------------------ la boca de frente
+PIEL_C, PIEL_O = hx("#F8C9A2"), hx("#E9A982")
+LAB_SUP, LAB_SUP2 = hx("#E26A82"), hx("#BC4560")
+LAB_INF, LAB_INF2 = hx("#F4889B"), hx("#D05570")
+ENCIA, ENCIA2 = hx("#F590A3"), hx("#D9677F")
+DIENTE, DIENTE2 = hx("#FFFDF6"), hx("#E6DDCC")
+LENG_A, LENG_B, LENG_C = hx("#FFA2B4"), hx("#F27891"), hx("#C94A69")
+ROJO_AL = hx("#FF3B2F")
+CIAN = P.CIAN
+BX = 540
+LAB_UP, LAB_DN, LAB_LADO = 64, 86, 62
+# sensores sobre la lengua: (dx, dy) desde el punto más alto de la lengua
+REC = [(-125, 72), (0, 58), (125, 72), (-255, 152), (-128, 142), (0, 138), (128, 142), (255, 152),
+       (-190, 228), (-64, 220), (64, 220), (190, 228)]
+DSUP = [(44, 84, 104, False), (126, 72, 92, False), (199, 64, 94, True), (266, 60, 76, False), (329, 58, 66, False)]
+DINF = [(30, 56, 56, False), (88, 54, 56, False), (145, 52, 62, True)]
+
+
+class Boca:
+    def __init__(self, a=1.0, top=560):
+        self.a = clamp(a)
+        self.top = top
+        self.J = lerp(196, 770, self.a)
+        self.hw = 400
+        self.yc = top + 0.27 * self.J + 8
+        self.bot = top + self.J
+        self.ty = top + 0.47 * self.J
+        self.tys = top + 0.76 * self.J
+
+    @staticmethod
+    def _u(x, hw):
+        return min(1.0, abs(x - BX) / hw)
+
+    def top_in(self, x):
+        return self.top + (self.yc - self.top) * self._u(x, self.hw) ** 2.6
+
+    def bot_in(self, x):
+        return self.yc + (self.bot - self.yc) * (1 - self._u(x, self.hw) ** 2.2) ** 0.55
+
+    def top_out(self, x):
+        hwo = self.hw + LAB_LADO
+        u = self._u(x, hwo)
+        y0 = self.top - LAB_UP
+        d = abs(x - BX)
+        arco = 20 * math.exp(-(d / 42) ** 2) - 9 * math.exp(-((d - 88) / 46) ** 2)
+        return y0 + (self.yc - y0) * u ** 2.2 + arco * (1 - u)
+
+    def bot_out(self, x):
+        u = self._u(x, self.hw + LAB_LADO)
+        return self.yc + (self.bot + LAB_DN - self.yc) * (1 - u ** 2.0) ** 0.55
+
+    def lengua_y(self, x):
+        u = min(1.25, abs(x - BX) / self.hw)
+        return self.ty + (self.tys - self.ty) * u ** 1.8
+
+    @staticmethod
+    def xs(hw, n=110):
+        return [BX + hw * math.sin(-math.pi / 2 + math.pi * i / n) for i in range(n + 1)]
+
+    def _contorno(self, ctx, fa, fb, hw):
+        xs = self.xs(hw)
+        ctx.move_to(xs[0], fa(xs[0]))
+        for x in xs[1:]:
+            ctx.line_to(x, fa(x))
+        for x in reversed(xs[1:-1]):
+            ctx.line_to(x, fb(x))
+        ctx.close_path()
+
+    def camino_in(self, ctx):
+        self._contorno(ctx, self.top_in, self.bot_in, self.hw)
+
+    def camino_out(self, ctx):
+        self._contorno(ctx, self.top_out, self.bot_out, self.hw + LAB_LADO)
+
+    def rec(self, i):
+        dx, dy = REC[i]
+        return BX + dx, self.ty + dy
+
+
+def _pend(f, x):
+    return (f(x + 2) - f(x - 2)) / 4
+
+
+def piel_cara(ctx):
+    g = cairo.RadialGradient(540, 980, 120, 540, 980, 1300)
+    g.add_color_stop_rgb(0, *PIEL_C)
+    g.add_color_stop_rgb(1, *PIEL_O)
+    ctx.set_source(g)
+    ctx.paint()
+    for x in (70, 1010):
+        _elipse_suave(ctx, x, 840, 200, 150, hx("#FF8FA8"), 0.5)
+    _elipse_suave(ctx, 540, 1620, 380, 120, PIEL_O, 0.7)
+    # nariz
+    _elipse_suave(ctx, 540, 350, 170, 95, PIEL_O, 0.8)
+    ctx.move_to(450, 296)
+    ctx.curve_to(432, 352, 468, 394, 506, 382)
+    ctx.curve_to(522, 402, 558, 402, 574, 382)
+    ctx.curve_to(612, 394, 648, 352, 630, 296)
+    _trazo(ctx, 7)
+    for sg in (-1, 1):
+        ctx.save()
+        ctx.translate(540 + sg * 37, 362)
+        ctx.rotate(sg * 0.35)
+        ctx.scale(19, 10)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgb(*hx("#9C5644"))
+        ctx.fill()
+        # surco bajo la nariz
+        ctx.move_to(540 + sg * 18, 412)
+        ctx.line_to(540 + sg * 24, 470)
+        _trazo(ctx, 7, PIEL_O, 0.9)
+
+
+def cavidad(ctx, bo):
+    top, J, hw = bo.top, bo.J, bo.hw
+    g = cairo.LinearGradient(0, top, 0, bo.bot)
+    g.add_color_stop_rgb(0, *hx("#CC5470"))
+    g.add_color_stop_rgb(0.4, *hx("#9C2E48"))
+    g.add_color_stop_rgb(1, *hx("#5A0F20"))
+    ctx.set_source(g)
+    ctx.paint()
+    # el arco del fondo y la garganta
+    aw = 0.36 * hw
+    ya = top + 0.15 * J
+    yb = bo.ty + 80
+    ctx.move_to(BX - aw, yb)
+    ctx.curve_to(BX - aw, ya + 0.10 * J, BX - aw * 0.72, ya, BX, ya)
+    ctx.curve_to(BX + aw * 0.72, ya, BX + aw, ya + 0.10 * J, BX + aw, yb)
+    ctx.close_path()
+    arco = ctx.copy_path()
+    yg = top + 0.36 * J
+    rg = cairo.RadialGradient(BX, yg, 10, BX, yg, aw * 1.15)
+    rg.add_color_stop_rgb(0, *hx("#0C0105"))
+    rg.add_color_stop_rgb(0.65, *hx("#260410"))
+    rg.add_color_stop_rgb(1, *hx("#4E0C1E"))
+    ctx.set_source(rg)
+    ctx.fill()
+    ctx.append_path(arco)
+    ctx.set_source_rgba(*hx("#741830"), 0.9)
+    ctx.set_line_width(30)
+    ctx.stroke()
+    ctx.append_path(arco)
+    ctx.set_source_rgba(*hx("#E4728A"), 0.7)
+    ctx.set_line_width(9)
+    ctx.stroke()
+    # úvula
+    uy0, uy1 = top + 0.07 * J, top + 0.30 * J
+    ctx.move_to(BX - 17, uy0)
+    ctx.curve_to(BX - 18, uy1 - 46, BX - 30, uy1 - 6, BX, uy1)
+    ctx.curve_to(BX + 30, uy1 - 6, BX + 18, uy1 - 46, BX + 17, uy0)
+    ctx.close_path()
+    g = cairo.LinearGradient(BX - 30, 0, BX + 30, 0)
+    g.add_color_stop_rgb(0, *hx("#E8728A"))
+    g.add_color_stop_rgb(1, *hx("#B83C58"))
+    ctx.set_source(g)
+    ctx.fill_preserve()
+    ctx.set_source_rgba(*INK, 0.85)
+    ctx.set_line_width(5)
+    ctx.stroke()
+    ctx.arc(BX - 8, uy1 - 22, 6, 0, 2 * math.pi)
+    ctx.set_source_rgba(1, 1, 1, 0.45)
+    ctx.fill()
+
+
+def lengua_frente(ctx, bo, calor=0.0):
+    hw = bo.hw
+    xs = [BX - hw * 1.25 + 2.5 * hw * i / 90 for i in range(91)]
+    ctx.move_to(xs[0], 2400)
+    for x in xs:
+        ctx.line_to(x, bo.lengua_y(x))
+    ctx.line_to(xs[-1], 2400)
+    ctx.close_path()
+    camino = ctx.copy_path()
+    cy = bo.ty + 0.22 * bo.J
+    g = cairo.RadialGradient(BX, cy, 20, BX, cy, hw * 1.05)
+    g.add_color_stop_rgb(0, *mezcla(LENG_A, hx("#FFB36B"), calor * 0.6))
+    g.add_color_stop_rgb(0.55, *mezcla(LENG_B, hx("#FF6A3D"), calor * 0.5))
+    g.add_color_stop_rgb(1, *LENG_C)
+    ctx.set_source(g)
+    ctx.fill()
+    ctx.save()
+    ctx.append_path(camino)
+    ctx.clip()
+    r = rng(7)
+    for _ in range(190):
+        x = BX + r.uniform(-hw, hw)
+        y = bo.ty + r.uniform(0, 0.66 * bo.J)
+        rr = r.uniform(3, 7)
+        if y < bo.lengua_y(x) + 12:
+            continue
+        ctx.arc(x, y, rr, 0, 2 * math.pi)
+        ctx.set_source_rgba(1, 0.88, 0.9, 0.32)
+        ctx.fill()
+    ctx.move_to(BX, bo.ty + 26)
+    ctx.curve_to(BX - 6, bo.ty + 0.2 * bo.J, BX + 6, bo.ty + 0.4 * bo.J, BX, bo.bot + 80)
+    ctx.set_source_rgba(*LENG_C, 0.6)
+    ctx.set_line_width(12)
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+    ctx.stroke()
+    for sg in (-1, 1):
+        ctx.save()
+        ctx.translate(BX + sg * 150, bo.ty + 60)
+        ctx.rotate(sg * 0.2)
+        ctx.scale(95, 18)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgba(1, 1, 1, 0.22)
+        ctx.fill()
+    ctx.restore()
+    for i, x in enumerate(xs):
+        (ctx.move_to if i == 0 else ctx.line_to)(x, bo.lengua_y(x))
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(6)
+    ctx.stroke()
+
+
+def receptor(ctx, x, y, r, alarma, t, s=1.0):
+    """Sensor de calor sobre la lengua: un anillo de neón acostado."""
+    if s <= 0.01:
+        return
+    col = mezcla(CIAN, ROJO_AL, alarma)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s * 0.64)
+    g = cairo.RadialGradient(0, 0, r * 0.4, 0, 0, r * 2.6)
+    g.add_color_stop_rgba(0, *col, 0.55 + 0.25 * alarma)
+    g.add_color_stop_rgba(1, *col, 0)
+    ctx.set_source(g)
+    ctx.arc(0, 0, r * 2.6, 0, 2 * math.pi)
+    ctx.fill()
+    if alarma > 0.05:
+        for k in range(2):
+            q = (t * 1.7 + k * 0.5) % 1
+            ctx.arc(0, 0, r * (1.1 + q * 1.5), 0, 2 * math.pi)
+            ctx.set_source_rgba(*ROJO_AL, 0.7 * (1 - q) * alarma)
+            ctx.set_line_width(r * 0.22)
+            ctx.stroke()
+    ctx.arc(0, 0, r * 1.12, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.fill()
+    ctx.arc(0, 0, r, 0, 2 * math.pi)
+    ctx.set_source_rgb(*mezcla(hx("#0B3540"), hx("#4A0A0A"), alarma))
+    ctx.fill()
+    ctx.arc(0, 0, r * 0.84, 0, 2 * math.pi)
+    ctx.set_source_rgb(*mezcla(col, (1, 1, 1), 0.25))
+    ctx.set_line_width(r * 0.26)
+    ctx.stroke()
+    # ojo de cerradura
+    ctx.arc(0, -r * 0.12, r * 0.2, 0, 2 * math.pi)
+    ctx.move_to(-r * 0.1, -r * 0.05)
+    ctx.line_to(r * 0.1, -r * 0.05)
+    ctx.line_to(r * 0.16, r * 0.38)
+    ctx.line_to(-r * 0.16, r * 0.38)
+    ctx.close_path()
+    ctx.set_source_rgb(*mezcla(col, (1, 1, 1), 0.4))
+    ctx.fill()
+    ctx.restore()
+
+
+def diente(ctx, x, y, w, h, ang, colmillo, abajo):
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.rotate(ang)
+    if abajo:
+        ctx.scale(1, -1)
+    r = w * 0.34
+    ctx.move_to(-w / 2, -16)
+    ctx.line_to(-w / 2, h - r)
+    if colmillo:
+        ctx.curve_to(-w / 2, h - r * 0.3, -w * 0.2, h + 2, 0, h + 12)
+        ctx.curve_to(w * 0.2, h + 2, w / 2, h - r * 0.3, w / 2, h - r)
+    else:
+        ctx.curve_to(-w / 2, h - r * 0.2, -w / 2 + r * 0.2, h, -w / 2 + r, h)
+        ctx.line_to(w / 2 - r, h)
+        ctx.curve_to(w / 2 - r * 0.2, h, w / 2, h - r * 0.2, w / 2, h - r)
+    ctx.line_to(w / 2, -16)
+    ctx.close_path()
+    g = cairo.LinearGradient(-w / 2, 0, w / 2, 0)
+    g.add_color_stop_rgb(0, *DIENTE2)
+    g.add_color_stop_rgb(0.3, *DIENTE)
+    g.add_color_stop_rgb(0.7, *DIENTE)
+    g.add_color_stop_rgb(1, *DIENTE2)
+    ctx.set_source(g)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(5)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.stroke()
+    ctx.move_to(-w * 0.22, h * 0.15)
+    ctx.line_to(-w * 0.22, h * 0.55)
+    ctx.set_source_rgba(1, 1, 1, 0.9)
+    ctx.set_line_width(w * 0.12)
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+    ctx.stroke()
+    ctx.restore()
+
+
+def encia(ctx, bo, abajo):
+    xs = bo.xs(bo.hw * 0.995)
+    if abajo:
+        f, d0, d1 = bo.bot_in, 6, -20
+    else:
+        f, d0, d1 = bo.top_in, -6, 22
+    ctx.move_to(xs[0], f(xs[0]) + d0)
+    for x in xs[1:]:
+        ctx.line_to(x, f(x) + d0)
+    for x in reversed(xs):
+        ctx.line_to(x, f(x) + d1)
+    ctx.close_path()
+    ctx.set_source_rgb(*ENCIA)
+    ctx.fill()
+    for i, x in enumerate(xs):
+        (ctx.move_to if i == 0 else ctx.line_to)(x, f(x) + d1)
+    ctx.set_source_rgba(*ENCIA2, 0.9)
+    ctx.set_line_width(4)
+    ctx.stroke()
+
+
+def _sobre_curva(f, anchos, hw, gap=5):
+    """Centros (x) de piezas puestas una al lado de la otra a lo largo de la curva y = f(x), desde el centro."""
+    xs = np.linspace(BX, BX + hw * 0.995, 500)
+    ys = np.array([f(x) for x in xs])
+    cum = np.concatenate([[0], np.cumsum(np.hypot(np.diff(xs), np.diff(ys)))])
+    out, s = [], gap / 2
+    for w in anchos:
+        s += w / 2
+        out.append(float(np.interp(s, cum, xs)))
+        s += w / 2 + gap
+    return out
+
+
+def dientes(ctx, bo):
+    ws = [w for _, w, _, _ in DINF]
+    cx = _sobre_curva(bo.bot_in, ws, bo.hw)
+    for sg in (-1, 1):
+        for (dx, w, h, c), x0 in reversed(list(zip(DINF, cx))):
+            x = BX + sg * (x0 - BX)
+            diente(ctx, x, bo.bot_in(x) - 16, w, h, math.atan(_pend(bo.bot_in, x)) * 0.85, c, True)
+    encia(ctx, bo, True)
+    fs = [1 - 0.2 * (dx / bo.hw) ** 1.5 for dx, _, _, _ in DSUP]
+    cx = _sobre_curva(bo.top_in, [w * f for (_, w, _, _), f in zip(DSUP, fs)], bo.hw, gap=4)
+    for sg in (-1, 1):
+        for (dx, w, h, c), f, x0 in reversed(list(zip(DSUP, fs, cx))):
+            x = BX + sg * (x0 - BX)
+            diente(ctx, x, bo.top_in(x) + 18, w * f, h * f, math.atan(_pend(bo.top_in, x)) * 0.9, c, False)
+    encia(ctx, bo, False)
+
+
+def labios(ctx, bo):
+    ctx.save()
+    ctx.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
+    bo.camino_out(ctx)
+    bo.camino_in(ctx)
+    anillo = ctx.copy_path()
+    ctx.new_path()
+    ctx.save()
+    ctx.rectangle(-2000, -2000, 5080, bo.yc + 2000)
+    ctx.clip()
+    ctx.append_path(anillo)
+    g = cairo.LinearGradient(0, bo.top - LAB_UP, 0, bo.top + 20)
+    g.add_color_stop_rgb(0, *LAB_SUP)
+    g.add_color_stop_rgb(1, *LAB_SUP2)
+    ctx.set_source(g)
+    ctx.fill()
+    ctx.restore()
+    ctx.save()
+    ctx.rectangle(-2000, bo.yc, 5080, 5000)
+    ctx.clip()
+    ctx.append_path(anillo)
+    g = cairo.RadialGradient(BX, bo.bot + 36, 20, BX, bo.bot + 36, bo.hw + 80)
+    g.add_color_stop_rgb(0, *LAB_INF)
+    g.add_color_stop_rgb(1, *LAB_INF2)
+    ctx.set_source(g)
+    ctx.fill()
+    ctx.restore()
+    for (x, y, rx, ry, ang, a) in ((BX, bo.bot + 44, 130, 13, 0, 0.42), (BX - 100, bo.top - 30, 48, 9, -0.12, 0.32),
+                                   (BX + 100, bo.top - 30, 48, 9, 0.12, 0.32)):
+        ctx.save()
+        ctx.translate(x, y)
+        ctx.rotate(ang)
+        ctx.scale(rx, ry)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgba(1, 1, 1, a)
+        ctx.fill()
+    ctx.set_fill_rule(cairo.FILL_RULE_WINDING)
+    bo.camino_out(ctx)
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(8)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.stroke()
+    bo.camino_in(ctx)
+    ctx.set_line_width(6)
+    ctx.stroke()
+    ctx.restore()
+
+
+def boca_frente(ctx, t, a=1.0, rec=None, calor=0.0, en_lengua=None, liquido=None, entre_dientes=None, piel=True):
+    """Primer plano de la cara con la boca abierta. rec = [(alarma, escala)] por sensor."""
+    bo = Boca(a)
+    if piel:
+        piel_cara(ctx)
+    ctx.save()
+    bo.camino_in(ctx)
+    ctx.clip()
+    cavidad(ctx, bo)
+    lengua_frente(ctx, bo, calor)
+    if rec is not None:
+        for i, (al, sp) in enumerate(rec):
+            x, y = bo.rec(i)
+            receptor(ctx, x, y, 27, al, t + i * 0.37, s=sp)
+    if calor > 0:
+        _elipse_suave(ctx, BX, bo.ty + 140, 520, 260, hx("#FF7A2A"), 0.35 * calor)
+    if en_lengua:
+        en_lengua(ctx, bo)
+    if liquido:
+        liquido(ctx, bo)
+    if entre_dientes:
+        entre_dientes(ctx, bo)
+    dientes(ctx, bo)
+    bo.camino_in(ctx)
+    ctx.set_source_rgba(0.18, 0.0, 0.04, 0.22)
+    ctx.set_line_width(34)
+    ctx.stroke()
+    ctx.restore()
+    labios(ctx, bo)
+    return bo
+
+
+# ------------------------------------------------------------------ tiempos clave
+T_BITE = b(0, "picante") + 0.28
+T_QUEMA = b(0, "sabor") + 0.1
+T_ALARMA = b(1, "alarma")
+T_SIN = b(1, "sin")
+T_SENS, T_QUE, T_43 = b(2, "sensores"), b(2, "quema"), b(2, "43")
+T_AJI, T_SUS, T_ENC, T_JUS, T_LLA = b(3, "ají"), b(3, "sustancia"), b(3, "encaja"), b(3, "justo"), b(3, "llave")
+T_CER, T_REC, T_SEN, T_CAF, T_PER, T_NI = (b(4, "cerebro"), b(4, "recibe"), b(4, "señal"), b(4, "café"),
+                                           b(4, "pero"), b(4, "ni"))
+T_TRA, T_ROJ, T_LLO, T_CUE, T_APA, T_NOE = (b(5, "transpiras"), b(5, "rojo"), b(5, "lloran"), b(5, "cuerpo"),
+                                            b(5, "apagar"), b(5, "no"))
+T_CAP, T_MEZ, T_AGU, T_TOM, T_BOC = (b(6, "capsaicina"), b(6, "mezcla"), b(6, "agua"), b(6, "tomarla"),
+                                     b(6, "boca"))
+T_LEC, T_GRA, T_ATR, T_DES, T_LEN = b(7, "leche"), b(7, "grasa"), b(7, "atrapa"), b(7, "despega"), b(7, "lengua")
+T_PQU = b(8, "quema")
+T_CAL, T_PPE, T_PLL, T_PEN = b(9, "calor"), b(9, "pero"), b(9, "llave"), b(9, "encaja")
+T_TRG, T_SEM, T_MAS, T_EXC, T_LEJ = (b(10, "tragan"), b(10, "semillas"), b(10, "masticarlas"), b(10, "excrementos"),
+                                     b(10, "lejos"))
+T_CRE, T_NUE = b(11, "crecen"), b(11, "nuevos")
+T_RMA, T_RDE = b(12, "mastica"), b(12, "destruye")
+T_EXI, T_ESP = b(13, "existe"), b(13, "espantar")
+T_COMO, T_TU = b(14, "Como"), b(14, "tú")
+
+# transiciones (inicio, duración)
+Z1 = (b(2) - 0.16, 0.42)            # Vos -> adentro de la boca
+Z2 = (T_ENC - 0.17, 0.40)           # boca -> un sensor de cerca
+Z3 = (T_CER - 0.30, 0.42)           # sensor -> cerebro (hacia afuera)
+Z4 = (b(6) - 0.22, 0.42)            # la cara -> adentro de la boca
+B5 = (b(8) - 0.12, 0.36)            # boca -> pájaro (barrido)
+T_FIN = T_COMO - 0.26               # la boca entra para el "como tú"
+
+BOCA_C = (540, 945)                 # centro de la boca en el primer plano
+
+
+def pill(ctx, txt, x, y, t, t0, t1=None, size=70, box=AMARILLO, fg=INK, rot=-3):
+    if t < t0 or (t1 is not None and t > t1 + 0.2):
+        return
+    s = pop(t, t0)
+    if t1 is not None:
+        s *= 1 - prog(t, t1, 0.2, "in")
+    cartel(ctx, txt, x, y, size, box=box, fg=fg, s=s, rot=rot)
+
+
+# ------------------------------------------------------------------ 1. el gancho: Vos muerde el ají
+def d_gancho(ctx, t):
+    q_cal = clamp((t - T_QUEMA) / 0.4)
+    fondo_azul(ctx, t, calor=0.3 + 0.7 * q_cal, cx=540, cy=1150, rc=950)
+    al = 0.0
+    if T_ALARMA <= t < T_ALARMA + 1.1:
+        al = clamp((t - T_ALARMA) / 0.1) * (1 - clamp((t - T_ALARMA - 0.8) / 0.3)) * (0.6 + 0.4 * math.sin(t * 14))
+    vineta_roja(ctx, al)
     temblor = 7 * math.sin(t * 60) * clamp((t - T_QUEMA) / 0.1) * (1 - clamp((t - T_QUEMA - 0.9) / 0.4))
     if t < T_BITE:
         pose, mord = "aji", 0.0
@@ -1159,22 +1585,21 @@ def sc_gancho(t):
         dibujar_vos(ctx, "mastica", alpha=1 - k, dx=temblor)
         dibujar_vos(ctx, "quema", alpha=k, dx=temblor)
     else:
-        dibujar_vos(ctx, pose, dx=0)
-    # el ají en la mano
+        dibujar_vos(ctx, pose)
     if pose != "quema":
         hx_, hy_ = vpos(372, 436)
         mx_, my_ = vpos(292, 405)
         ang = math.degrees(math.atan2(my_ - hy_, mx_ - hx_))
-        aji(ctx, (hx_ + mx_) / 2 + 10, (hy_ + my_) / 2, 0.6, rot=ang + 180 + 180, mordida=mord)
+        aji(ctx, (hx_ + mx_) / 2 + 10, (hy_ + my_) / 2, 0.6, rot=ang + 360, mordida=mord)
     else:
         q = clamp((t - T_QUEMA) / 0.7)
         hx_, hy_ = vpos(372, 436)
         aji(ctx, hx_ + 60 * q, hy_ + 900 * q * q, 0.6, rot=-160 + 300 * q, mordida=1.0)
-    if t >= T_BITE and t < T_BITE + 0.3:
+    if T_BITE <= t < T_BITE + 0.3:
         mx_, my_ = vpos(300, 400)
+        q = (t - T_BITE) / 0.3
         for k in range(8):
             a = k * math.pi / 4
-            q = (t - T_BITE) / 0.3
             ctx.arc(mx_ + math.cos(a) * 80 * q, my_ + math.sin(a) * 80 * q, 9 * (1 - q), 0, 2 * math.pi)
             ctx.set_source_rgb(*ROJO)
             ctx.fill()
@@ -1194,501 +1619,837 @@ def sc_gancho(t):
             ctx.set_line_width(16)
             ctx.set_line_cap(cairo.LINE_CAP_ROUND)
             ctx.stroke()
-    titulo_gancho(ctx, t)
-    if alarma > 0:
-        campana(ctx, 540, 560, 0.72 * pop(t, b(1, "alarma"), 0.3), t, sonando=True)
-    tsf = b(1, "sin")
-    if t >= tsf:
-        sp = pop(t, tsf, 0.3)
-        llama(ctx, 860, 780, 0.9 * sp, t)
-        prohibido(ctx, 860, 760, 110, sp)
-        cartel(ctx, "SIN FUEGO", 860, 920, 52, box=BLANCO, s=pop(t, tsf + 0.1), rot=6)
-    return a_rgb(s)
+    cartel(ctx, "EL PICANTE\nNO ES UN SABOR", 540, 245, 84, s=1 + 0.012 * math.sin(t * 2.4), pad=(56, 26))
+    if t >= T_ALARMA:
+        campana(ctx, 230, 640, 0.6 * pop(t, T_ALARMA, 0.3), t, sonando=t < T_ALARMA + 1.0)
+    if t >= T_SIN:
+        sp = pop(t, T_SIN, 0.3)
+        llama(ctx, 850, 660, 0.85 * sp, t)
+        prohibido(ctx, 850, 640, 105, sp)
 
 
-SENS = [(190, 860), (360, 800), (540, 780), (720, 800), (890, 860), (260, 1010), (450, 960), (630, 960),
-        (820, 1010), (330, 1170), (540, 1120), (750, 1170)]
+VOS_BOCA = vpos(260, 410)
 
 
-def temp_lengua(t):
-    tq, t43 = b(2, "quema"), b(2, "43")
-    if t < tq:
+# ------------------------------------------------------------------ 2. adentro de la boca: sensores, 43 °C y el ají
+R_STAR = 5                                  # el sensor al que entra la cámara
+K1 = [0, 2, 4, 6, 9, 11]                    # sensores que ocupan las otras llaves
+CHUNK = (566, 958)                          # donde cae el pedazo de ají
+
+
+def temperatura(t):
+    if t < T_QUE:
         return 25.0
-    if t < t43:
-        return lerp(25, 43, ease((t - tq) / (t43 - tq), "in"))
-    return min(48, 43 + (t - t43) * 6)
+    if t < T_43:
+        return lerp(25, 43, ease((t - T_QUE) / (T_43 - T_QUE), "in"))
+    if t < T_43 + 0.6:
+        return 43.0
+    return lerp(43, 25, prog(t, T_43 + 0.6, 0.45))
 
 
-def sc_lengua(t):
-    t0 = S[1]
-    if t < t0 + 0.35:
-        base = sc_gancho(t0 - 0.01)
-        mx, my = vpos(260, 410)
-        z = P.zexp(t, t0, 0.35, 1.0, 7.0, "in")
-        img = zoom_lineal(base, z, mx, my)
-        q = clamp((t - t0 - 0.2) / 0.15)
-        if q > 0:
-            img = (img.astype(np.float32) * (1 - q) + np.array(hx("#250509")) * 255 * q).astype(np.uint8)
-        return img
-    s, ctx = lienzo()
-    fondo_boca(ctx, t)
-    zz = 1 + 0.03 * clamp((t - t0) / 5)
+def _salto_llave(i, n):
+    """Ruta de cada llave desde el pedazo de ají hasta su sensor."""
+    t0 = T_SUS + 0.06 + i * 0.05
+    return t0, 0.42 + 0.03 * i
+
+
+LLAVES1 = K1 + [R_STAR]
+
+
+def llaves_boca1(ctx, bo, t):
+    if t < T_SUS:
+        return
+    for i, ri in enumerate(LLAVES1):
+        t0, d = _salto_llave(i, len(LLAVES1))
+        if t < t0:
+            continue
+        x1, y1 = bo.rec(ri)
+        if ri == R_STAR:
+            x1 -= 70
+            d += 0.25
+        q = clamp((t - t0) / d)
+        e = ease(q, "inout")
+        x = lerp(CHUNK[0], x1, e)
+        y = lerp(CHUNK[1] - 10, y1 - 4, e) - 90 * math.sin(math.pi * q)
+        rot = lerp(-30 if x1 < CHUNK[0] else 30, 0, e) + (6 * math.sin(t * 18 + i) if q >= 1 else 0)
+        s = 0.2 * pop(t, t0, 0.25)
+        llavecita(ctx, x, y, s, rot=rot, cara="picara")
+
+
+def alarma_boca1(t, i):
+    a = clamp((t - T_43) / 0.1) * (1 - clamp((t - T_43 - 0.7) / 0.3)) if t >= T_43 else 0.0
+    if i in LLAVES1 and i != R_STAR:
+        k = LLAVES1.index(i)
+        t0, d = _salto_llave(k, len(LLAVES1))
+        a = max(a, clamp((t - t0 - d) / 0.12))
+    return a
+
+
+def ajicito(ctx, x, y, s, rot, alpha=1.0):
+    aji(ctx, x, y, s, rot=rot, mordida=0.55, alpha=alpha)
+
+
+def d_boca1(ctx, t):
+    temp = temperatura(t)
+    calor = clamp((temp - 25) / 18)
+    rec = [(alarma_boca1(t, i), pop(t, T_SENS + i * 0.05, 0.3)) for i in range(len(REC))]
+    cae = T_AJI - 0.1
+    aterriza = cae + 0.42
+
+    def en_lengua(ctx, bo):
+        if calor > 0.02:
+            for k in range(7):
+                q = (t * 0.9 + k / 7) % 1
+                x = BX - 300 + k * 100
+                y = bo.ty + 120 - q * 380
+                ctx.move_to(x, y)
+                for j in range(6):
+                    ctx.line_to(x + 12 * math.sin(j * 1.3 + t * 6 + k), y - j * 22)
+                ctx.set_source_rgba(1, 0.75, 0.4, 0.5 * calor * math.sin(math.pi * q))
+                ctx.set_line_width(7)
+                ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+                ctx.stroke()
+        if t >= aterriza:
+            sq = 1 + 0.25 * (1 - clamp((t - aterriza) / 0.15)) if t < aterriza + 0.15 else 1.0
+            ajicito(ctx, CHUNK[0], CHUNK[1], 0.42 * sq, -12)
+        llaves_boca1(ctx, bo, t)
+
+    zz = 1 + 0.035 * clamp((t - Z1[0]) / 6.0)
+    sac = 6 * math.sin(t * 70) * (1 - clamp((t - T_43) / 0.3)) if T_43 <= t < T_43 + 0.3 else 0.0
     ctx.save()
-    ctx.translate(540, 960)
-    ctx.scale(zz, zz)
-    ctx.translate(-540, -960)
-    lengua(ctx, 660, t)
-    temp = temp_lengua(t)
-    t43 = b(2, "43")
-    alarma = clamp((t - t43) / 0.15) if t >= t43 else 0
-    if temp > 30:
-        ctx.rectangle(0, 0, 1080, 1920)
-        ctx.set_source_rgba(1, 0.4, 0.1, 0.18 * clamp((temp - 30) / 15))
-        ctx.fill()
-    ts = b(2, "sensores")
-    for i, (x, y) in enumerate(SENS):
-        sp = pop(t, ts + i * 0.05, 0.3)
-        sensor(ctx, x, y, 44, alarma, t + i * 0.13, s=sp)
+    camara(ctx, 540, 960, zz, 540 + sac, 960)
+    boca_frente(ctx, t, a=1.0, rec=rec, calor=calor, en_lengua=en_lengua)
     ctx.restore()
-    cartel(ctx, "TU LENGUA", 330, 240, 70, box=BLANCO, s=pop(t, b(2, "lengua")), rot=-3)
-    termometro(ctx, 900, 560, 380, (temp - 20) / 30, s=pop(t, b(2, "quema") - 0.2, 0.35))
-    if t >= b(2, "quema") - 0.2:
-        txt = f"{int(round(temp))} °C"
-        texto(ctx, txt, 760, 420, 76, fill=BLANCO if temp < 43 else hx("#FFD600"), sw=9)
-    if t >= t43:
-        cartel(ctx, "¡ALARMA!", 540, 560, 74, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, t43), rot=-4)
-    return a_rgb(s)
+    # el pedazo de ají cae desde afuera
+    if cae <= t < aterriza:
+        q = clamp((t - cae) / (aterriza - cae))
+        ajicito(ctx, CHUNK[0] + 20 * (1 - q), lerp(150, CHUNK[1], q * q), 0.42 * zz, lerp(-80, -12, q))
+    # la temperatura
+    if T_QUE - 0.15 <= t < T_43 + 1.1:
+        a = 1 - prog(t, T_43 + 0.8, 0.25, "in")
+        caliente = temp >= 42.9
+        cartel(ctx, f"{int(round(temp))} °C", 540, 175, 84, box=ROJO_AL if caliente else BLANCO,
+               fg=BLANCO if caliente else INK, s=pop(t, T_QUE - 0.15) * bump(t, T_43, 0.3, 0.2) * a, rot=-2)
 
 
-def sc_llave(t):
-    t0 = S[2]
-    s, ctx = lienzo()
-    fondo_boca(ctx, t)
-    lengua(ctx, 1150, t, seed=7)
-    cx, cy, R = 600, 780, 210
-    te, tj, tl = b(3, "encaja"), b(3, "justo"), b(3, "llave")
-    ts = b(3, "sustancia")
-    alarma = clamp((t - tj - 0.15) / 0.15) if t >= tj + 0.15 else 0
-    cerradura(ctx, cx, cy, R, alarma, t, s=pop(t, t0, 0.35))
-    cartel(ctx, "SENSOR DE CALOR", 600, 1035, 50, box=BLANCO, s=pop(t, t0 + 0.15), rot=2,
-           alpha=1 - clamp((t - b(3, "llave")) / 0.2))
-    # ají que entra
-    q = prog(t, b(3, "ají") - 0.2, 0.5, "out")
-    aji(ctx, lerp(-250, 190, q), 330, 0.95, rot=-20)
-    # llave: sale del ají y entra en la cerradura
-    if t >= ts:
-        kq = prog(t, ts, te - ts + 0.15, "inout")
-        x = lerp(260, cx - 6, kq)
-        y = lerp(360, cy + 14, kq)
-        rot = lerp(-30, 0, kq)
-        if t >= tj:
-            rot = lerp(0, 90, prog(t, tj, 0.2, "out"))
-        sc_ = lerp(0.3, 0.75, ease(min(1, kq * 1.4), "out"))
-        llave(ctx, x, y, sc_, rot=rot)
-        if t < te:
-            for k in range(10):
-                qq = ((t - ts) * 1.8 + k / 10) % 1
-                ctx.arc(260 + qq * 120 + 30 * math.sin(k), 360 + 40 * math.sin(k * 2 + qq * 3), 9 * (1 - qq), 0, 2 * math.pi)
-                ctx.set_source_rgba(1, 0.55, 0.1, 0.9 * (1 - qq))
+# ------------------------------------------------------------------ 3. de cerca: la llave falsa en el sensor
+SOCK = (540, 1090)
+SRX, SRY = 250, 96
+
+
+def lengua_macro(ctx, t, alarma=0.0):
+    g = cairo.LinearGradient(0, 0, 0, 720)
+    g.add_color_stop_rgb(0, *hx("#16030A"))
+    g.add_color_stop_rgb(1, *hx("#5E1426"))
+    ctx.set_source(g)
+    ctx.paint()
+    ctx.move_to(-3000, 720)
+    ctx.line_to(-80, 720)
+    ctx.curve_to(300, 560, 780, 560, 1160, 720)
+    ctx.line_to(4000, 720)
+    ctx.line_to(4000, 7000)
+    ctx.line_to(-3000, 7000)
+    ctx.close_path()
+    camino = ctx.copy_path()
+    g = cairo.LinearGradient(0, 600, 0, 1920)
+    g.add_color_stop_rgb(0, *hx("#B9435F"))
+    g.add_color_stop_rgb(0.35, *LENG_B)
+    g.add_color_stop_rgb(1, *LENG_A)
+    ctx.set_source(g)
+    ctx.fill()
+    ctx.save()
+    ctx.append_path(camino)
+    ctx.clip()
+    r = rng(12)
+    for j in range(15):
+        f = (j / 14) ** 1.6
+        y = 640 + 1350 * f
+        rr = 7 + 34 * f
+        paso = rr * 3.3
+        x = -40 + (j % 2) * paso / 2 + r.uniform(0, paso / 2)
+        while x < 1120:
+            xx, yy = x + r.uniform(-rr * 0.4, rr * 0.4), y + r.uniform(-rr * 0.3, rr * 0.3)
+            if ((xx - SOCK[0]) / (SRX * 1.25)) ** 2 + ((yy - SOCK[1]) / (SRY * 1.5)) ** 2 > 1:
+                ctx.save()
+                ctx.translate(xx, yy + rr * 0.18)
+                ctx.scale(rr, rr * 0.5)
+                ctx.arc(0, 0, 1, 0, 2 * math.pi)
+                ctx.restore()
+                ctx.set_source_rgba(*LENG_C, 0.35)
                 ctx.fill()
+                ctx.save()
+                ctx.translate(xx, yy)
+                ctx.scale(rr, rr * 0.5)
+                ctx.arc(0, 0, 1, 0, 2 * math.pi)
+                ctx.restore()
+                ctx.set_source_rgba(1, 0.8, 0.85, 0.5)
+                ctx.fill()
+            x += paso
+    ctx.move_to(528, 600)
+    ctx.line_to(552, 600)
+    ctx.line_to(610, 2000)
+    ctx.line_to(470, 2000)
+    ctx.close_path()
+    ctx.set_source_rgba(*LENG_C, 0.3)
+    ctx.fill()
+    g = cairo.LinearGradient(0, 560, 0, 900)
+    g.add_color_stop_rgba(0, 0.1, 0, 0.03, 0.75)
+    g.add_color_stop_rgba(1, 0.1, 0, 0.03, 0)
+    ctx.set_source(g)
+    ctx.paint()
     if alarma > 0:
-        cartel(ctx, "CLIC", 860, 640, 60, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tj + 0.15), rot=10,
-               alpha=1 - clamp((t - tl + 0.2) / 0.2))
-    if t >= tl:
-        cartel(ctx, "LLAVE FALSA", 540, 1170, 84, s=pop(t, tl), rot=-3)
-    return a_rgb(s)
+        _elipse_suave(ctx, SOCK[0], SOCK[1], 700, 420, ROJO_AL, 0.35 * alarma)
+    ctx.restore()
 
 
-def senal(ctx, x0, y0, x1, y1, t, t0, color=hx("#FF4D3A")):
-    if t < t0:
+def zocalo(ctx, x, y, rx, ry, alarma, t, forma="redonda", s=1.0):
+    """Un sensor visto de cerca: un anillo hundido en la superficie con su cerradura."""
+    if s <= 0.01:
+        return
+    col = mezcla(CIAN, ROJO_AL, alarma)
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    _elipse_suave(ctx, 0, 0, rx * 1.9, ry * 2.4, col, 0.45 + 0.25 * alarma)
+    if alarma > 0.05:
+        for k in range(3):
+            q = (t * 1.2 + k / 3) % 1
+            ctx.save()
+            ctx.scale(rx, ry)
+            ctx.arc(0, 0, 1.05 + q * 0.9, 0, 2 * math.pi)
+            ctx.restore()
+            ctx.set_source_rgba(*ROJO_AL, 0.75 * (1 - q) * alarma)
+            ctx.set_line_width(10)
+            ctx.stroke()
+    for (k, c) in ((1.1, INK), (1.0, mezcla(hx("#0B3540"), hx("#4A0A0A"), alarma))):
+        ctx.save()
+        ctx.scale(rx * k, ry * k)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgb(*c)
+        ctx.fill()
+    # pared interna (se ve la del fondo)
+    ctx.save()
+    ctx.scale(rx * 0.84, ry * 0.8)
+    ctx.arc(0, 0.16, 1, 0, 2 * math.pi)
+    ctx.restore()
+    ctx.set_source_rgb(*mezcla(hx("#04161C"), hx("#250404"), alarma))
+    ctx.fill()
+    # aro de luz
+    for lw, a in ((26, 0.25), (12, 1.0)):
+        ctx.save()
+        ctx.scale(rx * 0.93, ry * 0.93)
+        ctx.arc(0, 0, 1, 0, 2 * math.pi)
+        ctx.restore()
+        ctx.set_source_rgba(*mezcla(col, (1, 1, 1), 0.2), a)
+        ctx.set_line_width(lw)
+        ctx.stroke()
+    # cerradura acostada
+    ctx.save()
+    ctx.translate(0, ry * 0.12)
+    ctx.scale(1, 0.42)
+    if forma == "redonda":
+        ctx.arc(0, -10, 38, 0, 2 * math.pi)
+        ctx.move_to(-20, 0)
+        ctx.line_to(20, 0)
+        ctx.line_to(30, 80)
+        ctx.line_to(-30, 80)
+        ctx.close_path()
+    else:
+        for i in range(10):
+            a = -math.pi / 2 + i * math.pi / 5
+            rr = 70 if i % 2 == 0 else 30
+            (ctx.move_to if i == 0 else ctx.line_to)(math.cos(a) * rr, math.sin(a) * rr + 20)
+        ctx.close_path()
+    path = ctx.copy_path()
+    ctx.set_source_rgb(*hx("#020809"))
+    ctx.fill()
+    ctx.append_path(path)
+    ctx.set_source_rgba(*col, 0.9)
+    ctx.set_line_width(6)
+    ctx.stroke()
+    ctx.restore()
+    ctx.restore()
+
+
+def d_cerradura(ctx, t):
+    t_in = T_JUS - 0.02                         # la llave queda arriba de la cerradura
+    t_baja = t_in + 0.22                         # ya entró
+    t_g0, t_g1 = t_baja + 0.12, t_baja + 0.56    # gira
+    alarma = clamp((t - t_g1) / 0.12)
+    zz = 1 + 0.04 * clamp((t - Z2[0]) / 3.0)
+    sac = 8 * math.sin(t * 70) * (1 - clamp((t - t_g1) / 0.35)) if t_g1 <= t < t_g1 + 0.35 else 0.0
+    ctx.save()
+    camara(ctx, 540, 960, zz, 540 + sac, 960)
+    lengua_macro(ctx, t, alarma)
+    zocalo(ctx, SOCK[0], SOCK[1], SRX, SRY, alarma, t)
+    # la llave
+    tip_y = SOCK[1] + 12
+    if t < t_in:
+        q = clamp((t - (Z2[0] + 0.12)) / (t_in - Z2[0] - 0.12))
+        x = lerp(-260, SOCK[0], ease(q, "out"))
+        y = lerp(tip_y - 300, tip_y - 240, q) - 70 * abs(math.sin(q * math.pi * 3))
+        rot = 14 * math.sin(q * math.pi * 6) * (1 - q)
+        giro = 1.0
+    else:
+        x = SOCK[0]
+        y = lerp(tip_y - 240, tip_y + 150, ease(clamp((t - t_in) / (t_baja - t_in)), "in"))
+        rot = 0.0
+        th = 2 * math.pi * ease(clamp((t - t_g0) / (t_g1 - t_g0)), "inout")
+        giro = math.cos(th)
+    cara = "feliz" if alarma > 0.5 else "picara"
+    ctx.save()
+    ctx.rectangle(-500, -500, 2080, tip_y + 500 - 4)
+    ctx.clip()
+    llavecita(ctx, x, y, 1.0, rot=rot, cara=cara, giro=giro)
+    ctx.restore()
+    ctx.restore()
+    if alarma > 0:
+        vineta_roja(ctx, 0.6 * alarma * (0.7 + 0.3 * math.sin(t * 12)))
+    pill(ctx, "LLAVE FALSA", 540, 330, t, T_LLA, size=92)
+
+
+# ------------------------------------------------------------------ 4. el cerebro y el cuerpo
+BL, BR, BRAD = (290, 1060), (790, 1060), 185
+SB = 0.36                                   # escala de la boca dentro de la insignia
+_rs = Boca(1.0).rec(R_STAR)
+BADGE_STAR = (BL[0] + SB * (_rs[0] - BOCA_C[0]), BL[1] + SB * (_rs[1] - BOCA_C[1]))
+CARA = (540, 1040, 290)
+CARA_BOCA = (540, CARA[1] - 0.12 * CARA[2] + 0.42 * CARA[2] + 6 * 2.3)
+
+
+def insignia(ctx, x, y, r, s, dibujo, alpha=1.0):
+    if s <= 0.01 or alpha <= 0.01:
+        return
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    ctx.push_group()
+    ctx.arc(0, 8, r + 14, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.fill()
+    ctx.arc(0, 0, r + 14, 0, 2 * math.pi)
+    ctx.set_source_rgb(*BLANCO)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(7)
+    ctx.stroke()
+    ctx.save()
+    ctx.arc(0, 0, r, 0, 2 * math.pi)
+    ctx.clip()
+    dibujo(ctx)
+    ctx.restore()
+    ctx.arc(0, 0, r, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(6)
+    ctx.stroke()
+    ctx.pop_group_to_source()
+    ctx.paint_with_alpha(alpha)
+    ctx.restore()
+
+
+def rec_rojos(lista):
+    return [(1.0 if i in lista else 0.0, 1.0) for i in range(len(REC))]
+
+
+def llaves_quietas(ctx, bo, t, indices, s=0.2, cara="picara"):
+    for k, i in enumerate(indices):
+        x, y = bo.rec(i)
+        llavecita(ctx, x, y - 4, s, rot=6 * math.sin(t * 7 + k), cara=cara)
+
+
+def boca_insignia(t):
+    def dib(ctx):
+        ctx.save()
+        ctx.scale(SB, SB)
+        ctx.translate(-BOCA_C[0], -BOCA_C[1])
+        boca_frente(ctx, t, a=1.0, rec=rec_rojos(LLAVES1), en_lengua=lambda c, bo: (
+            ajicito(c, CHUNK[0], CHUNK[1], 0.42, -12), llaves_quietas(c, bo, t, LLAVES1)))
+        ctx.restore()
+    return dib
+
+
+def cafe_insignia(t):
+    def dib(ctx):
+        g = cairo.RadialGradient(0, 40, 20, 0, 40, 260)
+        g.add_color_stop_rgb(0, *hx("#7A3A1A"))
+        g.add_color_stop_rgb(1, *hx("#1A0C10"))
+        ctx.set_source(g)
+        ctx.paint()
+        taza(ctx, -10, 60, 0.95, t)
+    return dib
+
+
+def senal(ctx, x0, y0, x1, y1, t, t0, color=hx("#FF4D3A"), a=1.0):
+    if t < t0 or a <= 0.01:
         return
     q = clamp((t - t0) / 0.4)
     n = 14
     pts = []
     for i in range(n + 1):
         f = i / n * q
-        x = lerp(x0, x1, f)
-        y = lerp(y0, y1, f)
+        x, y = lerp(x0, x1, f), lerp(y0, y1, f)
         if 0 < i < n:
             dxp, dyp = -(y1 - y0), (x1 - x0)
-            L = math.hypot(dxp, dyp)
-            off = 22 * (1 if i % 2 else -1)
+            L = math.hypot(dxp, dyp) or 1
+            off = 20 * (1 if i % 2 else -1)
             x += dxp / L * off
             y += dyp / L * off
         pts.append((x, y))
-    for lw, col, a in ((22, color, 0.25), (12, color, 0.6), (6, (1, 1, 0.8), 1.0)):
+    for lw, col, al in ((22, color, 0.25), (12, color, 0.6), (6, (1, 1, 0.8), 1.0)):
         for i, (x, y) in enumerate(pts):
             (ctx.move_to if i == 0 else ctx.line_to)(x, y)
-        ctx.set_source_rgba(*col, a)
+        ctx.set_source_rgba(*col, al * a)
         ctx.set_line_width(lw)
         ctx.set_line_join(cairo.LINE_JOIN_ROUND)
         ctx.stroke()
     for k in range(3):
         f = ((t - t0) * 1.4 + k / 3) % 1
-        punto_brillo(ctx, lerp(x0, x1, f * q), lerp(y0, y1, f * q), 10, color, 1.0)
+        punto_brillo(ctx, lerp(x0, x1, f * q), lerp(y0, y1, f * q), 10, color, a)
 
 
-def sc_cerebro(t):
-    t0 = S[3]
-    s, ctx = lienzo()
-    fondo_oscuro(ctx, t)
-    tc, tr, tse, tca, tpe, tni = (b(4, "cerebro"), b(4, "recibe"), b(4, "señal"), b(4, "café"), b(4, "pero"),
-                                  b(4, "ni"))
-    bx, by = 540, 470
-    fl = 0.0
-    for tt in (tse, tca + 0.5):
-        if tt <= t < tt + 0.6:
-            fl = max(fl, 1 - (t - tt) / 0.6)
-    if fl > 0:
-        g = cairo.RadialGradient(bx, by, 50, bx, by, 380)
-        g.add_color_stop_rgba(0, 1, 0.2, 0.1, 0.7 * fl)
-        g.add_color_stop_rgba(1, 1, 0.2, 0.1, 0)
-        ctx.set_source(g)
-        ctx.paint()
-    P.cerebro(ctx, bx, by, 0.95 * pop(t, tc - 0.1, 0.4) * bump(t, tse, 0.3, 0.1) * bump(t, tca + 0.5, 0.3, 0.1))
-    # ají (derecha)
-    aji(ctx, 780, 1140, 0.8 * pop(t, t0, 0.35), rot=-30)
-    senal(ctx, 760, 1050, 600, 640, t, tr)
-    termometro(ctx, 960, 1180, 260, 0.33, s=pop(t, t0 + 0.2, 0.35) * bump(t, tpe, 0.35, 0.15))
-    if t >= t0 + 0.2:
-        texto(ctx, "36 °C", 960, 860, 60, fill=BLANCO, sw=8)
-    # café (izquierda)
-    if t >= tca - 0.15:
-        taza(ctx, 300, 1150, 0.95 * pop(t, tca - 0.15, 0.35), t)
-        senal(ctx, 320, 1000, 480, 640, t, tca + 0.1)
-        termometro(ctx, 110, 1180, 260, 0.9, s=pop(t, tca, 0.35))
-        texto(ctx, "70 °C", 110, 860, 60, fill=BLANCO, sw=8)
-    if t >= tse:
-        cartel(ctx, "¡QUEMA!", 830, 300, 70, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tse), rot=8)
-    if t >= tca + 0.5:
-        cartel(ctx, "¡QUEMA!", 250, 300, 70, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tca + 0.5), rot=-8)
-    if t >= tni:
-        sello(ctx, "+0 °C", 830, 1000, True, s=pop(t, tni), rot=-10)
-    return a_rgb(s)
-
-
-def icono_insignia(ctx, x, y, s, tipo, t, t0):
-    if s <= 0.01:
-        return
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.scale(s, s)
-    ctx.arc(0, 0, 130, 0, 2 * math.pi)
-    ctx.set_source_rgb(*BLANCO)
+def cara_tu(ctx, x, y, R, t, rojo=0.0, arde=0.0, t_sudor=None, t_lagrimas=None, sac=0.0):
+    x += sac
+    piel = mezcla(PIEL_C, hx("#FF6A55"), rojo)
+    piel2 = mezcla(PIEL_O, hx("#D63E30"), rojo)
+    ctx.arc(x, y + 12, R, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.fill()
+    g = cairo.RadialGradient(x - R * 0.3, y - R * 0.35, R * 0.1, x, y, R)
+    g.add_color_stop_rgb(0, *mezcla(piel, (1, 1, 1), 0.15))
+    g.add_color_stop_rgb(1, *piel2)
+    ctx.arc(x, y, R, 0, 2 * math.pi)
+    ctx.set_source(g)
     ctx.fill_preserve()
     ctx.set_source_rgb(*INK)
     ctx.set_line_width(10)
     ctx.stroke()
-    if tipo == "sudor":
-        for k in range(3):
-            q = ((t - t0) * 1.2 + k / 3) % 1
-            gota(ctx, -40 + k * 40, -40 + q * 90, 22, AZUL_AGUA, alpha=1 - q * 0.5)
-    elif tipo == "rojo":
-        k = clamp((t - t0) / 0.6)
-        ctx.arc(0, 0, 80, 0, 2 * math.pi)
-        ctx.set_source_rgb(*mezcla(hx("#F8C9A2"), hx("#FF5A4A"), k))
+    for sx in (-1, 1):
+        _elipse_suave(ctx, x + sx * R * 0.56, y + R * 0.2, R * 0.2, R * 0.12, hx("#FF5A6E"), 0.5 + 0.3 * rojo)
+    ey = y - R * 0.12
+    sep = R * 0.66
+    if arde > 0.5:
+        carita(ctx, x, ey, sep, 2.3, ojos="wide", boca="o", ceja="up", dy_boca=R * 0.42)
+    else:
+        carita(ctx, x, ey, sep, 2.3, ojos="open", boca="smile", dy_boca=R * 0.42)
+    # sudor
+    if t_sudor is not None and t >= t_sudor:
+        r = rng(4)
+        for k in range(6):
+            ph = r.uniform(0, 1)
+            q = ((t - t_sudor) * 0.7 + ph) % 1
+            if t - t_sudor < ph * 0.6:
+                continue
+            lado = -1 if k % 2 else 1
+            ang = math.radians(lerp(-60, -10, q) + r.uniform(-8, 8))
+            px = x + lado * R * 0.93 * math.cos(ang) + lado * 10
+            py = y + R * 0.93 * math.sin(ang) + q * 40
+            gota(ctx, px, py, 17, hx("#BFEFFF"), alpha=1 - q * 0.3)
+    # lágrimas
+    if t_lagrimas is not None and t >= t_lagrimas:
+        q0 = clamp((t - t_lagrimas) / 0.4)
+        for sx in (-1, 1):
+            x0 = x + sx * sep / 2
+            y0 = ey + 70
+            y1 = y0 + q0 * R * 0.75
+            ctx.move_to(x0, y0)
+            ctx.curve_to(x0 + sx * 6, y0 + 40, x0 - sx * 8, y1 - 40, x0 + sx * 4 * math.sin(t * 6), y1)
+            for lw, c in ((26, INK), (16, AZUL_AGUA)):
+                ctx.set_source_rgb(*c)
+                ctx.set_line_width(lw)
+                ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+                ctx.stroke_preserve()
+            ctx.new_path()
+            for k in range(2):
+                qq = ((t - t_lagrimas) * 1.6 + k * 0.5) % 1
+                gota(ctx, x0 + sx * 6, y1 + 10 + qq * 260, 13, AZUL_AGUA, alpha=1 - qq)
+    if rojo > 0.3:
+        vapor(ctx, x - R * 0.55, y - R * 0.8, t, T_ROJ, -1)
+        vapor(ctx, x + R * 0.55, y - R * 0.8, t, T_ROJ, 1)
+
+
+def rociadores(ctx, t, t0, t1, a):
+    if a <= 0.01:
+        return
+    ctx.save()
+    ctx.push_group()
+    rrect(ctx, 110, 548, 860, 36, 18)
+    ctx.set_source_rgb(*hx("#9AA3B5"))
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(7)
+    ctx.stroke()
+    for x in (280, 540, 800):
+        rrect(ctx, x - 24, 578, 48, 40, 10)
+        ctx.set_source_rgb(*hx("#C9D0DD"))
         ctx.fill_preserve()
         ctx.set_source_rgb(*INK)
-        ctx.set_line_width(7)
         ctx.stroke()
-        for j in range(3):
-            q = ((t - t0) * 1.5 + j / 3) % 1
-            ctx.move_to(-40 + j * 40, -95 - q * 30)
-            ctx.curve_to(-50 + j * 40, -110 - q * 30, -30 + j * 40, -120 - q * 30, -40 + j * 40, -135 - q * 30)
-            ctx.set_source_rgba(1, 0.3, 0.2, 1 - q)
-            ctx.set_line_width(6)
-            ctx.stroke()
-    elif tipo == "lagrimas":
-        ctx.save()
-        ctx.scale(1, 0.6)
-        ctx.arc(0, -30, 80, 0, 2 * math.pi)
-        ctx.restore()
-        ctx.set_source_rgb(*BLANCO)
-        ctx.fill_preserve()
-        ctx.set_source_rgb(*INK)
-        ctx.set_line_width(7)
-        ctx.stroke()
-        ctx.arc(0, -18, 30, 0, 2 * math.pi)
-        ctx.set_source_rgb(*hx("#6B3E26"))
-        ctx.fill()
-        q = ((t - t0) * 1.2) % 1
-        gota(ctx, 40, 40 + q * 60, 20, AZUL_AGUA, alpha=1 - q * 0.5)
+        if t0 <= t < t1 + 0.6:
+            r = rng(x)
+            for k in range(30):
+                ph = r.uniform(0, 1)
+                q = ((t - t0) * 1.4 + ph) % 1
+                nacio = t - q / 1.4
+                if nacio < t0 or nacio > t1:
+                    continue
+                ang = r.uniform(-0.55, 0.55)
+                px = x + math.sin(ang) * q * 420
+                py = 620 + math.cos(ang) * q * 640 + 120 * q * q
+                gota(ctx, px, py, 11, AZUL_AGUA, alpha=0.95, borde=True)
+    ctx.pop_group_to_source()
+    ctx.paint_with_alpha(a)
     ctx.restore()
 
 
-def sc_cuerpo(t):
-    t0 = S[4]
-    s, ctx = lienzo()
-    fondo_oscuro(ctx, t)
-    ttr, tro, tll, tcu, tap, tne = (b(5, "transpiras"), b(5, "rojo"), b(5, "lloran"), b(5, "cuerpo"),
-                                    b(5, "apagar"), b(5, "no"))
-    sube = prog(t, tcu - 0.1, 0.5)
-    yb = lerp(720, 330, sube)
-    kb = lerp(1.0, 0.72, sube)
-    for i, (tt, tipo, nom) in enumerate(((ttr, "sudor", "SUDOR"), (tro, "rojo", "ROJO"), (tll, "lagrimas", "LÁGRIMAS"))):
-        x = 200 + i * 340
-        sp = pop(t, (t0 if i == 0 else tt - 0.05), 0.35) * kb
-        icono_insignia(ctx, x, yb, sp, tipo, t, tt)
-        if sp > 0.01:
-            cartel(ctx, nom, x, yb + 175 * kb, 46, box=AMARILLO, s=sp)
-    if t >= tcu - 0.1:
-        a = clamp((t - tcu) / 0.3)
-        # techo con rociadores
-        rrect(ctx, 80, 640, 920, 36, 16)
-        ctx.set_source_rgba(0.6, 0.62, 0.66, a)
-        ctx.fill_preserve()
-        ctx.set_source_rgba(*INK, a)
-        ctx.set_line_width(6)
-        ctx.stroke()
-        for x in (250, 540, 830):
-            rrect(ctx, x - 26, 670, 52, 44, 10)
-            ctx.set_source_rgba(0.75, 0.75, 0.8, a)
-            ctx.fill_preserve()
-            ctx.set_source_rgba(*INK, a)
-            ctx.stroke()
-            if t >= tap:
-                r = rng(x)
-                for k in range(26):
-                    ph = r.uniform(0, 1)
-                    q = ((t - tap) * 1.3 + ph) % 1
-                    ang = r.uniform(-0.6, 0.6)
-                    px = x + math.sin(ang) * q * 520
-                    py = 720 + math.cos(ang) * q * 560
-                    gota(ctx, px, py, 10, AZUL_AGUA, alpha=0.9 * (1 - q * 0.4), borde=False)
-        # piso y fuego que no está
-        ctx.rectangle(0, 1290, 1080, 30)
-        ctx.set_source_rgba(0.4, 0.2, 0.2, a)
-        ctx.fill()
-        ctx.save()
-        ctx.translate(540, 1180)
-        ctx.scale(1.3, 1.3)
-        ctx.move_to(0, 60)
-        ctx.curve_to(-70, 50, -70, -20, -20, -60)
-        ctx.curve_to(-10, -30, 0, -90, 0, -110)
-        ctx.curve_to(30, -70, 70, -40, 62, 10)
-        ctx.curve_to(60, 50, 30, 62, 0, 60)
-        ctx.restore()
-        ctx.set_dash([18, 14])
-        ctx.set_source_rgba(1, 1, 1, 0.8 * a)
-        ctx.set_line_width(7)
-        ctx.stroke()
-        ctx.set_dash([])
-        texto(ctx, "?", 540, 1150, 110, fill=BLANCO, sw=8, alpha=a)
-    if t >= tne:
-        cartel(ctx, "NO HAY FUEGO", 540, 960, 80, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tne), rot=-4)
-    return a_rgb(s)
-
-
-# gotitas de capsaicina sobre la lengua (y0 = 900)
-GOT0 = [(470, 1080), (530, 1040), (600, 1090), (560, 1140), (500, 1150), (440, 1120), (620, 1030)]
-GOT1 = [(170, 1150), (320, 1010), (900, 1080), (760, 1250), (360, 1330), (130, 1420), (640, 960)]
-SENS2 = [(200, 1080), (340, 1000), (540, 990), (740, 1000), (880, 1080), (260, 1260), (540, 1220), (820, 1260),
-         (140, 1430), (400, 1380), (680, 1380), (940, 1430)]
-
-
-def _gotitas_pos(t):
-    """Posición de cada gotita: juntas, después repartidas por el agua, después se van con la leche."""
-    tm, te_ = b(6, "tomarla"), b(6, "boca", fin=True)
-    q = prog(t, tm, te_ - tm, "inout")
-    pos = [(lerp(a[0], c[0], q), lerp(a[1], c[1], q)) for a, c in zip(GOT0, GOT1)]
-    tdes = b(7, "despega")
-    if t >= tdes:
-        k = prog(t, tdes, 0.9, "in")
-        pos = [(x + (x - 540) * 0.2 * k, y - 1100 * k) for x, y in pos]
-    return pos
-
-
-def _sensores_estado(t, pos):
-    est = []
-    tcap = b(6, "capsaicina")
-    for sx, sy in SENS2:
-        d = min(math.hypot(sx - x, sy - y) for x, y in pos)
-        a = clamp((200 - d) / 80)
-        if t < tcap:
-            a = 0
-        est.append(a)
-    return est
-
-
-def sc_agua_leche(t):
-    s, ctx = lienzo()
-    fondo_boca(ctx, t)
-    lengua(ctx, 900, t, seed=9)
-    pos = _gotitas_pos(t)
-    est = _sensores_estado(t, pos)
-    for (x, y), a in zip(SENS2, est):
-        sensor(ctx, x, y, 34, a, t + x * 0.01, s=1.0)
-    # capa de agua
-    tme, tle = b(6, "mezcla"), b(7, "leche")
-    agua_a = clamp((t - tme - 0.4) / 0.6) * (1 - clamp((t - tle - 0.8) / 0.8))
-    if agua_a > 0:
-        ctx.rectangle(60, 900, 960, 1020)
-        ctx.set_source_rgba(*AZUL_AGUA, 0.28 * agua_a)
-        ctx.fill()
-        for k in range(6):
-            yy = 960 + k * 150 + 10 * math.sin(t * 3 + k)
-            ctx.move_to(80, yy)
-            for x in range(80, 1010, 40):
-                ctx.line_to(x, yy + 8 * math.sin(x * 0.03 + t * 4 + k))
-            ctx.set_source_rgba(1, 1, 1, 0.35 * agua_a)
-            ctx.set_line_width(4)
-            ctx.stroke()
-    # leche: glóbulos de grasa que envuelven las gotitas
-    tgr, tat, tdes = b(7, "grasa"), b(7, "atrapa"), b(7, "despega")
-    env = clamp((t - tat) / 0.7) if t >= tat else 0.0
-    if t >= tgr - 0.6 and env < 0.95:
-        r = rng(21)
-        for k in range(14):
-            x0, y0 = 760 + r.uniform(-80, 80), 1000 + r.uniform(-60, 60)
-            tx, ty = pos[k % len(pos)]
-            a = r.uniform(0, 2 * math.pi)
-            tx += math.cos(a) * 34
-            ty += math.sin(a) * 34
-            q = env
-            x = lerp(x0 + 40 * math.sin(t * 2 + k), tx, q)
-            y = lerp(y0 + 30 * math.cos(t * 2 + k), ty, q)
-            globulo(ctx, x, y, 22 * pop(t, tgr - 0.6 + k * 0.03, 0.3), alpha=1 - env)
-    for x, y in pos:
-        gotita_aceite(ctx, x, y, 30, envuelta=env)
-    # vasos
-    tag, tcap = b(6, "agua"), b(6, "capsaicina")
-    if t < tle + 1.2:
-        ap = pop(t, tme - 0.5, 0.35) * (1 - clamp((t - tle) / 0.3))
-        inc = 110 * prog(t, tme, 0.5)
-        if ap > 0.01:
-            vaso(ctx, 300, 520, 1.0 * ap, inc, AZUL_AGUA, nivel=lerp(0.8, 0.3, prog(t, tme + 0.4, 2.4)))
-            if inc > 60 and t < b(6, "boca", fin=True):
-                chorro(ctx, 300 + 120 * math.sin(math.radians(inc)), 520 - 120 * math.cos(math.radians(inc)), 520, 1000, AZUL_AGUA, 34, t)
-    if t >= tle - 0.2:
-        ap = pop(t, tle - 0.2, 0.35)
-        inc = -110 * prog(t, tle + 0.2, 0.5)
-        vaso(ctx, 780, 520, 1.0 * ap, inc, (1, 1, 0.98), nivel=lerp(0.8, 0.3, prog(t, tle + 0.6, 2.2)), blanco=True)
-        if inc < -60 and t < tat + 0.4:
-            chorro(ctx, 780 + 120 * math.sin(math.radians(inc)), 520 - 120 * math.cos(math.radians(inc)), 600, 1000, (1, 1, 0.98), 34, t)
-    # etiquetas
-    if tcap <= t < b(6, "tomarla"):
-        cartel(ctx, "CAPSAICINA", 540, 820, 70, s=pop(t, tcap), rot=-3)
-        flecha(ctx, 540, 870, 540, 1000, t, curva=0, w=12)
-    if b(6, "boca") <= t < tle:
-        sello(ctx, "AGUA", 330, 860, False, s=pop(t, b(6, "boca")))
-    if tgr <= t < tdes:
-        cartel(ctx, "GRASA", 820, 820, 70, box=BLANCO, s=pop(t, tgr), rot=4)
-    if t >= b(7, "lengua"):
-        sello(ctx, "LECHE", 760, 860, True, s=pop(t, b(7, "lengua")), rot=6)
-    return a_rgb(s)
-
-
-def sc_pajaro(t):
-    t0 = S[7]
-    s, ctx = lienzo()
-    fondo_exterior(ctx, t)
-    tqu, tca, tpe, tll, tno = b(8, "quema"), b(9, "calor"), b(9, "pero"), b(9, "llave"), b(9, "encaja")
-    # rama y planta
-    ctx.move_to(-20, 1160)
-    ctx.curve_to(300, 1140, 600, 1180, 1100, 1120)
-    ctx.set_source_rgb(*INK)
-    ctx.set_line_width(46)
-    ctx.stroke_preserve()
-    ctx.set_source_rgb(*hx("#8B5A2B"))
-    ctx.set_line_width(32)
+def llama_punteada(ctx, x, y, s, a):
+    if a <= 0.01 or s <= 0.01:
+        return
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    ctx.move_to(0, 60)
+    ctx.curve_to(-70, 50, -70, -20, -20, -60)
+    ctx.curve_to(-10, -30, 0, -90, 0, -110)
+    ctx.curve_to(30, -70, 70, -40, 62, 10)
+    ctx.curve_to(60, 50, 30, 62, 0, 60)
+    ctx.close_path()
+    ctx.restore()
+    ctx.set_dash([20, 16])
+    ctx.set_source_rgba(1, 1, 1, 0.95 * a)
+    ctx.set_line_width(9)
     ctx.stroke()
-    aji(ctx, 760, 1230, 0.7, rot=95)
-    aji(ctx, 900, 1215, 0.6, rot=80)
-    # pájaro
-    salto = 0.0
-    ojos = "feliz" if t < tca else "normal"
-    if tca <= t < tca + 0.8:
-        q = (t - tca) / 0.8
-        salto = 140 * math.sin(math.pi * q)
-        ojos = "grande"
-    picoteo = max(0.0, math.sin(t * 9)) if t < tca - 0.2 else 0.0
-    pajaro(ctx, 470, 1010 - salto - 10 * picoteo, 1.15, t, aleteo=0.6 if salto > 10 else 0, pico=picoteo * 0.6,
-           ojos=ojos)
-    if t < tca - 0.2:
-        aji(ctx, 620 + 10 * picoteo, 1035, 0.45, rot=180, mordida=0.3)
-    if t >= tqu:
-        cartel(ctx, "¡NI LO SIENTE!", 470, 760, 66, box=BLANCO, s=pop(t, tqu), rot=-4,
-               alpha=1 - clamp((t - tca + 0.2) / 0.2))
-    if tca - 0.15 <= t < tca + 1.0:
-        llama(ctx, 330, 1100, 0.8 * pop(t, tca - 0.15, 0.2) * (1 - clamp((t - tca - 0.7) / 0.3)), t)
-        if t >= tca + 0.1:
-            cartel(ctx, "¡AY!", 640, 760, 80, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tca + 0.1), rot=8)
-    # lupa: la cerradura del pájaro
-    if t >= tpe - 0.1:
-        ap = pop(t, tpe - 0.1, 0.35)
+    ctx.set_dash([])
+    texto(ctx, "?", x, y - 20 * s, 120 * s, fill=BLANCO, sw=8, alpha=a)
+
+
+def d_cuerpo(ctx, t):
+    sale = prog(t, b(5) - 0.2, 0.45)          # se van las insignias y el cerebro sube
+    fl = 0.0
+    for tt in (T_REC + 0.4, T_CAF + 0.5):
+        if tt <= t < tt + 0.7:
+            fl = max(fl, 1 - (t - tt) / 0.7)
+    rojo_cara = prog(t, T_ROJ, 0.45)
+    fondo_azul(ctx, t, calor=0.25 * fl + 0.5 * rojo_cara * (1 - prog(t, T_NOE, 0.6)), cx=540, cy=1000)
+    bx, by = lerp(540, 540, sale), lerp(470, 300, sale)
+    bs = lerp(0.95, 0.58, sale)
+    if fl > 0:
+        _elipse_suave(ctx, bx, by, 420 * bs, 420 * bs, ROJO_AL, 0.6 * fl)
+    P.cerebro(ctx, bx, by, bs * pop(t, T_CER - 0.12, 0.4) * bump(t, T_REC + 0.4, 0.3, 0.08) * bump(t, T_CAF + 0.5, 0.3, 0.08))
+    k_ins = 1 - sale
+    if k_ins > 0.01:
+        a_cafe = 1 - 0.55 * prog(t, T_PER, 0.4)
+        senal(ctx, BL[0] + 40, BL[1] - BRAD - 10, 470, 620, t, T_REC, a=k_ins)
+        senal(ctx, BR[0] - 40, BR[1] - BRAD - 10, 610, 620, t, T_CAF + 0.1, a=k_ins * a_cafe)
+        insignia(ctx, BL[0], BL[1], BRAD, k_ins * bump(t, T_PER, 0.35, 0.1), boca_insignia(t))
+        if t >= T_CAF - 0.2:
+            insignia(ctx, BR[0], BR[1], BRAD, k_ins * pop(t, T_CAF - 0.2), cafe_insignia(t), alpha=a_cafe)
+        if t >= T_REC:
+            cartel(ctx, "36 °C", BL[0], BL[1] + BRAD + 50, 62, box=BLANCO, s=k_ins * pop(t, T_REC) * bump(t, T_PER, 0.35, 0.2))
+        if t >= T_CAF + 0.1:
+            cartel(ctx, "70 °C", BR[0], BR[1] + BRAD + 50, 62, box=ROJO_AL, fg=BLANCO, s=k_ins * pop(t, T_CAF + 0.1),
+                   alpha=a_cafe)
+        if t >= T_SEN:
+            cartel(ctx, "¡QUEMA!", 540, 165, 84, box=ROJO_AL, fg=BLANCO,
+                   s=k_ins * pop(t, T_SEN) * bump(t, T_CAF + 0.5, 0.3, 0.15), rot=-3)
+        if t >= T_NI:
+            sello(ctx, "+0 °C", BL[0] + 30, BL[1] + 10, True, s=k_ins * pop(t, T_NI), rot=-8)
+    # la cara
+    cs = pop(t, b(5) - 0.15, 0.4)
+    if cs > 0.01:
+        sac = 7 * math.sin(t * 55) * clamp((t - T_CUE) / 0.2) * (1 - clamp((t - T_APA - 0.2) / 0.3))
+        senal(ctx, 540, by + 150, 540, CARA[1] - CARA[2] - 10, t, T_TRA - 0.15, a=1 - prog(t, T_NOE, 0.3))
         ctx.save()
-        ctx.translate(540, 470)
-        ctx.scale(ap, ap)
-        ctx.arc(0, 0, 300, 0, 2 * math.pi)
-        ctx.set_source_rgb(*hx("#2A0A10"))
-        ctx.fill_preserve()
-        ctx.set_source_rgb(*INK)
-        ctx.set_line_width(14)
-        ctx.stroke_preserve()
-        ctx.set_source_rgb(*BLANCO)
-        ctx.set_line_width(6)
-        ctx.stroke()
+        ctx.translate(CARA[0], CARA[1])
+        ctx.scale(cs, cs)
+        ctx.translate(-CARA[0], -CARA[1])
+        cara_tu(ctx, CARA[0], CARA[1], CARA[2], t, rojo=rojo_cara * (1 - 0.6 * prog(t, T_NOE + 0.2, 0.5)),
+                arde=1.0 if t >= T_TRA - 0.1 else 0.0, t_sudor=T_TRA, t_lagrimas=T_LLO, sac=sac)
         ctx.restore()
-        if ap > 0.3:
-            cerradura(ctx, 610, 470, 150, 0.0, t, forma="estrella", s=ap)
-            kq = prog(t, tll - 0.1, tno - tll + 0.3, "out")
-            reb = 0.0
-            if t >= tno + 0.2:
-                reb = 160 * ease(clamp((t - tno - 0.2) / 0.4), "out")
-            llave(ctx, lerp(300, 540, kq) - reb, 470 + (12 * math.sin(t * 50) if t >= tno + 0.2 and reb < 150 else 0),
-                  0.55 * ap, rot=-12 * clamp(reb / 160))
-            if t >= tno + 0.2:
-                prohibido(ctx, 560, 470, 70, pop(t, tno + 0.2, 0.25))
-        cartel(ctx, "SENSOR DE PÁJARO", 540, 140, 50, box=BLANCO, s=ap, rot=-2)
-        if t >= tno + 0.2:
-            cartel(ctx, "NO ENCAJA", 540, 820, 76, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tno + 0.2), rot=3)
-    return a_rgb(s)
+        rociadores(ctx, t, T_APA + 0.15, T_NOE - 0.1, pop(t, T_APA - 0.15, 0.3) * (1 - prog(t, T_NOE + 0.3, 0.3)))
+        llama_punteada(ctx, CARA_BOCA[0], CARA_BOCA[1] - 30, 1.0 * pop(t, T_NOE, 0.3), 1 - prog(t, Z4[0] - 0.05, 0.15))
+        pill(ctx, "NO HAY FUEGO", 540, 600, t, T_NOE + 0.15, size=84, box=ROJO_AL, fg=BLANCO)
 
 
-def sc_viaje(t):
-    t0 = S[8]
-    ttr, tse, tma, tsa, tex, tle, tcr, tnu = (b(10, "tragan"), b(10, "semillas"), b(10, "masticarlas"),
-                                               b(10, "salen"), b(10, "excrementos"), b(10, "lejos"),
-                                               b(11, "crecen"), b(11, "nuevos"))
-    pan = 900 * prog(t, tma + 0.3, tex - tma, "inout")
-    s, ctx = lienzo()
-    fondo_exterior(ctx, t, pan=pan)
-    # planta original (se va a la izquierda)
-    planta_aji(ctx, 230 - pan, 1330, 1.1, 1.0, t)
-    vuela = t >= tma + 0.2
-    if not vuela:
-        bx, by = 470, 1000
+# ------------------------------------------------------------------ 5. agua y leche
+D0 = LLAVES1                                  # sensores con llave al empezar
+D1 = [1, 3, 8, 7, 10, 5, 0]                   # adónde las lleva el agua (una por llave de D0)
+
+
+def _pos_llave_agua(bo, k, t):
+    """Posición de la llave k durante la escena del agua y la leche."""
+    x0, y0 = bo.rec(D0[k])
+    x1, y1 = bo.rec(D1[k])
+    q = prog(t, T_TOM - 0.1 + 0.08 * k, 1.9, "inout")
+    x = lerp(x0, x1, q) + 40 * math.sin(math.pi * q) * math.sin(k * 2.1)
+    y = lerp(y0, y1, q) - 70 * math.sin(math.pi * q)
+    if t >= T_DES:
+        e = prog(t, T_DES + 0.06 * k, 0.6, "in")
+        gx, gy = BX, bo.top + 0.36 * bo.J
+        x, y = lerp(x, gx, e), lerp(y, gy, e)
+    return x, y
+
+
+def _alarma_agua(bo, i, t):
+    """Un sensor queda rojo desde que lo toca una llave hasta que la leche se la lleva."""
+    if i in D0:
+        on = True
     else:
-        q = prog(t, tma + 0.2, 1.2, "inout")
-        bx, by = lerp(470, 640, q), lerp(1000, 640, q)
-        sale = prog(t, tle + 0.1, 1.0, "in")
-        bx, by = bx + 700 * sale, by - 250 * sale
-    xr = clamp((t - tse) / 0.3) if t >= tse else 0
-    if t >= tex + 0.9:
-        xr *= 1 - clamp((t - tex - 0.9) / 0.3)
-    ale = 0.9 * math.sin(t * 22) if vuela else 0.0
-    pico = 0.9 * clamp((t - ttr + 0.2) / 0.2) * (1 - clamp((t - ttr - 0.4) / 0.2)) if t < ttr + 0.8 else 0
-    pajaro(ctx, bx, by, 1.05, t, aleteo=ale, pico=pico, ojos="feliz" if not vuela else "normal",
-           xray=xr, semillas=7, vuelo=vuela)
-    # el ají entra entero en el pico
-    if t < ttr + 0.5:
-        q = prog(t, ttr - 0.1, 0.5, "in")
-        aji(ctx, lerp(720, bx + 110, q), lerp(1010, by - 20, q), 0.55 * (1 - 0.6 * q), rot=180)
-    if t >= tma:
-        cartel(ctx, "SIN MASTICAR", 300, 420, 62, box=BLANCO, s=pop(t, tma), rot=-5, alpha=1 - clamp((t - tex) / 0.2))
-    if t >= tse and t < tex:
-        cartel(ctx, "SEMILLAS ENTERAS", 760, 300, 58, box=AMARILLO, s=pop(t, tse + 0.2), rot=4)
-    # el excremento cae
-    caida0 = tex - 0.1
-    gx = 640
-    if t >= caida0:
-        q = clamp((t - caida0) / 0.55)
-        gy = lerp(by + 110, 1270, q * q)
+        on = False
+        tm = T_TOM - 0.1
+        for k in range(len(D0)):
+            tt = tm
+            while tt <= min(t, tm + 2.6):
+                x, y = _pos_llave_agua(bo, k, tt)
+                rx, ry = bo.rec(i)
+                if math.hypot(x - rx, y - ry) < 48:
+                    on = True
+                    break
+                tt += 0.08
+            if on:
+                break
+    if not on:
+        return 0.0
+    if t >= T_DES:
+        # se apaga cuando se va la llave que tenía encima
+        for k in range(len(D0)):
+            if D1[k] == i:
+                return 1 - prog(t, T_DES + 0.06 * k + 0.15, 0.25)
+        return 1 - prog(t, T_DES + 0.3, 0.3)
+    return 1.0
+
+
+def _nivel(bo, t, t0, d0, t1, d1, alto):
+    sube = prog(t, t0, d0, "out")
+    baja = prog(t, t1, d1, "in")
+    return lerp(bo.bot + 60, alto, sube * (1 - baja))
+
+
+def liquido(ctx, bo, y, col, a, t, borde=(1, 1, 1)):
+    if y > bo.bot + 50:
+        return
+    xs = range(BX - bo.hw - 20, BX + bo.hw + 40, 20)
+    ctx.move_to(BX - bo.hw - 20, 2400)
+    for x in xs:
+        ctx.line_to(x, y + 9 * math.sin(x * 0.02 + t * 5))
+    ctx.line_to(BX + bo.hw + 40, 2400)
+    ctx.close_path()
+    ctx.set_source_rgba(*col, a)
+    ctx.fill()
+    for i, x in enumerate(xs):
+        (ctx.move_to if i == 0 else ctx.line_to)(x, y + 9 * math.sin(x * 0.02 + t * 5))
+    ctx.set_source_rgba(*borde, 0.85)
+    ctx.set_line_width(6)
+    ctx.stroke()
+
+
+def globulos(ctx, bo, t):
+    if t < T_GRA - 0.2:
+        return
+    env = prog(t, T_ATR, 0.7)
+    r = rng(21)
+    for k in range(len(D0)):
+        kx, ky = _pos_llave_agua(bo, k, t)
+        for j in range(7):
+            a0 = r.uniform(0, 2 * math.pi)
+            sx, sy = BX + r.uniform(-330, 330), bo.ty + r.uniform(60, 200)
+            ang = j * 2 * math.pi / 7 + k
+            tx, ty = kx + math.cos(ang) * 46, ky - 36 + math.sin(ang) * 46
+            x = lerp(sx + 30 * math.sin(t * 2 + a0), tx, env)
+            y = lerp(sy + 20 * math.cos(t * 2 + a0), ty, env)
+            rr = 24 * pop(t, T_GRA - 0.2 + 0.03 * (k * 7 + j), 0.3)
+            if t >= T_DES:
+                rr *= 1 - 0.5 * prog(t, T_DES + 0.06 * k, 0.6, "in")
+            if rr > 0.5:
+                globulo(ctx, x, y, rr)
+
+
+def d_boca2(ctx, t):
+    def liquidos(ctx, bo):
+        ya = _nivel(bo, t, T_AGU, 0.9, T_BOC + 0.15, 0.45, bo.ty + 30)
+        liquido(ctx, bo, ya, AZUL_AGUA, 0.55, t)
+        yl = _nivel(bo, t, T_LEC + 0.45, 0.9, T_DES + 0.2, 0.55, bo.ty + 50)
+        liquido(ctx, bo, yl, (1, 1, 0.97), 0.78, t, borde=(1, 1, 1))
+        globulos(ctx, bo, t)
+        for k in range(len(D0)):
+            x, y = _pos_llave_agua(bo, k, t)
+            s = 0.2
+            if t >= T_DES:
+                s *= 1 - 0.6 * prog(t, T_DES + 0.06 * k, 0.6, "in")
+            flota = T_TOM - 0.1 + 0.08 * k <= t < T_TOM + 1.9
+            cara = "susto" if t >= T_ATR else ("feliz" if flota else "picara")
+            llavecita(ctx, x, y - 4, s, rot=8 * math.sin(t * (9 if flota else 7) + k), cara=cara)
+
+    zz = 1 + 0.03 * clamp((t - Z4[0]) / 11.0)
+    ctx.save()
+    camara(ctx, 540, 960, zz)
+    bo0 = Boca(1.0)
+    rec = [(_alarma_agua(bo0, i, t), 1.0) for i in range(len(REC))]
+    boca_frente(ctx, t, a=1.0, rec=rec, liquido=liquidos)
+    ctx.restore()
+    # vaso de agua
+    if T_MEZ - 0.3 <= t < T_BOC + 0.6:
+        ap = pop(t, T_MEZ - 0.3, 0.35) * (1 - prog(t, T_BOC + 0.3, 0.3, "in"))
+        inc = 115 * prog(t, T_MEZ + 0.1, 0.45) * (1 - prog(t, T_BOC - 0.2, 0.4))
+        vaso(ctx, 300, 330, 1.0 * ap, inc, AZUL_AGUA, nivel=lerp(0.85, 0.25, prog(t, T_AGU, 2.4)))
+        if inc > 70 and T_AGU - 0.1 <= t < T_BOC - 0.1:
+            r_ = math.radians(inc)
+            chorro(ctx, 300 + 120 * math.sin(r_), 330 - 120 * math.cos(r_), 520, 1000, AZUL_AGUA, 34, t)
+    # vaso de leche
+    if T_LEC - 0.25 <= t < T_GRA + 0.6:
+        ap = pop(t, T_LEC - 0.25, 0.35) * (1 - prog(t, T_GRA + 0.3, 0.3, "in"))
+        inc = -115 * prog(t, T_LEC + 0.05, 0.45) * (1 - prog(t, T_GRA - 0.2, 0.4))
+        vaso(ctx, 780, 330, 1.0 * ap, inc, (1, 1, 0.98), nivel=lerp(0.85, 0.25, prog(t, T_LEC + 0.4, 1.8)),
+             blanco=True)
+        if inc < -70 and T_LEC + 0.4 <= t < T_GRA - 0.1:
+            r_ = math.radians(inc)
+            chorro(ctx, 780 + 120 * math.sin(r_), 330 - 120 * math.cos(r_), 600, 1010, (1, 1, 0.98), 34, t)
+    # carteles
+    if T_CAP <= t < T_MEZ - 0.1:
+        a = 1 - prog(t, T_MEZ - 0.35, 0.25)
+        cartel(ctx, "CAPSAICINA", 540, 770, 70, s=pop(t, T_CAP) * a, rot=-3)
+        if a > 0.3:
+            flecha(ctx, 540, 820, 540, 1005, t, curva=0, w=12, alpha=a)
+    if T_BOC <= t < T_LEC + 0.3:
+        sello(ctx, "AGUA", 330, 300, False, s=pop(t, T_BOC) * (1 - prog(t, T_LEC, 0.25, "in")))
+    if T_GRA <= t < T_DES:
+        a = 1 - prog(t, T_DES - 0.25, 0.25)
+        cartel(ctx, "GRASA", 540, 770, 70, box=BLANCO, s=pop(t, T_GRA) * a, rot=3)
+    if t >= T_LEN:
+        sello(ctx, "LECHE", 760, 300, True, s=pop(t, T_LEN), rot=6)
+
+
+# ------------------------------------------------------------------ 6. pájaros, semillas y el ratón
+PLANTA_A = (700, 1.3)
+PLANTA_B = (2250, 1.25)
+NIDO = (400, 1185)                         # donde está parado el pájaro
+
+
+def yg(x):
+    return 1368 + 16 * math.sin(x * 0.0045) + 10 * math.sin(x * 0.011 + 1)
+
+
+def suelo(ctx, x0, x1, fx):
+    # colinas lejanas
+    ctx.move_to(x0, 7000)
+    for x in range(int(x0), int(x1) + 40, 40):
+        xx = x + fx * 0.45
+        ctx.line_to(x, 1250 + 50 * math.sin(xx * 0.003) + 30 * math.sin(xx * 0.0077 + 2))
+    ctx.line_to(x1, 7000)
+    ctx.close_path()
+    ctx.set_source_rgba(*hx("#18305A"), 0.9)
+    ctx.fill()
+    ctx.move_to(x0, 7000)
+    for x in range(int(x0), int(x1) + 20, 20):
+        ctx.line_to(x, yg(x))
+    ctx.line_to(x1, 7000)
+    ctx.close_path()
+    g = cairo.LinearGradient(0, 1340, 0, 2400)
+    g.add_color_stop_rgb(0, *hx("#2A8A5A"))
+    g.add_color_stop_rgb(1, *hx("#0E3330"))
+    ctx.set_source(g)
+    ctx.fill()
+    for i, x in enumerate(range(int(x0), int(x1) + 20, 20)):
+        (ctx.move_to if i == 0 else ctx.line_to)(x, yg(x))
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(12)
+    ctx.stroke_preserve()
+    ctx.set_source_rgb(*hx("#4BD98A"))
+    ctx.set_line_width(5)
+    ctx.stroke()
+    r = rng(3)
+    for x in range(int(x0 // 90) * 90, int(x1), 90):
+        xx = x + r.uniform(0, 50)
+        y = yg(xx)
+        ctx.move_to(xx - 14, y + 2)
+        ctx.line_to(xx - 6, y - 26)
+        ctx.line_to(xx, y + 2)
+        ctx.line_to(xx + 8, y - 20)
+        ctx.line_to(xx + 14, y + 2)
+        ctx.set_source_rgb(*hx("#3CC27A"))
+        ctx.fill()
+
+
+_PB = PLANTA_B[0]
+KF = [(B5[0], 560, 1050, 1.12), (T_PPE, 560, 1050, 1.12), (T_TRG + 2.3, 560, 1050, 1.12),
+      (T_EXC + 0.25, _PB, 900, 1.0), (T_LEJ - 0.1, _PB, 1000, 1.0), (T_LEJ + 0.5, 1475, 820, 0.52),
+      (T_CRE - 0.35, 1475, 820, 0.52), (T_CRE + 0.2, _PB, 1040, 1.0), (b(12) - 0.05, _PB, 1040, 1.0),
+      (b(12) + 0.6, _PB - 200, 1120, 1.12), (b(13), _PB - 200, 1120, 1.12), (b(13) + 0.7, _PB - 20, 1010, 0.95),
+      (TOTAL + 1, _PB - 20, 1010, 0.95)]
+
+
+def cam_mundo(t):
+    for (t0, x0, y0, z0), (t1, x1, y1, z1) in zip(KF, KF[1:]):
+        if t0 <= t < t1:
+            q = ease((t - t0) / (t1 - t0), "inout")
+            return lerp(x0, x1, q), lerp(y0, y1, q), math.exp(lerp(math.log(z0), math.log(z1), q))
+    return KF[-1][1:]
+
+
+T_VUELO = T_MAS + 0.35
+T_SUELTA = T_EXC + 0.12
+
+
+def pajaro_xy(t):
+    if t < T_VUELO:
+        salto = 150 * math.sin(math.pi * clamp((t - T_CAL) / 0.75)) if T_CAL <= t < T_CAL + 0.75 else 0.0
+        return NIDO[0], NIDO[1] - salto, False
+    if t < T_SUELTA + 0.9:
+        q = clamp((t - T_VUELO) / (T_EXC + 0.25 - T_VUELO))
+        e = ease(q, "inout")
+        x = lerp(NIDO[0], PLANTA_B[0], e)
+        y = lerp(NIDO[1], 640, ease(min(1, q * 1.8), "out"))
+        if t >= T_SUELTA:
+            k = prog(t, T_SUELTA + 0.1, 0.8, "in")
+            x += 900 * k
+            y -= 300 * k
+        return x, y, True
+    if t >= T_ESP:
+        q = prog(t, T_ESP + 0.1, 0.9, "out")
+        return lerp(3500, PLANTA_B[0] + 30, q), lerp(600, yg(PLANTA_B[0]) - 360 * PLANTA_B[1] - 60, q), q < 0.97
+    return None
+
+
+def d_mundo(ctx, t):
+    fx, fy, z = cam_mundo(t)
+    calor_def = prog(t, T_EXI, 0.5) * (1 - prog(t, T_FIN, 0.2))
+    fondo_azul(ctx, t)
+    ctx.save()
+    camara(ctx, fx, fy, z)
+    x0, x1 = fx - 540 / z - 60, fx + 540 / z + 60
+    if calor_def > 0:
+        pul = 0.75 + 0.25 * math.sin(t * 6)
+        _elipse_suave(ctx, PLANTA_B[0], yg(PLANTA_B[0]) - 230, 560, 560, ROJO_AL, 0.55 * pul * calor_def)
+    suelo(ctx, x0, x1, fx)
+    # planta A con sus ajíes
+    pa = PLANTA_A[0]
+    planta_aji(ctx, pa, yg(pa), PLANTA_A[1], 1.0, t, ajies=False)
+    h = 360 * PLANTA_A[1]
+    for i, (dx, fy_, rot) in enumerate(((70, -0.68, 80), (-40, -0.85, 110))):
+        aji(ctx, pa + dx * PLANTA_A[1], yg(pa) + h * fy_ + 60 * PLANTA_A[1], 0.42 * PLANTA_A[1], rot=rot)
+    # el ají que agarra el pájaro
+    t_agarra = b(8) + 0.5
+    aji_colgado = (pa - 78, yg(pa) - 0.5 * h + 78)
+    st = pajaro_xy(t)
+    if t < t_agarra:
+        aji(ctx, aji_colgado[0], aji_colgado[1], 0.42 * PLANTA_A[1], rot=100)
+    # planta B
+    pb = PLANTA_B[0]
+    if t >= T_CRE:
+        planta_aji(ctx, pb, yg(pb), PLANTA_B[1], clamp((t - T_CRE) / 1.1), t)
+    # excremento con semillas
+    if t >= T_SUELTA and t < T_CRE + 0.6:
+        bx_, by_, _ = pajaro_xy(T_SUELTA)
+        q = clamp((t - T_SUELTA) / 0.55)
+        gx = lerp(bx_, pb, q)
+        gyy = lerp(by_ + 80, yg(pb) - 20, q * q)
+        a = 1 - prog(t, T_CRE + 0.1, 0.4)
         ctx.save()
-        ctx.translate(gx, gy)
-        sq = 1 + 0.4 * clamp((t - caida0 - 0.55) / 0.1) * (1 - clamp((t - caida0 - 0.65) / 0.2))
+        ctx.translate(gx, gyy)
+        sq = 1 + 0.4 * clamp((t - T_SUELTA - 0.55) / 0.08) * (1 - clamp((t - T_SUELTA - 0.63) / 0.2))
         ctx.scale(sq, 1 / sq)
-        for dx, dy, r in ((0, 0, 40), (-26, 14, 28), (26, 14, 28), (0, -24, 26)):
+        ctx.push_group()
+        for dx, dy, r in ((0, 0, 42), (-28, 14, 30), (28, 14, 30), (0, -26, 28)):
             ctx.arc(dx, dy, r, 0, 2 * math.pi)
             ctx.new_sub_path()
         ctx.set_source_rgb(*hx("#F2F0E6"))
@@ -1696,128 +2457,331 @@ def sc_viaje(t):
         ctx.set_source_rgb(*INK)
         ctx.set_line_width(5)
         ctx.stroke()
-        for dx, dy in ((-14, 4), (12, 10), (2, -14)):
-            semilla(ctx, dx, dy, 0.55)
+        for dx, dy in ((-14, 4), (14, 10), (2, -16)):
+            semilla(ctx, dx, dy, 0.6)
+        ctx.pop_group_to_source()
+        ctx.paint_with_alpha(a)
         ctx.restore()
-    if t >= tle:
-        ap = pop(t, tle, 0.3)
-        flecha(ctx, 520, 1130, 110, 1130, t, alpha=clamp(ap) * (1 - clamp((t - tcr) / 0.3)), curva=0, w=14, bote=False)
-        cartel(ctx, "LEJOS DE LA PLANTA", 330, 1040, 50, box=BLANCO, s=ap, alpha=1 - clamp((t - tcr) / 0.2))
-    if t >= tcr:
-        planta_aji(ctx, gx, 1300, 1.2, clamp((t - tcr) / 1.1), t)
-    if t >= tnu:
-        cartel(ctx, "¡AJÍES NUEVOS!", 540, 420, 76, s=pop(t, tnu), rot=-3)
-    return a_rgb(s)
-
-
-def sc_raton(t):
-    t0 = S[9]
-    tma, tde = b(12, "mastica"), b(12, "destruye")
-    s, ctx = lienzo()
-    fondo_exterior(ctx, t, pan=900)
-    planta_aji(ctx, 900, 1330, 1.0, 1.0, t)
-    q = prog(t, t0, 0.5, "out")
-    rojo = clamp((t - tma - 0.6) / 0.5)
-    raton(ctx, lerp(-200, 470, q), 1050, 1.2, t, mastica=(tma <= t < tde + 0.3), rojo=rojo)
-    if t < tma + 0.15:
-        aji(ctx, lerp(-200, 470, q) + 210, 1060, 0.5, rot=180)
-    if t >= tma:
-        r = rng(5)
-        for k in range(16):
-            ph = r.uniform(0, 0.8)
-            if t < tma + ph:
-                continue
-            qq = clamp((t - tma - ph) / 0.8)
-            ang = r.uniform(-1.2, 0.6)
-            x = 640 + math.cos(ang) * 320 * qq
-            y = 1040 + math.sin(ang) * 260 * qq + 400 * qq * qq
-            semilla(ctx, x, y, 1.0, rot=k, rota=clamp(qq * 3))
-    if rojo > 0:
-        ex, ey = 470 + 1.2 * 40, 1050 - 1.2 * 120
-        vapor(ctx, ex - 60, ey, t, tma + 0.6, -1)
-        vapor(ctx, ex + 90, ey, t, tma + 0.6, 1)
-    if t >= tde:
-        sello(ctx, "SEMILLAS\nDESTRUIDAS", 540, 560, False, s=pop(t, tde), rot=-6)
-    return a_rgb(s)
-
-
-def sc_final(t):
-    t0 = S[10]
-    tci, tex, tesp, tani, tco = (b(13, "científicos"), b(13, "existe"), b(13, "espantar"), b(13, "animales"),
-                                 b(14, "Como"))
-    s, ctx = lienzo()
-    fondo_oscuro(ctx, t)
-    aura = clamp((t - tex) / 0.5)
-    if aura > 0:
-        pul = 0.5 + 0.5 * math.sin(t * 6)
-        g = cairo.RadialGradient(540, 900, 80, 540, 900, 520)
-        g.add_color_stop_rgba(0, 1, 0.25, 0.1, (0.55 + 0.25 * pul) * aura)
-        g.add_color_stop_rgba(1, 1, 0.25, 0.1, 0)
-        ctx.set_source(g)
-        ctx.paint()
-    planta_aji(ctx, 540, 1250, 1.45 * pop(t, t0, 0.4), 1.0, t)
-    if t >= tex:
-        cartel(ctx, "UNA DEFENSA", 540, 300, 90, box=hx("#FF2D2D"), fg=BLANCO, s=pop(t, tex), rot=-3,
-               alpha=1 - clamp((t - b(14, "Como") + 0.3) / 0.2))
-    # el ratón se acerca y sale despedido
-    if t >= t0:
-        q = prog(t, t0 + 0.2, tesp - t0 - 0.2, "out")
-        hu = prog(t, tesp, 0.6, "in")
-        rx = lerp(-250, 220, q) - 700 * hu
-        raton(ctx, rx, 1190, 0.7, t, rojo=clamp((t - tesp) / 0.2))
-        if tesp <= t < tesp + 0.8:
-            for k in range(3):
-                qq = ((t - tesp) * 2 + k / 3) % 1
-                ctx.arc(420, 1100, 60 + qq * 220, math.pi * 0.75, math.pi * 1.25)
-                ctx.set_source_rgba(1, 0.4, 0.1, 1 - qq)
-                ctx.set_line_width(12)
+    # flecha de distancia
+    if T_LEJ + 0.3 <= t < T_CRE:
+        a = prog(t, T_LEJ + 0.3, 0.3) * (1 - prog(t, T_CRE - 0.35, 0.2))
+        ctx.set_dash([40, 30])
+        ctx.move_to(pa + 160, 1000)
+        ctx.line_to(pb - 160, 1000)
+        ctx.set_source_rgba(1, 1, 1, 0.9 * a)
+        ctx.set_line_width(14)
+        ctx.stroke()
+        ctx.set_dash([])
+        for xx, sg in ((pa + 160, -1), (pb - 160, 1)):
+            ctx.move_to(xx - sg * 50, 950)
+            ctx.line_to(xx, 1000)
+            ctx.line_to(xx - sg * 50, 1050)
+            ctx.set_source_rgba(1, 1, 1, 0.9 * a)
+            ctx.set_line_width(14)
+            ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+            ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+            ctx.stroke()
+    # ratón
+    if b(12) - 0.2 <= t < T_ESP + 1.2:
+        aji_suelo = (pb - 150, yg(pb - 150) - 28)
+        come = prog(t, T_RMA, 1.2)
+        if come < 0.98:
+            aji(ctx, aji_suelo[0], aji_suelo[1], 0.5 * (1 - 0.6 * come), rot=-10, mordida=come)
+        q = prog(t, b(12) - 0.1, 0.9, "out")
+        hu = prog(t, T_ESP, 0.7, "in")
+        rx = lerp(1700, aji_suelo[0] - 190, q) - 1400 * hu
+        rojo = prog(t, T_RMA + 0.7, 0.5)
+        raton(ctx, rx, yg(rx) - 135, 0.95, t, mastica=(T_RMA <= t < T_RDE + 0.2), rojo=rojo)
+        if rojo > 0 and hu < 0.5:
+            vapor(ctx, rx + 20, yg(rx) - 230, t, T_RMA + 0.7, -1)
+            vapor(ctx, rx + 120, yg(rx) - 230, t, T_RMA + 0.7, 1)
+        if t >= T_RMA:
+            r = rng(5)
+            for k in range(14):
+                ph = r.uniform(0, 0.9)
+                if t < T_RMA + ph:
+                    continue
+                qq = clamp((t - T_RMA - ph) / 0.7)
+                ang = r.uniform(-1.3, 0.2)
+                x = aji_suelo[0] - 40 + math.cos(ang) * 230 * qq
+                y = aji_suelo[1] - 30 + math.sin(ang) * 220 * qq + 300 * qq * qq
+                y = min(y, yg(x) - 10)
+                semilla(ctx, x, y, 1.1, rot=k, rota=clamp(qq * 3))
+    # pájaro
+    if st is not None:
+        bx, by, vuela = st
+        con_aji = t_agarra <= t < T_TRG + 0.3
+        trago = prog(t, T_TRG, 0.35, "in")
+        xr = prog(t, T_TRG + 0.2, 0.3) * (1 - prog(t, T_SUELTA, 0.3))
+        ojos = "feliz"
+        if T_CAL <= t < T_CAL + 0.9:
+            ojos = "grande"
+        elif vuela:
+            ojos = "normal"
+        picot = 0.0
+        if t_agarra - 0.35 <= t < t_agarra:
+            picot = math.sin(math.pi * (t - t_agarra + 0.35) / 0.35)
+        s_p = 1.0 if t < T_ESP else 0.8
+        ale = 0.9 * math.sin(t * 22) if vuela else (0.6 if T_CAL <= t < T_CAL + 0.75 else 0.0)
+        pajaro(ctx, bx + 30 * picot, by + 20 * picot, s_p, t, aleteo=ale, pico=0.5 * picot + (0.4 if con_aji else 0),
+               ojos=ojos, xray=xr, semillas=7, vuelo=vuela)
+        if con_aji:
+            ax = bx + 180 + 100 * 0.45
+            ay = by - 20
+            aji(ctx, lerp(ax, bx + 20, trago), lerp(ay, by + 30, trago), 0.45 * (1 - 0.7 * trago), rot=lerp(0, 40, trago))
+        # el sensor del pájaro
+        if t < T_TRG:
+            sa = pop(t, B5[0] + 0.5, 0.35) * (1 - prog(t, T_TRG - 0.3, 0.25))
+            al = clamp((t - T_CAL - 0.05) / 0.1) * (1 - clamp((t - T_CAL - 0.9) / 0.3))
+            sx_, sy_ = bx, by - 300
+            if sa > 0.01:
+                ctx.set_dash([10, 12])
+                ctx.move_to(bx + 60, by - 80)
+                ctx.line_to(sx_, sy_ + 40)
+                ctx.set_source_rgba(1, 1, 1, 0.7 * sa)
+                ctx.set_line_width(5)
                 ctx.stroke()
-    # el pájaro llega tranquilo
-    if t >= tesp:
-        q = prog(t, tesp, 1.0, "out")
-        pajaro(ctx, lerp(1250, 760, q), lerp(500, 820, q), 0.6, t, aleteo=0.9 * math.sin(t * 22) if q < 0.95 else 0,
-               ojos="feliz", vuelo=q < 0.95)
-    if t >= tani:
-        cartel(ctx, "LOS QUE MASTICAN", 300, 1420, 54, box=BLANCO, s=pop(t, tani), rot=-4,
-               alpha=1 - clamp((t - tco) / 0.15))
-    # la boca: "como tú"
-    if t >= tco - 0.25:
-        q = prog(t, tco - 0.25, 0.35, "out")
-        cierre = clamp((t - b(14, "tú")) / 0.18)
-        ctx.rectangle(0, 0, 1080, 1920)
-        ctx.set_source_rgba(0, 0, 0, 0.45 * q)
+                ctx.set_dash([])
+                zocalo(ctx, sx_, sy_, 62, 24, al, t, forma="estrella", s=sa)
+                if t >= T_PQU and al < 0.1:
+                    sello_mini(ctx, sx_ + 95, sy_ - 30, True, pop(t, T_PQU, 0.3) * (1 - prog(t, T_CAL - 0.2, 0.2)))
+    # llama de prueba
+    if T_CAL - 0.15 <= t < T_CAL + 1.1:
+        llama(ctx, NIDO[0] - 190, yg(NIDO[0] - 190) - 50, 0.8 * pop(t, T_CAL - 0.15, 0.2) * (1 - prog(t, T_CAL + 0.8, 0.3)), t)
+    ctx.restore()
+    # recuadro: la cerradura del pájaro
+    if T_PPE - 0.05 <= t < B5[0] + 8.0 and t < T_TRG + 0.2:
+        ap = pop(t, T_PPE - 0.05, 0.35) * (1 - prog(t, T_TRG - 0.25, 0.3, "in"))
+        recuadro_pajaro(ctx, t, ap)
+    if t >= T_RDE and t < b(13) + 0.6:
+        sello(ctx, "SEMILLAS\nDESTRUIDAS", 540, 330, False, s=pop(t, T_RDE) * (1 - prog(t, b(13) + 0.3, 0.25, "in")),
+              rot=-5)
+    pill(ctx, "UNA DEFENSA", 540, 300, t, T_EXI, size=92, box=ROJO_AL, fg=BLANCO)
+
+
+def sello_mini(ctx, x, y, ok, s):
+    if s <= 0.01:
+        return
+    col = hx("#2BB24C") if ok else ROJO_AL
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.scale(s, s)
+    ctx.arc(0, 0, 40, 0, 2 * math.pi)
+    ctx.set_source_rgb(*col)
+    ctx.fill_preserve()
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(7)
+    ctx.stroke()
+    ctx.move_to(-18, 2)
+    ctx.line_to(-4, 17)
+    ctx.line_to(20, -15)
+    ctx.set_source_rgb(*BLANCO)
+    ctx.set_line_width(10)
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+    ctx.stroke()
+    ctx.restore()
+
+
+def recuadro_pajaro(ctx, t, ap):
+    if ap <= 0.01:
+        return
+    cx, cy, R = 540, 600, 300
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.scale(ap, ap)
+    ctx.arc(0, 12, R + 12, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.fill()
+    ctx.arc(0, 0, R + 12, 0, 2 * math.pi)
+    ctx.set_source_rgb(*BLANCO)
+    ctx.fill()
+    ctx.restore()
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.scale(ap, ap)
+    ctx.arc(0, 0, R, 0, 2 * math.pi)
+    ctx.clip()
+    g = cairo.LinearGradient(0, -R, 0, R)
+    g.add_color_stop_rgb(0, *hx("#0E1640"))
+    g.add_color_stop_rgb(1, *hx("#1E2E6E"))
+    ctx.set_source(g)
+    ctx.paint()
+    zocalo(ctx, 0, 150, 190, 72, 0.0, t, forma="estrella")
+    # la llave intenta entrar y rebota
+    t_llega, t_toca = T_PLL - 0.2, T_PEN + 0.05
+    tip_y = 150 + 6
+    if t < t_toca:
+        q = prog(t, t_llega, t_toca - t_llega - 0.15, "out")
+        x = lerp(-420, 0, q)
+        y = tip_y - 130 - 40 * abs(math.sin(q * math.pi * 3)) * (1 - q)
+        if t >= t_toca - 0.15:
+            y = lerp(tip_y - 130, tip_y - 8, ease((t - t_toca + 0.15) / 0.15, "in"))
+        rot, cara = 0.0, "picara"
+    else:
+        q = prog(t, t_toca, 0.5, "out")
+        x = lerp(0, -150, q)
+        y = tip_y - 8 - 120 * math.sin(math.pi * min(1, q * 1.2)) + 40 * q
+        rot = lerp(0, -30, q)
+        cara = "enojo"
+    llavecita(ctx, x, y, 0.62, rot=rot, cara=cara)
+    if t >= t_toca + 0.05:
+        prohibido(ctx, 120, 40, 62, pop(t, t_toca + 0.05, 0.25))
+    ctx.restore()
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.scale(ap, ap)
+    ctx.arc(0, 0, R, 0, 2 * math.pi)
+    ctx.set_source_rgb(*INK)
+    ctx.set_line_width(7)
+    ctx.stroke()
+    ctx.restore()
+    if t >= t_toca + 0.1:
+        cartel(ctx, "NO ENCAJA", 540, 960, 84, box=ROJO_AL, fg=BLANCO, s=pop(t, t_toca + 0.1) * ap, rot=3)
+
+
+# ------------------------------------------------------------------ 7. "como tú": la boca muerde
+MORD = [T_TU + 0.02, T_TU + 0.36]          # los dos mordiscos
+
+
+def mandibula(t):
+    """Apertura de la boca (1 = abierta) durante los mordiscos."""
+    a = 1.0
+    m1, m2 = MORD
+    cerrada = 0.11                          # los dientes se clavan en el ají
+    if t >= m1:
+        a = lerp(1.0, cerrada, prog(t, m1, 0.1, "in"))
+    if t >= m1 + 0.12:
+        a = lerp(cerrada, 0.36, prog(t, m1 + 0.12, 0.12, "out"))
+    if t >= m2:
+        a = lerp(0.36, cerrada - 0.02, prog(t, m2, 0.09, "in"))
+    return a
+
+
+def d_mordida(ctx, t):
+    a = mandibula(t)
+    rotura = 0.35 * clamp((t - MORD[0] - 0.08) / 0.05) + 0.35 * clamp((t - MORD[1] - 0.07) / 0.05)
+
+    def entre(ctx, bo):
+        ya = bo.top_in(BX) + 18 + 104 + 4
+        yb = bo.bot_in(BX) - 16 - 56
+        gap = yb - ya
+        grosor = 96
+        sq = clamp(max(gap, 62) / grosor, 0, 1)
+        ctx.save()
+        ctx.translate(BX - 30 + 4 * math.sin(t * 9), ya + min(grosor / 2, max(gap, 62) / 2))
+        ctx.scale(1.0 + 0.25 * (1 - sq), sq)
+        aji(ctx, 0, 0, 1.25, rot=0, mordida=rotura)
+        ctx.restore()
+
+    sac = 0.0
+    for m in MORD:
+        if m + 0.08 <= t < m + 0.4:
+            sac = 12 * math.sin(t * 80) * (1 - (t - m - 0.08) / 0.32)
+    ctx.save()
+    camara(ctx, 540, 960, 1.0, 540 + sac, 960)
+    boca_frente(ctx, t, a=max(a, 0.0), rec=[(0.0, 1.0)] * len(REC), entre_dientes=entre)
+    ctx.restore()
+    for j, m in enumerate(MORD):
+        if t < m + 0.08:
+            continue
+        q = clamp((t - m - 0.08) / 0.6)
+        r = rng(8 + j)
+        for k in range(14):
+            ang = r.uniform(0.15, math.pi - 0.15) * (1 if k % 2 else -1)
+            v = r.uniform(260, 560)
+            x = 540 + math.cos(ang) * v * q
+            y = 700 + math.sin(ang) * v * 0.6 * q + 700 * q * q
+            if k % 3 == 0:
+                semilla(ctx, x, y, 1.5, rot=k)
+            else:
+                ctx.arc(x, y, 15 * (1 - q * 0.5), 0, 2 * math.pi)
+                ctx.set_source_rgb(*ROJO)
+                ctx.fill_preserve()
+                ctx.set_source_rgb(*INK)
+                ctx.set_line_width(4)
+                ctx.stroke()
+    if t >= MORD[1] + 0.08:
+        q = clamp((t - MORD[1] - 0.08) / 0.9)
+        vineta_roja(ctx, (1 - 0.4 * q) * (0.75 + 0.25 * math.sin(t * 16)))
+
+
+# ------------------------------------------------------------------ composición
+def barrido(ctx, q, A, tA, B, tB):
+    k = ease(q, "inout")
+    for fn, dx in ((A, -1080 * k), (B, 1080 * (1 - k))):
+        ctx.save()
+        ctx.rectangle(dx, 0, W, H)
+        ctx.clip()
+        ctx.translate(dx, 0)
+        fn(ctx, tB if fn is B else tA)
+        ctx.restore()
+    # estela del barrido
+    a = math.sin(math.pi * q)
+    r = rng(2)
+    for k_ in range(14):
+        y = r.uniform(0, H)
+        x = r.uniform(0, W)
+        ctx.move_to(x, y)
+        ctx.line_to(x + 500, y)
+        ctx.set_source_rgba(1, 1, 1, 0.12 * a)
+        ctx.set_line_width(r.uniform(4, 14))
+        ctx.stroke()
+
+
+def componer(ctx, t):
+    def tr(T):
+        return clamp((t - T[0]) / T[1])
+    if t < Z1[0]:
+        d_gancho(ctx, t)
+    elif t < sum(Z1):
+        zoom_entre(ctx, tr(Z1), d_gancho, t, VOS_BOCA, d_boca1, t, BOCA_C, 12.8)
+    elif t < Z2[0]:
+        d_boca1(ctx, t)
+    elif t < sum(Z2):
+        x, y = Boca(1.0).rec(R_STAR)
+        zoom_entre(ctx, tr(Z2), d_boca1, t, (x, y), d_cerradura, t, SOCK, 9.5)
+    elif t < Z3[0]:
+        d_cerradura(ctx, t)
+    elif t < sum(Z3):
+        zoom_entre(ctx, 1 - tr(Z3), d_cuerpo, t, BADGE_STAR, d_cerradura, t, SOCK, 26.0, a0=0.45, a1=0.85)
+    elif t < Z4[0]:
+        d_cuerpo(ctx, t)
+    elif t < sum(Z4):
+        zoom_entre(ctx, tr(Z4), d_cuerpo, t, CARA_BOCA, d_boca2, t, BOCA_C, 14.0)
+    elif t < B5[0]:
+        d_boca2(ctx, t)
+    elif t < sum(B5):
+        barrido(ctx, tr(B5), d_boca2, t, d_mundo, t)
+    elif t < T_FIN:
+        d_mundo(ctx, t)
+    else:
+        q = prog(t, T_FIN, 0.26, "out")
+        d_mundo(ctx, t)
+        ctx.rectangle(0, 0, W, H)
+        ctx.set_source_rgba(0, 0, 0, 0.5 * q)
         ctx.fill()
-        aji(ctx, 540, 960, 1.3 * q, rot=-90)
-        boca_grande(ctx, 540, 960, lerp(0.4, 1.35, q), cierre, t)
-        if cierre > 0.9:
-            campana(ctx, 540, 380, 0.7 * pop(t, b(14, "tú") + 0.18, 0.25), t, sonando=True)
-            fl = 1 - clamp((t - b(14, "tú") - 0.18) / 0.3)
-            ctx.rectangle(0, 0, 1080, 1920)
-            ctx.set_source_rgba(1, 0.1, 0.05, 0.35 * fl)
-            ctx.fill()
-    return a_rgb(s)
+        e = max(motor.ease("back", clamp((t - T_FIN) / 0.26)), 0.0)
+        z = lerp(0.2, 1.0, e)
+        ctx.save()
+        ctx.arc(540, 945, lerp(120, 1250, clamp(e)), 0, 2 * math.pi)
+        ctx.clip()
+        capa(ctx, d_mordida, t, cam=(540, 945, max(z, 0.05), 540, 945))
+        ctx.restore()
 
-
-ESCENAS = [sc_gancho, sc_lengua, sc_llave, sc_cerebro, sc_cuerpo, sc_agua_leche, sc_agua_leche, sc_pajaro,
-           sc_viaje, sc_raton, sc_final]
 
 CAPS = motor.Captions(WORDS, {"size": 76, "y": 1470, "max_palabras": 3, "max_letras": 18})
 
 
 def cuadro(t):
-    i = escena_de(t)
+    s, ctx = lienzo()
     try:
-        img = ESCENAS[i](t)
+        componer(ctx, t)
     except Exception as e:
-        raise RuntimeError(f"falló {ESCENAS[i].__name__} en t={t:.3f}: {e}") from e
-    if i > 0 and t - S[i] < 0.08 and i not in (1, 6):
-        k = 1 - (t - S[i]) / 0.08
-        img = (img.astype(np.float32) * (1 - 0.35 * k) + 255 * 0.35 * k).astype(np.uint8)
-    im = Image.fromarray(img)
+        raise RuntimeError(f"falló el cuadro en t={t:.3f}: {e}") from e
+    im = Image.fromarray(a_rgb(s))
     CAPS.draw(im, t)
     return im
-
-
 # ------------------------------------------------------------------ sonido
 def _env(n, a=0.005, r=0.05):
     e = np.ones(n, np.float32)
@@ -1919,81 +2883,115 @@ def snd(kind, **kw):
     return P.sonido(kind, **kw)
 
 
+
+def s_zap(d=0.3):
+    """Chispazo eléctrico corto: el sensor que se activa."""
+    n = int(d * SR)
+    t = np.arange(n) / SR
+    r = np.random.default_rng(13)
+    zumb = np.sign(np.sin(2 * np.pi * 110 * t)) * 0.4 + np.sin(2 * np.pi * 880 * t * (1 + 0.3 * t)) * 0.3
+    ruido = r.standard_normal(n).astype(np.float32) * 0.35
+    env = np.exp(-t * 11) * (0.7 + 0.3 * np.sign(np.sin(2 * np.pi * 37 * t)))
+    return ((zumb + ruido) * env * 0.6).astype(np.float32)
+
+
+def sonido_picante(kind, **kw):
+    if kind == "zap":
+        return s_zap(**kw)
+    return snd(kind, **kw)
+
+
 def eventos():
     E = []
 
     def ev(t, k, v=1.0, **kw):
         E.append((t, k, v, kw))
 
+    # gancho: la alarma suena una sola vez
     ev(T_BITE - 0.05, "crunch", 0.9, d=0.35)
     ev(T_QUEMA, "boing", 0.7)
-    ev(T_QUEMA + 0.1, "siseo", 0.5, d=1.2)
-    ev(b(1, "alarma"), "alarma", 0.8, d=S[1] - b(1, "alarma") + 0.1)
-    ev(b(1, "sin"), "pop", 0.8)
-    ev(S[1], "zoom", 0.9)
-    ev(b(2, "lengua"), "pop", 0.6)
-    for i in range(len(SENS)):
-        ev(b(2, "sensores") + i * 0.05, "tick", 0.25, f=1400 + i * 60, d=0.05)
-    ev(b(2, "quema") - 0.2, "subida", 0.6, d=b(2, "43") - b(2, "quema") + 0.2)
-    ev(b(2, "43"), "alarma", 0.7, d=0.8)
-    ev(S[2], "whoosh", 0.8)
-    ev(b(3, "ají") - 0.2, "whoosh_suave", 0.7)
-    ev(b(3, "sustancia"), "subida", 0.4, d=0.6)
-    ev(b(3, "justo") + 0.1, "clic", 1.0)
-    ev(b(3, "justo") + 0.2, "alarma", 0.6, d=0.9)
-    ev(b(3, "llave"), "pop", 0.8)
-    ev(S[3], "whoosh", 0.8)
-    ev(b(4, "recibe"), "chispa", 0.5, d=0.6, seed=2)
-    ev(b(4, "señal"), "pop", 0.7)
-    ev(b(4, "café") - 0.15, "pop", 0.6)
-    ev(b(4, "café") + 0.1, "chispa", 0.5, d=0.6, seed=3)
-    ev(b(4, "café") + 0.5, "pop", 0.7)
-    ev(b(4, "ni"), "ding", 0.8)
-    ev(S[4], "whoosh", 0.8)
-    for w_ in ("transpiras", "rojo", "lloran"):
-        ev(b(5, w_) - 0.05, "pop", 0.7)
-    ev(b(5, "apagar"), "siseo", 0.7, d=S[5] - b(5, "apagar"))
-    ev(b(5, "no"), "boing", 0.6)
-    ev(S[5], "whoosh", 0.8)
-    ev(b(6, "capsaicina"), "pop", 0.7)
-    ev(b(6, "mezcla"), "vertido", 0.8, d=2.4)
-    ev(b(6, "tomarla"), "siseo", 0.4, d=1.6)
-    ev(b(6, "boca"), "boing", 0.6)
-    ev(b(7, "leche") - 0.2, "pop", 0.6)
-    ev(b(7, "leche") + 0.3, "vertido", 0.7, d=1.6)
-    ev(b(7, "grasa"), "pop", 0.6)
-    ev(b(7, "despega"), "whoosh_suave", 0.8)
-    ev(b(7, "lengua"), "ding", 0.8)
-    ev(S[7], "whoosh", 0.8)
-    ev(b(8, "quema"), "pop", 0.6)
-    ev(b(9, "calor"), "boing", 0.8)
-    ev(b(9, "pero") - 0.1, "zoom", 0.6)
-    ev(b(9, "encaja") + 0.2, "clunk", 1.0)
-    ev(b(10, "tragan"), "trago", 1.0)
-    ev(b(10, "semillas"), "pop", 0.6)
-    ev(b(10, "masticarlas") + 0.2, "aleteo", 0.8, d=1.6)
-    ev(b(10, "excrementos") + 0.45, "plop", 1.0)
-    ev(b(10, "lejos"), "whoosh_suave", 0.6)
-    ev(b(11, "crecen"), "brote", 0.8, d=1.1)
-    ev(b(11, "nuevos"), "pop", 0.7)
-    ev(S[9], "whoosh", 0.7)
-    ev(b(12, "mastica"), "crunch", 1.0, d=1.4, seed=3)
-    ev(b(12, "destruye"), "boing", 0.7)
-    ev(S[10], "whoosh", 0.8)
-    ev(b(13, "existe"), "pop", 0.8)
-    ev(b(13, "espantar"), "golpe", 0.8)
-    ev(b(13, "espantar") + 0.1, "aleteo", 0.5, d=0.9)
-    ev(b(14, "Como") - 0.25, "whoosh", 0.9)
-    ev(b(14, "tú") + 0.18, "crunch", 1.0, d=0.3, seed=9)
-    ev(b(14, "tú") + 0.18, "alarma", 0.8, d=COLA)
+    ev(T_QUEMA + 0.1, "siseo", 0.45, d=1.1)
+    ev(T_ALARMA, "alarma", 0.5, d=1.0)
+    ev(T_SIN, "pop", 0.8)
+    # adentro de la boca
+    ev(Z1[0], "zoom", 0.9)
+    for i in range(len(REC)):
+        ev(T_SENS + i * 0.05, "tick", 0.22, f=1400 + i * 60, d=0.05)
+    ev(T_QUE - 0.15, "pop", 0.5)
+    ev(T_QUE, "subida", 0.5, d=T_43 - T_QUE)
+    ev(T_43, "zap", 0.8)
+    ev(T_AJI - 0.1, "whoosh_suave", 0.6)
+    ev(T_AJI + 0.32, "plop", 0.8)
+    for i in range(len(LLAVES1)):
+        ev(T_SUS + 0.06 + i * 0.05, "pop", 0.35)
+    # la llave falsa
+    ev(Z2[0], "zoom", 0.8)
+    ev(T_JUS + 0.1, "click", 0.9)
+    ev(T_JUS + 0.42, "clic", 1.0)
+    ev(T_JUS + 0.76, "zap", 0.9)
+    ev(T_LLA, "pop", 0.8)
+    # cerebro y cuerpo
+    ev(Z3[0], "whoosh", 0.7)
+    ev(T_CER - 0.1, "pop", 0.6)
+    ev(T_REC, "chispa", 0.45, d=0.6, seed=2)
+    ev(T_SEN, "pop", 0.7)
+    ev(T_CAF - 0.2, "pop", 0.6)
+    ev(T_CAF + 0.1, "chispa", 0.45, d=0.6, seed=3)
+    ev(T_NI, "ding", 0.8)
+    ev(b(5) - 0.2, "whoosh_suave", 0.6)
+    ev(T_TRA - 0.1, "boing", 0.6)
+    ev(T_ROJ, "siseo", 0.4, d=0.9)
+    ev(T_LLO, "plop", 0.5)
+    ev(T_APA, "vertido", 0.55, d=T_NOE - T_APA)
+    ev(T_NOE + 0.15, "pop", 0.8)
+    # agua y leche
+    ev(Z4[0], "zoom", 0.8)
+    ev(T_CAP, "pop", 0.7)
+    ev(T_MEZ - 0.3, "pop", 0.5)
+    ev(T_AGU - 0.1, "vertido", 0.8, d=T_BOC - T_AGU)
+    ev(T_BOC, "boing", 0.6)
+    ev(T_BOC + 0.3, "trago", 0.9)
+    ev(T_LEC - 0.25, "pop", 0.5)
+    ev(T_LEC + 0.4, "vertido", 0.7, d=T_GRA - T_LEC - 0.5)
+    for k in range(5):
+        ev(T_GRA - 0.2 + k * 0.08, "pop", 0.3)
+    ev(T_DES, "whoosh_suave", 0.7)
+    ev(T_DES + 0.5, "trago", 0.9)
+    ev(T_LEN, "ding", 0.8)
+    # pájaros
+    ev(B5[0], "whoosh", 0.8)
+    ev(b(8) + 0.4, "pop", 0.5)
+    ev(T_PQU, "ding", 0.6)
+    ev(T_CAL - 0.15, "siseo", 0.4, d=0.8)
+    ev(T_CAL, "boing", 0.8)
+    ev(T_CAL + 0.05, "zap", 0.5)
+    ev(T_PPE - 0.05, "zoom", 0.6)
+    ev(T_PEN + 0.05, "clunk", 1.0)
+    ev(T_TRG, "trago", 1.0)
+    ev(T_SEM, "pop", 0.5)
+    ev(T_VUELO, "aleteo", 0.8, d=2.4)
+    ev(T_SUELTA + 0.55, "plop", 1.0)
+    ev(T_LEJ, "whoosh_suave", 0.6)
+    ev(T_CRE, "brote", 0.8, d=1.1)
+    ev(T_NUE, "pop", 0.7)
+    ev(b(12) - 0.1, "whoosh_suave", 0.5)
+    ev(T_RMA, "crunch", 1.0, d=1.3, seed=3)
+    ev(T_RDE, "boing", 0.7)
+    ev(T_EXI, "pop", 0.8)
+    ev(T_ESP, "golpe", 0.8)
+    ev(T_ESP + 0.05, "whoosh", 0.6)
+    ev(T_ESP + 0.15, "aleteo", 0.5, d=0.9)
+    # "como tú": la alarma vuelve a sonar, corta
+    ev(T_FIN, "whoosh", 0.9)
+    ev(MORD[0] + 0.08, "crunch", 1.0, d=0.25, seed=9)
+    ev(MORD[1] + 0.07, "crunch", 1.0, d=0.25, seed=11)
+    ev(MORD[1] + 0.1, "alarma", 0.45, d=0.6)
     return E
-
-
 def pista_efectos():
     n = int((TOTAL + 2) * SR)
     mix = np.zeros(n, np.float32)
     for t, k, v, kw in eventos():
-        x = snd(k, **kw) * v
+        x = sonido_picante(k, **kw) * v
         i0 = int(t * SR)
         i1 = min(n, i0 + len(x))
         if 0 <= i0 < n:
