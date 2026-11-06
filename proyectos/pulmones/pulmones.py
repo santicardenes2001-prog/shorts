@@ -159,13 +159,19 @@ def dibujar_vos(ctx, pose, sy=1.0, alpha=1.0):
 TC = (540, 975)                          # centro del pecho en pantalla
 TS = 1.38                                # escala del dibujo del pecho
 
+# Puntos de cada pulmón (local). El de la derecha de la pantalla es el izquierdo de la persona: deja lugar al corazón.
 PULMON_I = [(-118, -345), (-178, -312), (-232, -210), (-262, -60), (-272, 90), (-268, 228), (-215, 238),
-            (-150, 206), (-85, 192), (-46, 168), (-36, 70), (-50, -10), (-40, -100), (-58, -220), (-84, -310)]
-PULMON_D = [(118, -345), (178, -312), (232, -210), (262, -60), (272, 90), (268, 228), (215, 238),
-            (165, 214), (128, 182), (120, 130), (104, 74), (66, 22), (48, -60), (58, -220), (84, -310)]
+            (-160, 206), (-125, 196), (-104, 188), (-106, 120), (-94, 35), (-52, -90), (-58, -220), (-84, -310)]
+PULMON_D = [(118, -345), (178, -312), (232, -210), (262, -60), (272, 90), (268, 228), (246, 236),
+            (228, 232), (214, 228), (204, 222), (206, 150), (188, 78), (150, 16), (98, -36), (62, -120),
+            (58, -220), (84, -310)]
 BASE = {5, 6, 7, 8, 9}                   # puntos que se apoyan en el diafragma
-HILIO = {"i": (-55, -30), "d": (60, -25)}
-CORAZON = (40, 112)
+HILIO = {"i": (-72, -50), "d": (96, -48)}
+# El corazón: en el medio del pecho, corrido hacia la izquierda de la persona (derecha de la pantalla),
+# apoyado en el diafragma, con la punta hacia abajo y a la izquierda de la persona.
+CORAZON_PTS = [(-92, 25), (-58, -14), (8, -34), (80, -30), (136, 0), (176, 60), (198, 130), (194, 186),
+               (150, 206), (60, 204), (-30, 198), (-84, 174), (-100, 112), (-100, 60)]
+CORAZON = (50, 100)                      # centro aproximado, para el latido
 
 
 def tw(x, y):
@@ -259,32 +265,43 @@ def traquea(ctx, serio):
         ctx.stroke()
 
 
-def corazon(ctx, t, serio, latido=1.0, alpha=1.0):
+def corazon(ctx, t, serio, latido=1.0, alpha=1.0, c=0.0):
     fase = (t * 1.25) % 1
     beat = math.exp(-((fase - 0.08) / 0.05) ** 2) + 0.6 * math.exp(-((fase - 0.25) / 0.05) ** 2)
-    s = 1 + 0.07 * beat * latido
+    s = 1 + 0.05 * beat * latido
     ctx.save()
+    ctx.translate(0, (domo(0, c) - domo(0, 0)) * 0.6)
     ctx.translate(*CORAZON)
-    ctx.rotate(-0.35)
     ctx.scale(s, s)
-    ctx.move_to(0, 78)
-    ctx.curve_to(-60, 40, -98, 6, -96, -32)
-    ctx.curve_to(-94, -72, -42, -86, 0, -48)
-    ctx.curve_to(42, -86, 94, -72, 96, -32)
-    ctx.curve_to(98, 6, 60, 40, 0, 78)
-    ctx.close_path()
+    ctx.translate(-CORAZON[0], -CORAZON[1])
+    curva_cerrada(ctx, CORAZON_PTS)
     path = ctx.copy_path()
-    g = cairo.RadialGradient(-30, -40, 5, 0, 0, 110)
-    g.add_color_stop_rgb(0, *hx("#FF6A7A"))
+    g = cairo.RadialGradient(0, 30, 10, 60, 100, 200)
+    g.add_color_stop_rgb(0, *hx("#FF7084"))
     g.add_color_stop_rgb(1, *hx("#B3142B"))
     ctx.save()
     ctx.clip()
     ctx.set_source(g)
-    ctx.paint_with_alpha(alpha)
+    ctx.paint_with_alpha(alpha * (1.0 if not serio else 0.9))
+    # surco entre los ventrículos y un brillo
+    ctx.move_to(70, -26)
+    ctx.curve_to(70, 40, 110, 120, 168, 200)
+    ctx.set_source_rgba(0.45, 0.02, 0.08, 0.45 * alpha)
+    ctx.set_line_width(7)
+    ctx.stroke()
+    ctx.save()
+    ctx.translate(-30, 40)
+    ctx.rotate(-0.5)
+    ctx.scale(22, 46)
+    ctx.arc(0, 0, 1, 0, 2 * math.pi)
+    ctx.restore()
+    ctx.set_source_rgba(1, 1, 1, 0.3 * alpha)
+    ctx.fill()
     ctx.restore()
     ctx.append_path(path)
     ctx.set_source_rgba(*(INK if not serio else (1, 0.8, 0.8)), alpha)
     ctx.set_line_width(7 / TS if not serio else 4 / TS)
+    ctx.set_line_join(cairo.LINE_JOIN_ROUND)
     ctx.stroke()
     ctx.restore()
 
@@ -356,9 +373,9 @@ def pulmon(ctx, lado, t, c=0.0, e=0.0, col=0.0, serio=False, alarma=0.0, cara=No
     ctx.set_line_join(cairo.LINE_JOIN_ROUND)
     ctx.stroke()
     if cara:
-        fx_ = sg * 150
-        fy_ = -40 + (domo(0, c) - domo(0, 0)) * 0.35
-        carita(ctx, fx_ * (1 + 0.04 * e), fy_, 74, 1.45, look=mira, **cara)
+        fx_ = -160 if lado == "i" else 172
+        fy_ = (-60 if lado == "i" else -80) + (domo(0, c) - domo(0, 0)) * 0.35
+        carita(ctx, fx_ * (1 + 0.04 * e), fy_, 72, 1.42, look=mira, **cara)
     return pts
 
 
@@ -405,10 +422,7 @@ def costillas(ctx, e, serio, a=1.0):
                 ctx.set_source_rgba(*GRIS_SERIO, 0.75 * a)
                 ctx.set_line_width(8 / TS)
                 ctx.stroke()
-    # esternón y clavículas
-    rrect(ctx, -20, -330, 40, 470, 18)
-    ctx.set_source_rgba(*(col if not serio else GRIS_SERIO), (0.45 if not serio else 0.4) * a)
-    ctx.fill()
+    # clavículas
     for sg in (-1, 1):
         ctx.move_to(sg * 30, -372)
         ctx.curve_to(sg * 120, -400, sg * 200, -370, sg * 300, -405)
@@ -584,7 +598,6 @@ def d_torso(ctx, t):
     ctx.translate(4 * math.sin(t * 50) * tiembla, 0)
     silueta(ctx, False)
     traquea(ctx, False)
-    corazon(ctx, t, False)
     sep_d = 0.0
     if t >= T_DESP:
         sep_d = prog(t, T_DESP, 0.5)
@@ -600,6 +613,7 @@ def d_torso(ctx, t):
         pulmon(ctx, lado, t, c=ins, e=ins * (1.0 if t >= b(7) else 0.3), col=col, cara=cara_pulmon(t, lado),
                mira=mira, alarma=0.6 * sep_d if lado == "d" else 0.0)
         ctx.restore()
+    corazon(ctx, t, False, c=ins)
     # la capa de afuera: se ve cuando la explicamos
     a_pl = prog(t, T_ARRA, 0.4) * (1 - prog(t, T_PROB + 0.3, 0.3)) + prog(t, T_DESP - 0.2, 0.3)
     for lado in ("i", "d"):
@@ -1184,7 +1198,7 @@ def d_auto(ctx, t):
 
 
 ENTRADA = (300, 60)                      # por donde entró la bala (costado izquierdo de él)
-BALA = (150, 72)                         # donde quedó, junto al corazón
+BALA = (238, 72)                         # donde quedó: dentro del pulmón, a 2,5 cm del corazón
 
 
 def insp_serio(t):
@@ -1222,8 +1236,8 @@ def nivel_sangre(t):
 
 
 def cam_serio(t):
-    kf = [(Z6[0], 150, 40, 1.12), (T_QUED - 0.1, 150, 40, 1.12), (T_CM - 0.1, 130, 90, 1.9),
-          (T_CORA + 0.3, 130, 90, 1.9), (T_HERI, 170, 40, 1.35), (T_PEC2 - 0.2, 170, 40, 1.35),
+    kf = [(Z6[0], 150, 40, 1.12), (T_QUED - 0.1, 150, 40, 1.12), (T_CM - 0.1, 200, 80, 1.9),
+          (T_CORA + 0.3, 200, 80, 1.9), (T_HERI, 170, 40, 1.35), (T_PEC2 - 0.2, 170, 40, 1.35),
           (T_PEC2 + 0.4, 0, -40, 1.0), (b(14), 0, -40, 1.0),
           (F8[0], 190, 120, 1.35), (T_VOLV - 0.3, 190, 120, 1.35), (T_PEG2 + 0.3, 0, -40, 1.0), (TOTAL + 1, 0, -40, 1.0)]
     for (t0, x0, y0, z0), (t1, x1, y1, z1) in zip(kf, kf[1:]):
@@ -1246,7 +1260,6 @@ def d_torso_serio(ctx, t):
     ctx.scale(TS, TS)
     silueta(ctx, True)
     traquea(ctx, True)
-    corazon(ctx, t, True, latido=1.6 if T_CORA - 0.2 <= t < T_CORA + 1.0 else 1.0)
     pulmon(ctx, "i", t, c=ins, e=ins, serio=True)
     # el espacio entre las capas del pulmón izquierdo de él (a la derecha de la pantalla)
     cav = puntos_pulmon("d", ins, ins)
@@ -1283,6 +1296,7 @@ def d_torso_serio(ctx, t):
                 ctx.stroke()
     pulmon(ctx, "d", t, c=ins * (1 - col), e=ins * (1 - col), col=col, serio=True,
            alarma=clamp(col * 1.6) * (0.75 + 0.25 * math.sin(t * 6)) if t < T_VOLV else clamp(col * 1.6))
+    corazon(ctx, t, True, latido=1.6 if T_CORA - 0.2 <= t < T_CORA + 1.0 else 1.0, c=ins)
     # la capa de afuera
     pegado = prog(t, T_PEG2 - 0.1, 0.3)
     for lado in ("i", "d"):
@@ -1295,7 +1309,10 @@ def d_torso_serio(ctx, t):
     # la bala
     if t >= T_ATRA - 0.05:
         q = prog(t, T_ATRA - 0.05, 0.55, "out")
-        bx, by = lerp(ENTRADA[0] + 160, BALA[0], q), lerp(ENTRADA[1] - 30, BALA[1], q)
+        hx_, hy_ = HILIO["d"]
+        kb = 1 - 0.55 * col                     # la bala se mueve con el pulmón cuando se desinfla
+        bfx, bfy = hx_ + (BALA[0] - hx_) * kb, hy_ + (BALA[1] - hy_) * kb
+        bx, by = lerp(ENTRADA[0] + 160, bfx, q), lerp(ENTRADA[1] - 30, bfy, q)
         ctx.set_dash([18 / TS * 1.4, 12 / TS * 1.4])
         ctx.move_to(ENTRADA[0] + 160, ENTRADA[1] - 30)
         ctx.line_to(bx, by)
@@ -1320,7 +1337,7 @@ def d_torso_serio(ctx, t):
     # la medida
     if T_CM - 0.1 <= t < T_HERI:
         a = prog(t, T_CM - 0.1, 0.25) * (1 - prog(t, T_HERI - 0.3, 0.3))
-        x0, x1 = 112, BALA[0] - 16
+        x0, x1 = 186, BALA[0] - 16
         ctx.move_to(x0, BALA[1] - 34)
         ctx.line_to(x0, BALA[1] - 46)
         ctx.line_to(x1, BALA[1] - 46)
@@ -1345,7 +1362,7 @@ def d_torso_serio(ctx, t):
     grano(ctx, t)
 
 
-TUBO_IN = (232, 196)                     # punta del tubo, dentro del espacio entre las capas
+TUBO_IN = (246, 206)                     # punta del tubo, dentro del espacio entre las capas
 TUBO_OUT = (520, 380)                    # afuera del pecho, hacia el frasco
 
 
