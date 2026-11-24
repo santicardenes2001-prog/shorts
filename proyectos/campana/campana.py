@@ -1247,6 +1247,79 @@ def farol(ctx, x, y, a=1.0):
     rellena(ctx, NEGRO, 4, a=a)
 
 
+SOMBRA = hx("#232A44")
+
+
+def sereno(ctx, x, base, s, fase, mueve, mira=1.0):
+    """Hombre que se acerca con un farol, asustado: el cuerpo echado para atrás, el farol estirado hacia adelante,
+    la otra mano contra el pecho, ojos bien abiertos y cejas arriba. Silueta oscura con borde, sin temblor.
+    Devuelve la posición de la mano del farol en coordenadas del dispositivo."""
+    with en(ctx, x, base - 4 * abs(math.sin(fase)) * mueve, s):
+        # piernas: abiertas al quedarse quieto, alternan al caminar
+        for sg in (1, -1):
+            a = 0.32 * math.sin(fase) * sg * mueve
+            pie = (sg * 18 + 150 * math.sin(a), 150 * math.cos(a) - 150)
+            for col, w in ((INK, 34), (SOMBRA, 24)):
+                ctx.move_to(sg * 10, -150)
+                ctx.line_to(*pie)
+                trazo(ctx, col, w)
+            elipse(ctx, pie[0] + 12, pie[1] - 2, 20, 9)
+            rellena(ctx, hx("#10131F"), 5)
+        ctx.save()
+        ctx.translate(0, -150)
+        ctx.rotate(-0.13)                      # echado para atrás
+        # saco largo
+        ctx.move_to(-34, -152)
+        ctx.curve_to(-50, -150, -54, -130, -56, -110)
+        ctx.line_to(-62, 14)
+        ctx.line_to(62, 14)
+        ctx.line_to(54, -110)
+        ctx.curve_to(52, -130, 48, -150, 34, -152)
+        ctx.close_path()
+        rellena(ctx, SOMBRA, 7)
+        ctx.move_to(0, -150)
+        ctx.line_to(0, 10)
+        trazo(ctx, hx("#3A4470"), 4)
+        # mano contra el pecho
+        for col, w in ((INK, 30), (SOMBRA, 20)):
+            ctx.move_to(-30, -130)
+            ctx.line_to(-6, -84)
+            ctx.line_to(26, -112)
+            trazo(ctx, col, w)
+        ctx.arc(28, -114, 13, 0, TAU)
+        rellena(ctx, hx("#3A4470"), 5)
+        # brazo del farol, estirado hacia la campana
+        hx_, hy_ = 122, -126
+        for col, w in ((INK, 32), (SOMBRA, 22)):
+            ctx.move_to(30, -138)
+            ctx.line_to(hx_, hy_)
+            trazo(ctx, col, w)
+        ctx.arc(hx_, hy_, 14, 0, TAU)
+        rellena(ctx, hx("#3A4470"), 5)
+        # cabeza, sombrero y cara de miedo
+        ctx.arc(4, -192, 38, 0, TAU)
+        rellena(ctx, SOMBRA, 6)
+        rrect(ctx, -30, -276, 60, 56, 8)
+        rellena(ctx, hx("#151A2B"), 6)
+        elipse(ctx, 0, -222, 58, 10)
+        rellena(ctx, hx("#151A2B"), 6)
+        for ex in (14, 33):
+            elipse(ctx, ex, -194, 8, 11)
+            rellena(ctx, BLANCO, 3)
+            ctx.arc(ex + 2.5 * mira, -193, 3.4, 0, TAU)
+            ctx.set_source_rgb(*INK)
+            ctx.fill()
+            ctx.move_to(ex - 8, -211)
+            ctx.line_to(ex + 7, -215)
+            trazo(ctx, hx("#C9D1DE"), 3)
+        elipse(ctx, 27, -168, 5, 7)
+        ctx.set_source_rgb(*hx("#0A0D18"))
+        ctx.fill()
+        ux, uy = ctx.user_to_device(hx_, hy_ + 6)
+        ctx.restore()
+    return ux, uy
+
+
 def d_nadie(ctx, t):
     fondo(ctx, t)
     t0 = b(18)
@@ -1255,8 +1328,15 @@ def d_nadie(ctx, t):
     zoom(ctx, lerp(1.0, 0.82, q), 540, 1000)
     ang = vaiven(t, t0 - 1.0, 0.4, 1.6, 2.0)
     escena_superficie(ctx, t, ang, 0.8, xc=700, s=0.8)
-    xf = lerp(-140, 230, suave(t, T_NADIE - 0.4, 1.0))
-    farol(ctx, xf, 1020 + 6 * math.sin(t * 6), pop(t, T_NADIE - 0.5, 0.3))
+    # el sereno entra caminando, cada vez más despacio, y se queda quieto mirando la campana
+    avance = prog(t, t0 + 0.15, T_QUIEN - t0 + 0.1, "out")
+    x = lerp(-220, 250, avance)
+    vel = clamp((1 - avance) * 1.6)
+    fase = (x + 190) / 55.0
+    dx, dy = sereno(ctx, x, SUELO16, 1.35, fase, vel)
+    hx_, hy_ = ctx.device_to_user(dx, dy)
+    with en(ctx, hx_, hy_, 1.0, 0.12 * math.sin(fase) * vel):
+        farol(ctx, 0, 70, 1.0)
     ctx.restore()
     signo(ctx, "?", 540, 520, 260, t, T_QUIEN - 0.1, col=LUZ)
 

@@ -32,10 +32,13 @@ Animación procedural (`campana.py`), armazón de `bostezo.py` y `mar.py` (cáma
   fosa, late (está vivo), lo tapa la tierra, queda el tubo, reloj y VARIAS HORAS → sopa, cerveza y salchichas bajan
   por el tubo → tres planitos (campana, tubo, bandera), sello PROBLEMA → plano con el contorno del cuerpo acostado:
   cuerdas a BRAZOS y PIERNAS hasta la barra de la campana; el contorno se hincha (SE HINCHA), las cuerdas tiran y la
-  campana suena → la campana suena sola en el cementerio vacío (SOLA) → plano más abierto, un farol se acerca desde la
-  izquierda, "?" en "quién" → cierre.
+  campana suena → la campana suena sola en el cementerio vacío (SOLA) → plano más abierto, entra desde la izquierda un
+  sereno con un farol, asustado (echado para atrás, el farol estirado, la otra mano en el pecho, ojos bien abiertos);
+  camina cada vez más despacio y se queda quieto mirando la campana, sin temblar; "?" en "quién" → cierre.
 - **Tono (V3):** historia oscura sin caras ni personajes; los cuerpos van siempre tapados con sábana o como contorno
   de plano; solo se ve una mano.
+  Excepción pedida por el usuario (24/11): el sereno del final, en silueta oscura con ojos de miedo, en lugar de un
+  farol flotando.
 - **Cámara:** acercamiento lento en cada escena del medio (`deriva`), golpe de zoom al entrar, cortes secos en la
   pregunta, en "Por si no estaba muerto" y en "La campana podía sonar sola"; panorámicas por el corte del cementerio
   con `cam()`.
